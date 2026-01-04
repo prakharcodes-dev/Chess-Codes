@@ -27,3 +27,10 @@ This roadmap outlines planned improvements for the project as my skills grow.
 - Add basic AI opponent
 - Optimize game logic
 
+
+  ## ⚠️ Known Limitations
+- Check and checkmate logic is not fully implemented yet
+- Illegal move prevention is still being improved
+- No AI opponent in the current version
+
+
