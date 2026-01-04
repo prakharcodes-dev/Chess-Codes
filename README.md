@@ -11,3 +11,19 @@ This is my first solo project, and although it is not fully complete yet, it cur
 - Implement check and checkmate logic
 - Add move history
 - Improve UI and responsiveness
+
+## 🛣️ Project Roadmap
+
+This roadmap outlines planned improvements for the project as my skills grow.
+
+### Planned Features
+- Detect check and checkmate conditions
+- Prevent illegal moves automatically
+- Add move history panel
+- Add game restart and reset option
+
+### Long-Term Goals
+- Improve UI design
+- Add basic AI opponent
+- Optimize game logic
+
