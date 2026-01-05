@@ -1,4 +1,5 @@
 📖 About This Project
+
 This is my first solo project, a complete chess game with legal move validation for all pieces. The game features both single-player practice mode and real-time multiplayer functionality.
 
 Key Learning: Implementing chess logic is more challenging than it appears - every piece has unique movement rules that must be validated accurately.
