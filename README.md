@@ -55,3 +55,31 @@ Java: Game logic and server-side processing
 REST API: Frontend-backend communication
 
 Game State Management: Maintains board state
+
+📋 Project Roadmap
+
+✅ Implemented
+
+Legal moves for all chess pieces
+
+Check/checkmate detection
+
+Multiplayer functionality
+
+Move validation and undo
+
+🔄 In Progress
+
+Enhanced multiplayer reliability
+
+Move history panel
+
+UI/UX improvements
+
+🚀 Planned
+
+AI opponent with Java engine
+
+Advanced rules (castling, en passant)
+
+Game database for history
