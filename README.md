@@ -1,36 +1,34 @@
-# Chess-Codes
+📖 About This Project
+This is my first solo project, a complete chess game with legal move validation for all pieces. The game features both single-player practice mode and real-time multiplayer functionality.
 
-This is my first solo project, and although it is not fully complete yet, it currently supports legal moves for all chess pieces. I am continuously working on improving the logic and overall accuracy of the game. Building this project helped me understand that implementing chess logic is more challenging than it appears.
+Key Learning: Implementing chess logic is more challenging than it appears - every piece has unique movement rules that must be validated accurately.
 
-## Features
-- Basic chess board UI
-- Valid move highlighting
-- Turn-based play (White vs Black)
+✨ Features
+♟️ Core Game Features
+Complete Chess Rules: All standard piece movements with validation
 
-## Future Improvements
-- Implement check and checkmate logic
-- Add move history
-- Improve UI and responsiveness
+Check & Checkmate Detection: Real-time game state monitoring
 
-## 🛣️ Project Roadmap
+Legal Move Highlights: Visual indicators for valid moves
 
-This roadmap outlines planned improvements for the project as my skills grow.
+Move History: Undo functionality to reverse moves
 
-### Planned Features
-- Detect check and checkmate conditions
-- Prevent illegal moves automatically
-- Add move history panel
-- Add game restart and reset option
+Turn-based Play: Alternates between White and Black players
 
-### Long-Term Goals
-- Improve UI design
-- Add basic AI opponent
-- Optimize game logic
+🌐 Multiplayer Features
+Real-time P2P Gaming: Play with friends anywhere
 
+One-Click Sharing: Generate shareable links and QR codes
 
-  ## ⚠️ Known Limitations
-- Check and checkmate logic is not fully implemented yet
-- Illegal move prevention is still being improved
-- No AI opponent in the current version
+Auto-Join: Friends can join with single click
 
+Connection Status: Real-time monitoring
 
+🎨 User Experience
+Modern Dark Theme: Easy on eyes
+
+Responsive Design: Works on desktop and mobile
+
+Visual Feedback: Clear piece selection and movement
+
+Game Statistics: Track moves and player info
