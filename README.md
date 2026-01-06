@@ -60,6 +60,8 @@ Game State Management: Maintains board state
 
 ✅ Implemented
 
+Created a fully interactive chessboard UI using HTML, CSS, and JavaScript.
+
 Legal moves for all chess pieces
 
 Check/checkmate detection
@@ -83,3 +85,4 @@ AI opponent with Java engine
 Advanced rules (castling, en passant)
 
 Game database for history
+
