@@ -79,10 +79,10 @@ Move history panel
 UI/UX improvements
 
 🚀 Planned
-
-AI opponent with Java engine
-
-Advanced rules (castling, en passant)
-
-Game database for history
+ 
+ AI opponent built using a Java engine  
+ 
+ Implementation of advanced chess rules (castling, en passant)  
+ 
+ Game history storage for tracking past games  
 
