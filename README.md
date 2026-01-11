@@ -1,88 +1,111 @@
-📖 About This Project
+♟️ Chess Game Project
+This is my first chess game built with HTML, CSS, and JavaScript. I created everything myself including the board setup, piece movements, and game rules.
 
-This is my first solo project, a complete chess game with legal move validation for all pieces. The game features both single-player practice mode and real-time multiplayer functionality.
+✨ What It Does
+✅ Basic Game Features
+Full chess board with all pieces in starting position
 
-Key Learning: Implementing chess logic is more challenging than it appears - every piece has unique movement rules that must be validated accurately.
+Piece movement rules for pawns, knights, bishops, rooks, queens, and kings
 
-✨ Features
+Turn system - players take turns moving pieces
 
-♟️ Core Game Features
+Legal move checking - pieces can only move according to chess rules
 
-Complete Chess Rules: All standard piece movements with validation
+Visual feedback - selected pieces and valid moves are highlighted
 
-Check & Checkmate Detection: Real-time game state monitoring
+Move history - all moves are shown in a list
 
-Legal Move Highlights: Visual indicators for valid moves
+Undo button - go back one move (for practice games)
 
-Move History: Undo functionality to reverse moves
+Check detection - warns when king is in danger
 
-Turn-based Play: Alternates between White and Black players
+Checkmate detection - ends game when king is trapped
 
-🌐 Multiplayer Features
+🎨 Visual Design
+Dark theme with nice colors for the board
 
-Real-time P2P Gaming: Play with friends anywhere
+Chess piece symbols that look good on screen
 
-One-Click Sharing: Generate shareable links and QR codes
+Responsive layout that works on different screen sizes
 
-Auto-Join: Friends can join with single click
+Clear indicators for whose turn it is
 
-Connection Status: Real-time monitoring
+Game status messages at the bottom
 
-🎨 User Experience
+⏱️ Game Controls
+New Game - resets the board to starting position
 
-Modern Dark Theme: Easy on eyes
+Undo - takes back the last move (local games only)
 
-Responsive Design: Works on desktop and mobile
+Resign - gives up the current game
 
-Visual Feedback: Clear piece selection and movement
+Leave - exits multiplayer games
 
-Game Statistics: Track moves and player info
+🛠️ How It Works
+Game Setup
+The board is an 8x8 grid. Each square can have:
 
-🏗️ Tech Stack
+No piece (empty)
 
-Frontend
+A piece with color (white or black) and type (pawn, rook, etc.)
 
-HTML5/CSS3/JavaScript: Core frontend
+Piece Movement Rules
+Pawns - move forward one square, two squares from starting position, capture diagonally
 
-Responsive Design: Mobile-friendly interface
+Rooks - move straight in any direction
 
-Real-time Updates: Dynamic game state
+Knights - move in L-shape (two squares one way, one square sideways)
 
-Backend
+Bishops - move diagonally
 
-Java: Game logic and server-side processing
+Queens - move straight or diagonally any distance
 
-REST API: Frontend-backend communication
+Kings - move one square in any direction
 
-Game State Management: Maintains board state
+Game Logic
+Turn system: White moves first, then black, alternating
 
-📋 Project Roadmap
+Move validation: Checks if moves are legal for each piece type
 
-✅ Implemented
+Check detection: Looks if any piece threatens the opponent's king
 
-Created a fully interactive chessboard UI using HTML, CSS, and JavaScript.
+Checkmate check: Tests if player has any legal moves when in check
 
-Legal moves for all chess pieces
+Stalemate detection: Ends game if player has no legal moves but isn't in check
 
-Check/checkmate detection
+📁 File Structure
+index.html - Main game file with HTML, CSS, and JavaScript
 
-Multiplayer functionality
+No external libraries - everything is in one file
 
-Move validation and undo
+Simple setup - just open the HTML file in a browser
 
-🔄 In Progress
+🚀 How to Play
+Open the HTML file in your web browser
 
-Enhanced multiplayer reliability
+Click "Local Game" to start a practice game
 
-Move history panel
+Click on any piece to select it
 
-UI/UX improvements
+Click on highlighted squares to move the piece
 
-🚀 Planned
- 
- AI opponent built using a Java engine  
- 
- Implementation of advanced chess rules (castling, en passant)  
- 
- Game history storage for tracking past games  
+Watch the move history update as you play
 
+Use Undo to practice different moves
+
+Try Resign or New Game to restart
+
+🎯 What I Learned
+How chess piece movements really work
+
+JavaScript arrays for the game board
+
+Event handling for user clicks
+
+Game state management
+
+CSS grid for board layout
+
+Turn-based game logic
+
+Move validation algorithms
