@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chess Game</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a2e; font-family: Arial; color: white; padding: 20px; }
+.container { max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; gap: 30px; }
+.header { width: 100%; text-align: center; margin-bottom: 20px; }
+.header h1 { font-size: 2.5rem; color: #f8c555; }
+.board-container { flex: 1; min-width: 500px; background: #162447; padding: 20px; border-radius: 10px; position: relative; }
+.controls { width: 320px; background: #162447; padding: 20px; border-radius: 10px; display: flex; flex-direction: column; gap: 15px; }
+.chess-board { width: 100%; border: 3px solid #3d3d5c; border-collapse: collapse; background: white; }
+.chess-board td { width: 70px; height: 70px; text-align: center; font-size: 40px; cursor: pointer; }
+.light-cell { background: #f0d9b5; }
+.dark-cell { background: #b58863; }
+.selected-cell { outline: 3px solid red; outline-offset: -3px; }
+.white-piece { color: white; text-shadow: 1px 1px 2px #000; }
+.black-piece { color: black; text-shadow: 1px 1px 2px #fff; }
+.info-panel { background: #1f4068; padding: 15px; border-radius: 8px; text-align: center; }
+.turn-indicator { font-size: 1.2rem; font-weight: bold; margin: 10px 0; padding: 10px; background: #2d3748; border-radius: 6px; }
+.status { color: red; font-weight: bold; margin: 10px 0; }
+.buttons { display: flex; flex-direction: column; gap: 10px; }
+.action-btn { padding: 12px; border: none; border-radius: 6px; background: #3d3d5c; color: white; font-size: 1rem; cursor: pointer; transition: all 0.3s; }
+.action-btn:hover { background: #4a4a6e; transform: translateY(-2px); }
+.btn-primary { background: #f8c555; color: black; }
+.btn-success { background: #4CAF50; }
+.btn-danger { background: #f44336; }
+.moves-history { background: #1f4068; padding: 15px; border-radius: 8px; max-height: 300px; overflow-y: auto; }
+#movesList { list-style: none; font-family: monospace; padding: 0; margin: 0; }
+#movesList li { padding: 8px 12px; margin: 3px 0; background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+.move-number { color: #f8c555; font-weight: bold; }
+.game-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 1000; }
+.winner-text { font-size: 2.5rem; color: #f8c555; font-weight: bold; margin-bottom: 20px; }
+.overlay-btn { padding: 12px 24px; margin: 10px; background: #f8c555; color: black; border: none; border-radius: 6px; cursor: pointer; font-size: 1.1rem; }
+.setup-panel { background: #1f4068; padding: 15px; border-radius: 8px; }
+.input-group { margin-bottom: 15px; }
+.input-group label { display: block; margin-bottom: 5px; color: #ccc; }
+.input-group input { width: 100%; padding: 10px; border-radius: 6px; border: 2px solid #3d3d5c; background: #2d3748; color: white; }
+.setup-buttons { display: flex; gap: 10px; }
+.timer-container { display: flex; justify-content: space-between; margin: 15px 0; gap: 10px; }
+.timer-box { flex: 1; background: #2d3748; padding: 10px; border-radius: 6px; text-align: center; transition: all 0.3s; }
+.timer-box.active { background: #4a5568; border: 2px solid #f8c555; box-shadow: 0 0 10px rgba(248, 197, 85, 0.5); }
+.timer-value { font-size: 1.4rem; font-weight: bold; font-family: monospace; }
+.player-info { background: #2d3748; padding: 10px; border-radius: 6px; margin-top: 15px; }
+.player-row { display: flex; justify-content: space-between; margin: 5px 0; }
+.player-color { padding: 3px 10px; border-radius: 15px; font-weight: bold; }
+.player-color.white { background: white; color: black; }
+.player-color.black { background: black; color: white; }
+.game-id-display { background: #2d3748; padding: 10px; border-radius: 6px; margin-top: 15px; }
+.connection-status { position: fixed; top: 20px; right: 20px; padding: 8px 15px; border-radius: 20px; font-weight: bold; z-index: 1001; }
+.connected { background: green; }
+.disconnected { background: red; }
+.waiting { background: orange; }
+.notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1f4068; color: white; padding: 10px 20px; border-radius: 8px; display: none; z-index: 1001; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.possible-move { position: relative; }
+.possible-move::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; background: rgba(0, 255, 0, 0.3); border-radius: 50%; }
+.highlight { background: rgba(255, 255, 0, 0.3) !important; }
+</style>
+</head>
+<body>
+
+<div class="connection-status" id="connectionStatus">Local Game</div>
+<div class="notification" id="notification"></div>
+
+<div class="container">
+    <div class="header">
+        <h1>Chess Game</h1>
+        <p>Play chess online with friends or locally</p>
+    </div>
+    
+    <div class="board-container">
+        <div class="game-overlay" id="gameOverlay">
+            <div style="font-size: 5rem; margin-bottom: 20px;">🏆</div>
+            <div class="winner-text" id="winnerText"></div>
+            <button class="overlay-btn" onclick="initBoard()">New Game</button>
+            <button class="overlay-btn" onclick="document.getElementById('gameOverlay').style.display = 'none'">Close</button>
+        </div>
+        <table class="chess-board" id="chessBoard"></table>
+    </div>
+    
+    <div class="controls">
+        <div class="setup-panel" id="setupPanel">
+            <h3>Multiplayer Setup</h3>
+            <div class="input-group">
+                <label>Your Name:</label>
+                <input type="text" id="playerName" value="Player" maxlength="10">
+            </div>
+            <div class="input-group">
+                <label>Game ID:</label>
+                <input type="text" id="gameId" placeholder="Enter game ID" maxlength="6">
+            </div>
+            <div class="setup-buttons">
+                <button class="action-btn btn-success" onclick="joinGame()">Join Game</button>
+                <button class="action-btn btn-primary" onclick="createGame()">Create Game</button>
+            </div>
+        </div>
+        
+        <div class="info-panel" id="gamePanel" style="display: none;">
+            <h3>Game Status</h3>
+            <div class="turn-indicator" id="turnIndicator">White's Turn</div>
+            <div class="timer-container">
+                <div class="timer-box" id="whiteTimer">
+                    <div>White</div>
+                    <div class="timer-value" id="whiteTime">10:00</div>
+                </div>
+                <div class="timer-box" id="blackTimer">
+                    <div>Black</div>
+                    <div class="timer-value" id="blackTime">10:00</div>
+                </div>
+            </div>
+            <div class="status" id="gameStatus"></div>
+            <div class="player-info">
+                <div class="player-row">
+                    <div>You:</div>
+                    <div>
+                        <span id="myNameDisplay">-</span>
+                        <span class="player-color" id="myColorDisplay">-</span>
+                    </div>
+                </div>
+                <div class="player-row">
+                    <div>Opponent:</div>
+                    <div>
+                        <span id="opponentNameDisplay">-</span>
+                        <span class="player-color" id="opponentColorDisplay">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="game-id-display">
+                <div>Game ID:</div>
+                <div style="font-weight: bold; color: #f8c555;" id="currentGameId">-</div>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button class="action-btn btn-primary" onclick="newLocalGame()">Local Game</button>
+            <button class="action-btn" onclick="undoMove()" id="undoBtn">Undo</button>
+            <button class="action-btn btn-danger" onclick="resignGame()" id="resignBtn">Resign</button>
+            <button class="action-btn" onclick="leaveGame()" id="leaveBtn">Leave</button>
+        </div>
+        
+        <div class="moves-history">
+            <h4>Moves History</h4>
+            <ul id="movesList"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+let board = [];
+let turn = 'white';
+let selected = null;
+let gameActive = true;
+let moveHistory = [];
+let totalMoves = 0;
+let whiteMoves = 0;
+let blackMoves = 0;
+let lastMove = Date.now();
+let possibleMoves = [];
+
+let myColor = null;
+let myName = 'Player';
+let gameId = '';
+let opponent = '';
+let server = 'http://localhost:9090';
+let online = false;
+let poll = null;
+let lastMoves = 0;
+let whiteTime = 600000;
+let blackTime = 600000;
+let started = false;
+let ended = false;
+
+const symbols = {
+    white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
+    black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' }
+};
+
+function initBoard() {
+    board = [
+        [
+            { type: 'rook', color: 'black' },
+            { type: 'knight', color: 'black' },
+            { type: 'bishop', color: 'black' },
+            { type: 'queen', color: 'black' },
+            { type: 'king', color: 'black' },
+            { type: 'bishop', color: 'black' },
+            { type: 'knight', color: 'black' },
+            { type: 'rook', color: 'black' }
+        ],
+        Array(8).fill().map(() => ({ type: 'pawn', color: 'black' })),
+        Array(8).fill(null),
+        Array(8).fill(null),
+        Array(8).fill(null),
+        Array(8).fill(null),
+        Array(8).fill().map(() => ({ type: 'pawn', color: 'white' })),
+        [
+            { type: 'rook', color: 'white' },
+            { type: 'knight', color: 'white' },
+            { type: 'bishop', color: 'white' },
+            { type: 'queen', color: 'white' },
+            { type: 'king', color: 'white' },
+            { type: 'bishop', color: 'white' },
+            { type: 'knight', color: 'white' },
+            { type: 'rook', color: 'white' }
+        ]
+    ];
+    turn = 'white';
+    selected = null;
+    possibleMoves = [];
+    gameActive = true;
+    moveHistory = [];
+    totalMoves = 0;
+    whiteMoves = 0;
+    blackMoves = 0;
+    whiteTime = 600000;
+    blackTime = 600000;
+    started = false;
+    ended = false;
+    lastMove = Date.now();
+    
+    drawBoard();
+    updateInfo();
+    updateClock();
+    document.getElementById('gameStatus').textContent = '';
+    document.getElementById('gameOverlay').style.display = 'none';
+    document.getElementById('movesList').innerHTML = '';
+    
+    if (poll) {
+        clearInterval(poll);
+        poll = null;
+    }
+    online = false;
+    myColor = null;
+    
+    document.getElementById('setupPanel').style.display = 'block';
+    document.getElementById('gamePanel').style.display = 'none';
+    
+    document.getElementById('connectionStatus').className = 'connection-status disconnected';
+    document.getElementById('connectionStatus').textContent = 'Local Game';
+    
+    document.getElementById('undoBtn').disabled = true;
+    document.getElementById('resignBtn').disabled = true;
+    document.getElementById('leaveBtn').disabled = true;
+    
+    showMsg("New local game started! White moves first.");
+}
+
+function drawBoard() {
+    const el = document.getElementById('chessBoard');
+    el.innerHTML = '';
+    
+    for (let r = 0; r < 8; r++) {
+        const row = document.createElement('tr');
+        for (let c = 0; c < 8; c++) {
+            const cell = document.createElement('td');
+            cell.className = (r + c) % 2 === 0 ? 'light-cell' : 'dark-cell';
+            
+            if (selected && selected.row === r && selected.col === c) {
+                cell.classList.add('selected-cell');
+            }
+            
+            if (possibleMoves.some(m => m.row === r && m.col === c)) {
+                cell.classList.add('possible-move');
+            }
+            
+            const piece = board[r][c];
+            if (piece) {
+                cell.textContent = symbols[piece.color][piece.type];
+                cell.classList.add(`${piece.color}-piece`);
+                
+                if (piece.type === 'king' && kingInCheck(piece.color)) {
+                    cell.classList.add('highlight');
+                }
+            }
+            
+            cell.onclick = () => clickCell(r, c);
+            row.appendChild(cell);
+        }
+        el.appendChild(row);
+    }
+}
+
+function clickCell(row, col) {
+    if (!gameActive || ended) {
+        showMsg("Game is not active!");
+        return;
+    }
+    
+    if (online) {
+        if (!started) {
+            showMsg("Game hasn't started yet!");
+            return;
+        }
+        if (myColor !== turn) {
+            showMsg("Wait for your turn!");
+            return;
+        }
+    }
+    
+    const piece = board[row][col];
+    
+    if (selected) {
+        const canMove = possibleMoves.some(m => m.row === row && m.col === col);
+        
+        if (canMove) {
+            makeMove(selected.row, selected.col, row, col);
+        } else {
+            if (piece && piece.color === turn) {
+                selected = { row, col };
+                possibleMoves = getMoves(row, col);
+            } else {
+                selected = null;
+                possibleMoves = [];
+            }
+        }
+    } else {
+        if (piece && piece.color === turn) {
+            selected = { row, col };
+            possibleMoves = getMoves(row, col);
+        } else {
+            showMsg(`It's ${turn}'s turn! Select a ${turn} piece.`);
+        }
+    }
+    
+    drawBoard();
+}
+
+function makeMove(r1, c1, r2, c2) {
+    if (!online) {
+        moveHistory.push({
+            board: JSON.parse(JSON.stringify(board)),
+            turn: turn,
+            totalMoves: totalMoves,
+            whiteMoves: whiteMoves,
+            blackMoves: blackMoves
+        });
+    }
+    
+    const now = Date.now();
+    if (turn === 'white') {
+        whiteTime -= (now - lastMove);
+    } else {
+        blackTime -= (now - lastMove);
+    }
+    lastMove = now;
+    
+    const piece = board[r1][c1];
+    const capturedPiece = board[r2][c2];
+    
+    board[r2][c2] = piece;
+    board[r1][c1] = null;
+    
+    if (turn === 'white') whiteMoves++; else blackMoves++;
+    totalMoves++;
+    
+    const from = getNotation(r1, c1);
+    const to = getNotation(r2, c2);
+    const moveText = `${from} → ${to}`;
+    addMoveToHistory(moveText, turn, capturedPiece);
+    
+    if (online) {
+        const moveStr = `${r1},${c1},${r2},${c2}`;
+        sendMove(moveStr);
+    }
+    
+    turn = turn === 'white' ? 'black' : 'white';
+    
+    selected = null;
+    possibleMoves = [];
+    
+    updateInfo();
+    updateClock();
+    checkGame();
+    
+    if (!online) {
+        document.getElementById('undoBtn').disabled = moveHistory.length === 0;
+    }
+    
+    showMsg(`${turn === 'white' ? 'White' : 'Black'}'s turn`);
+    
+    drawBoard();
+}
+
+function getNotation(row, col) {
+    const letters = 'abcdefgh';
+    return letters[col] + (8 - row);
+}
+
+function addMoveToHistory(move, player, capturedPiece = null) {
+    const list = document.getElementById('movesList');
+    const moveNumber = Math.floor(totalMoves / 2) + 1;
+    
+    let moveText = move;
+    if (capturedPiece) {
+        moveText += ` (captures ${capturedPiece.type})`;
+    }
+    
+    if (player === 'white') {
+        const item = document.createElement('li');
+        item.innerHTML = `<span class="move-number">${moveNumber}.</span> ${moveText}`;
+        list.appendChild(item);
+    } else {
+        const items = list.children;
+        if (items.length > 0) {
+            const lastItem = items[items.length - 1];
+            lastItem.textContent += ` ${moveText}`;
+        } else {
+            const item = document.createElement('li');
+            item.innerHTML = `<span class="move-number">1.</span> ${moveText}`;
+            list.appendChild(item);
+        }
+    }
+    
+    list.scrollTop = list.scrollHeight;
+}
+
+function undoMove() {
+    if (!online && moveHistory.length > 0) {
+        const prev = moveHistory.pop();
+        board = prev.board;
+        turn = prev.turn;
+        totalMoves = prev.totalMoves;
+        whiteMoves = prev.whiteMoves;
+        blackMoves = prev.blackMoves;
+        selected = null;
+        possibleMoves = [];
+        
+        const list = document.getElementById('movesList');
+        if (list.lastChild) {
+            list.removeChild(list.lastChild);
+        }
+        
+        drawBoard();
+        updateInfo();
+        updateClock();
+        document.getElementById('gameStatus').textContent = '';
+        
+        document.getElementById('undoBtn').disabled = moveHistory.length === 0;
+        
+        showMsg("Move undone");
+    }
+}
+
+function updateInfo() {
+    let text = '';
+    
+    if (online) {
+        if (!started) {
+            text = "Waiting for opponent...";
+            document.getElementById('connectionStatus').className = 'connection-status waiting';
+        } else if (ended) {
+            text = "Game Over";
+            document.getElementById('connectionStatus').className = 'connection-status disconnected';
+        } else if (myColor === turn) {
+            text = "YOUR TURN";
+            document.getElementById('connectionStatus').className = 'connection-status connected';
+        } else {
+            text = "Opponent's Turn";
+            document.getElementById('connectionStatus').className = 'connection-status connected';
+        }
+    } else {
+        text = turn === 'white' ? "White's Turn" : "Black's Turn";
+        document.getElementById('connectionStatus').className = 'connection-status disconnected';
+        document.getElementById('connectionStatus').textContent = 'Local Game';
+    }
+    
+    document.getElementById('turnIndicator').textContent = text;
+    document.getElementById('whiteTimer').classList.toggle('active', turn === 'white');
+    document.getElementById('blackTimer').classList.toggle('active', turn === 'black');
+}
+
+function updateClock() {
+    const wm = Math.max(0, Math.floor(whiteTime / 60000));
+    const ws = Math.max(0, Math.floor((whiteTime % 60000) / 1000));
+    const bm = Math.max(0, Math.floor(blackTime / 60000));
+    const bs = Math.max(0, Math.floor((blackTime % 60000) / 1000));
+    
+    document.getElementById('whiteTime').textContent = 
+        `${wm.toString().padStart(2, '0')}:${ws.toString().padStart(2, '0')}`;
+    document.getElementById('blackTime').textContent = 
+        `${bm.toString().padStart(2, '0')}:${bs.toString().padStart(2, '0')}`;
+    
+    if (whiteTime < 60000) {
+        document.getElementById('whiteTime').style.color = '#ff6b6b';
+    } else {
+        document.getElementById('whiteTime').style.color = 'white';
+    }
+    
+    if (blackTime < 60000) {
+        document.getElementById('blackTime').style.color = '#ff6b6b';
+    } else {
+        document.getElementById('blackTime').style.color = 'white';
+    }
+    
+    if (whiteTime <= 0) {
+        endGame("Black wins on time!");
+    } else if (blackTime <= 0) {
+        endGame("White wins on time!");
+    }
+}
+
+function newLocalGame() {
+    if (confirm('Start new local game? Current game will be lost.')) {
+        initBoard();
+    }
+}
+
+function checkGame() {
+    const statusEl = document.getElementById('gameStatus');
+    
+    if (kingInCheck(turn)) {
+        if (checkmate(turn)) {
+            const winner = turn === 'white' ? 'BLACK' : 'WHITE';
+            endGame(`${winner} WINS BY CHECKMATE!`);
+        } else {
+            statusEl.textContent = 'CHECK!';
+        }
+    } else {
+        statusEl.textContent = '';
+        
+        if (stalemate(turn)) {
+            endGame("STALEMATE - DRAW!");
+        }
+    }
+}
+
+function findKing(color) {
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const p = board[r][c];
+            if (p && p.type === 'king' && p.color === color) {
+                return { r, c };
+            }
+        }
+    }
+    return null;
+}
+
+function kingInCheck(color) {
+    const king = findKing(color);
+    if (!king) return false;
+    
+    const opp = color === 'white' ? 'black' : 'white';
+    return attacked(king.r, king.c, opp);
+}
+
+function checkmate(color) {
+    if (!kingInCheck(color)) return false;
+    
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const p = board[r][c];
+            if (p && p.color === color && getMoves(r, c).length > 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function stalemate(color) {
+    if (kingInCheck(color)) return false;
+    
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const p = board[r][c];
+            if (p && p.color === color && getMoves(r, c).length > 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function attacked(row, col, byColor) {
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const p = board[r][c];
+            if (p && p.color === byColor) {
+                const moves = pieceMoves(r, c, true);
+                if (moves.some(m => m.row === row && m.col === col)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function getMoves(row, col) {
+    const p = board[row][col];
+    const all = pieceMoves(row, col);
+    const legal = [];
+    
+    for (const move of all) {
+        const original = board[row][col];
+        const target = board[move.row][move.col];
+        
+        board[move.row][move.col] = original;
+        board[row][col] = null;
+        
+        const check = kingInCheck(p.color);
+        
+        board[row][col] = original;
+        board[move.row][move.col] = target;
+        
+        if (!check) {
+            legal.push(move);
+        }
+    }
+    
+    return legal;
+}
+
+function pieceMoves(row, col, includeAttackOnly = false) {
+    const p = board[row][col];
+    if (!p) return [];
+    
+    switch(p.type) {
+        case 'pawn': return pawnMoves(row, col, p.color, includeAttackOnly);
+        case 'rook': return slide(row, col, [[1,0], [-1,0], [0,1], [0,-1]]);
+        case 'bishop': return slide(row, col, [[1,1], [1,-1], [-1,1], [-1,-1]]);
+        case 'queen': return slide(row, col, [[1,0], [-1,0], [0,1], [0,-1], [1,1], [1,-1], [-1,1], [-1,-1]]);
+        case 'knight': return knightMoves(row, col, p.color);
+        case 'king': return kingMoves(row, col, p.color);
+        default: return [];
+    }
+}
+
+function pawnMoves(row, col, color, attackOnly = false) {
+    const moves = [];
+    const dir = color === 'white' ? -1 : 1;
+    const start = color === 'white' ? 6 : 1;
+    
+    if (!attackOnly) {
+        if (inBounds(row + dir, col) && !board[row + dir][col]) {
+            moves.push({row: row + dir, col});
+            
+            if (row === start && !board[row + 2 * dir][col]) {
+                moves.push({row: row + 2 * dir, col});
+            }
+        }
+    }
+    
+    for (const offset of [-1, 1]) {
+        const nr = row + dir;
+        const nc = col + offset;
+        if (inBounds(nr, nc)) {
+            if (board[nr][nc] && board[nr][nc].color !== color) {
+                moves.push({row: nr, col: nc});
+            }
+        }
+    }
+    
+    return moves;
+}
+
+function slide(row, col, dirs) {
+    const moves = [];
+    const color = board[row][col].color;
+    
+    for (const [dr, dc] of dirs) {
+        let r = row + dr;
+        let c = col + dc;
+        
+        while (inBounds(r, c)) {
+            if (!board[r][c]) {
+                moves.push({row: r, col: c});
+            } else {
+                if (board[r][c].color !== color) {
+                    moves.push({row: r, col: c});
+                }
+                break;
+            }
+            r += dr;
+            c += dc;
+        }
+    }
+    
+    return moves;
+}
+
+function knightMoves(row, col, color) {
+    const offsets = [[2,1], [2,-1], [-2,1], [-2,-1], [1,2], [1,-2], [-1,2], [-1,-2]];
+    const moves = [];
+    
+    for (const [dr, dc] of offsets) {
+        const nr = row + dr;
+        const nc = col + dc;
+        
+        if (inBounds(nr, nc) && (!board[nr][nc] || board[nr][nc].color !== color)) {
+            moves.push({row: nr, col: nc});
+        }
+    }
+    
+    return moves;
+}
+
+function kingMoves(row, col, color) {
+    const moves = [];
+    
+    for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            
+            const nr = row + dr;
+            const nc = col + dc;
+            
+            if (inBounds(nr, nc) && (!board[nr][nc] || board[nr][nc].color !== color)) {
+                if (!attacked(nr, nc, color === 'white' ? 'black' : 'white')) {
+                    moves.push({row: nr, col: nc});
+                }
+            }
+        }
+    }
+    
+    return moves;
+}
+
+function inBounds(row, col) {
+    return row >= 0 && row < 8 && col >= 0 && col < 8;
+}
+
+async function joinGame() {
+    const gameIdInput = document.getElementById('gameId').value.trim();
+    const nameInput = document.getElementById('playerName').value.trim();
+    
+    if (!gameIdInput) {
+        showMsg("Please enter a Game ID");
+        return;
+    }
+    
+    gameId = gameIdInput.substring(0, 6);
+    myName = nameInput || 'Player';
+    
+    try {
+        const res = await fetch(`${server}/join?gameId=${gameId}&playerId=${myName}`);
+        const role = await res.text();
+        
+        if (role === 'full') {
+            showMsg("Game is full!");
+            return;
+        }
+        
+        myColor = role;
+        online = true;
+        
+        document.getElementById('setupPanel').style.display = 'none';
+        document.getElementById('gamePanel').style.display = 'block';
+        
+        document.getElementById('myNameDisplay').textContent = myName;
+        document.getElementById('myColorDisplay').textContent = myColor;
+        document.getElementById('myColorDisplay').className = `player-color ${myColor}`;
+        document.getElementById('currentGameId').textContent = gameId;
+        
+        document.getElementById('connectionStatus').className = 'connection-status waiting';
+        document.getElementById('connectionStatus').textContent = `Connected as ${myColor}`;
+        
+        document.getElementById('undoBtn').disabled = true;
+        document.getElementById('resignBtn').disabled = false;
+        document.getElementById('leaveBtn').disabled = false;
+        
+        showMsg(`Joined game as ${myColor}! Waiting for opponent...`);
+        
+        startPoll();
+        
+    } catch (err) {
+        showMsg("Server connection failed");
+        console.error(err);
+    }
+}
+
+async function createGame() {
+    const name = document.getElementById('playerName').value.trim() || 'Player';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let shortId = '';
+    for (let i = 0; i < 6; i++) {
+        shortId += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    document.getElementById('gameId').value = shortId;
+    joinGame();
+}
+
+async function sendMove(move) {
+    try {
+        const res = await fetch(`${server}/sendMove?gameId=${gameId}&playerId=${myName}&move=${move}`);
+        if (!res.ok) {
+            const err = await res.text();
+            showMsg(err);
+            return false;
+        }
+        return true;
+    } catch (err) {
+        showMsg("Failed to send move");
+        return false;
+    }
+}
+
+async function getState() {
+    try {
+        const res = await fetch(`${server}/getState?gameId=${gameId}`);
+        if (!res.ok) return null;
+        const text = await res.text();
+        return JSON.parse(text);
+    } catch (err) {
+        return null;
+    }
+}
+
+async function getMovesList() {
+    try {
+        const res = await fetch(`${server}/getMoves?gameId=${gameId}`);
+        if (!res.ok) return [];
+        const text = await res.text();
+        return text ? text.split(',') : [];
+    } catch (err) {
+        return [];
+    }
+}
+
+function applyMove(r1, c1, r2, c2) {
+    if (board[r1][c1] === null) {
+        return;
+    }
+    
+    const piece = board[r1][c1];
+    const capturedPiece = board[r2][c2];
+    
+    board[r2][c2] = piece;
+    board[r1][c1] = null;
+    
+    if (piece.color === 'white') whiteMoves++; else blackMoves++;
+    totalMoves++;
+    
+    const from = getNotation(r1, c1);
+    const to = getNotation(r2, c2);
+    addMoveToHistory(`${from} → ${to}`, piece.color, capturedPiece);
+    
+    turn = piece.color === 'white' ? 'black' : 'white';
+    
+    drawBoard();
+    checkGame();
+    updateInfo();
+}
+
+function startPoll() {
+    if (poll) clearInterval(poll);
+    
+    poll = setInterval(async () => {
+        const state = await getState();
+        if (!state) return;
+        
+        whiteTime = parseInt(state.whiteTime) || 600000;
+        blackTime = parseInt(state.blackTime) || 600000;
+        started = state.gameStarted === true;
+        ended = state.gameEnded === true;
+        turn = state.turn || 'white';
+        
+        if (myColor === 'white' && state.black) {
+            opponent = state.black;
+            document.getElementById('opponentNameDisplay').textContent = opponent;
+            document.getElementById('opponentColorDisplay').textContent = 'black';
+            document.getElementById('opponentColorDisplay').className = 'player-color black';
+        } else if (myColor === 'black' && state.white) {
+            opponent = state.white;
+            document.getElementById('opponentNameDisplay').textContent = opponent;
+            document.getElementById('opponentColorDisplay').textContent = 'white';
+            document.getElementById('opponentColorDisplay').className = 'player-color white';
+        }
+        
+        const serverMoves = await getMovesList();
+        if (serverMoves.length > lastMoves) {
+            for (let i = lastMoves; i < serverMoves.length; i++) {
+                const [r1, c1, r2, c2] = serverMoves[i].split(',').map(Number);
+                if (!isNaN(r1)) {
+                    applyMove(r1, c1, r2, c2);
+                    
+                    if (i === serverMoves.length - 1 && myColor !== turn) {
+                        showMsg("Opponent moved!");
+                    }
+                }
+            }
+            lastMoves = serverMoves.length;
+        }
+        
+        updateInfo();
+        updateClock();
+        
+        if (ended && state.winner) {
+            const winner = state.winner === 'white' ? 'WHITE' : 'BLACK';
+            endGame(`${winner} WINS!`);
+            clearInterval(poll);
+        }
+        
+    }, 1000);
+}
+
+function resignGame() {
+    if (online && confirm("Are you sure you want to resign?")) {
+        showMsg("You resigned");
+        endGame("You resigned - Opponent wins!");
+        leaveGame();
+    } else if (!online && confirm("Resign from local game?")) {
+        endGame("Game resigned");
+    }
+}
+
+function leaveGame() {
+    if (online) {
+        if (poll) {
+            clearInterval(poll);
+            poll = null;
+        }
+        showMsg("Left the game");
+        initBoard();
+    }
+}
+
+function endGame(msg) {
+    document.getElementById('winnerText').textContent = msg;
+    document.getElementById('gameOverlay').style.display = 'flex';
+    gameActive = false;
+    ended = true;
+    
+    if (online) {
+        document.getElementById('resignBtn').disabled = true;
+    }
+}
+
+function showMsg(msg) {
+    const el = document.getElementById('notification');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+setInterval(() => {
+    if (gameActive && !ended) {
+        const now = Date.now();
+        if (turn === 'white') {
+            whiteTime -= (now - lastMove);
+        } else {
+            blackTime -= (now - lastMove);
+        }
+        lastMove = now;
+        updateClock();
+    }
+}, 1000);
+
+initBoard();
+</script>
+</body>
+</html>
