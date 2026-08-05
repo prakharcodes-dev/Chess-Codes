@@ -19,14 +19,20 @@ public class ChessServe {
         volatile boolean ended = false;
         volatile String winner = null;
         volatile int moveVersion = 0;
-        String[][] boardState = initializeBoard();
+        String[][] boardState = null;
         volatile String cachedStateJson = null;
         volatile long cacheTimestamp = 0;
         volatile String gameId;
         List<String> chats = Collections.synchronizedList(new ArrayList<>());
         
+        // Synchronized room options
+        volatile String gameVariant = "standard";
+        volatile String boardTheme = "default";
+        volatile int timeControl = 5;
+        
         Game(String id) {
             this.gameId = id;
+            this.boardState = initializeBoard(this.gameVariant);
         }
     }
     
@@ -258,7 +264,7 @@ public class ChessServe {
                 }
                 
                 byte[] data = java.nio.file.Files.readAllBytes(file.toPath());
-                exchange.getResponseHeaders().set("Cache-Control", "max-age=3600");
+                exchange.getResponseHeaders().set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
                 exchange.getResponseHeaders().set("Content-Type", "text/html");
                 exchange.sendResponseHeaders(200, data.length);
                 try (OutputStream os = exchange.getResponseBody()) {
@@ -300,7 +306,36 @@ public class ChessServe {
             if (game.whitePlayer == null) {
                 game.whitePlayer = playerId;
                 role = "white";
-                System.out.println("Player '" + playerId + "' joined game '" + gameId + "' as WHITE");
+                
+                String variantParam = params.get("gameVariant");
+                if (variantParam != null) {
+                    game.gameVariant = variantParam;
+                }
+                String themeParam = params.get("boardTheme");
+                if (themeParam != null) {
+                    game.boardTheme = themeParam;
+                }
+                String timeParam = params.get("timeControl");
+                if (timeParam != null) {
+                    try {
+                        game.timeControl = Integer.parseInt(timeParam);
+                    } catch (NumberFormatException e) {
+                        game.timeControl = 5;
+                    }
+                }
+                
+                if (game.timeControl == 0) {
+                    game.whiteTime = 99999999999L;
+                    game.blackTime = 99999999999L;
+                } else {
+                    game.whiteTime = (long) game.timeControl * 60 * 1000;
+                    game.blackTime = (long) game.timeControl * 60 * 1000;
+                }
+                
+                game.boardState = initializeBoard(game.gameVariant);
+                game.lastTime = System.currentTimeMillis();
+                
+                System.out.println("Player '" + playerId + "' joined game '" + gameId + "' as WHITE. Variant: " + game.gameVariant + ", Theme: " + game.boardTheme + ", TimeControl: " + game.timeControl);
             } else if (game.blackPlayer == null) {
                 if (playerId.equals(game.whitePlayer)) {
                     playerId = playerId + "_2";
@@ -836,20 +871,14 @@ public class ChessServe {
     }
     
     private static File findIndexHtml() {
-        String[] paths = {
-            "index.html",
-            "frontend/index.html",
-            "../frontend/index.html",
-            "public/index.html"
-        };
-        for (String path : paths) {
-            File f = new File(path);
-            if (f.exists()) {
-                return f;
-            }
-        }
-        return null;
+    File f = new File("frontend/index.html");
+
+    if (f.exists()) {
+        return f;
     }
+
+    return null;
+}
     
     private static void handleSendChatRequest(HttpExchange exchange) throws IOException {
         requestCounter.incrementAndGet();
@@ -917,6 +946,10 @@ public class ChessServe {
     }
     
     private static String[][] initializeBoard() {
+        return initializeBoard("standard");
+    }
+    
+    private static String[][] initializeBoard(String variant) {
         String[][] board = new String[8][8];
         
         String[] blackBackRank = {"brook", "bknight", "bbishop", "bqueen", "bking", "bbishop", "bknight", "brook"};

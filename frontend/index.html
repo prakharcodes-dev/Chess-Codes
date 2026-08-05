@@ -5,173 +5,1001 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chess Game</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #1a1a2e; font-family: Arial; color: white; padding: 20px; }
-.container { max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; gap: 30px; }
-.header { width: 100%; text-align: center; margin-bottom: 20px; }
-.header h1 { font-size: 2.5rem; color: #f8c555; }
-.board-container { flex: 1; min-width: 500px; background: #162447; padding: 20px; border-radius: 10px; position: relative; }
-.controls { width: 320px; background: #162447; padding: 20px; border-radius: 10px; display: flex; flex-direction: column; gap: 15px; }
-.chess-board { width: 100%; border: 3px solid #3d3d5c; border-collapse: collapse; background: white; }
-.chess-board td { width: 70px; height: 70px; text-align: center; font-size: 40px; cursor: pointer; }
-.light-cell { background: #f0d9b5; }
-.dark-cell { background: #b58863; }
-.selected-cell { outline: 3px solid red; outline-offset: -3px; }
-.white-piece { color: white; text-shadow: 1px 1px 2px #000; }
-.black-piece { color: black; text-shadow: 1px 1px 2px #fff; }
-.info-panel { background: #1f4068; padding: 15px; border-radius: 8px; text-align: center; }
-.turn-indicator { font-size: 1.2rem; font-weight: bold; margin: 10px 0; padding: 10px; background: #2d3748; border-radius: 6px; }
-.status { color: red; font-weight: bold; margin: 10px 0; }
-.buttons { display: flex; flex-direction: column; gap: 10px; }
-.action-btn { padding: 12px; border: none; border-radius: 6px; background: #3d3d5c; color: white; font-size: 1rem; cursor: pointer; transition: all 0.3s; }
-.action-btn:hover { background: #4a4a6e; transform: translateY(-2px); }
-.btn-primary { background: #f8c555; color: black; }
-.btn-success { background: #4CAF50; }
-.btn-danger { background: #f44336; }
-.moves-history { background: #1f4068; padding: 15px; border-radius: 8px; max-height: 300px; overflow-y: auto; }
-#movesList { list-style: none; font-family: monospace; padding: 0; margin: 0; }
-#movesList li { padding: 8px 12px; margin: 3px 0; background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
-.move-number { color: #f8c555; font-weight: bold; }
-.game-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 1000; }
-.winner-text { font-size: 2.5rem; color: #f8c555; font-weight: bold; margin-bottom: 20px; }
-.overlay-btn { padding: 12px 24px; margin: 10px; background: #f8c555; color: black; border: none; border-radius: 6px; cursor: pointer; font-size: 1.1rem; }
-.setup-panel { background: #1f4068; padding: 15px; border-radius: 8px; }
-.input-group { margin-bottom: 15px; }
-.input-group label { display: block; margin-bottom: 5px; color: #ccc; }
-.input-group input { width: 100%; padding: 10px; border-radius: 6px; border: 2px solid #3d3d5c; background: #2d3748; color: white; }
-.setup-buttons { display: flex; gap: 10px; }
-.timer-container { display: flex; justify-content: space-between; margin: 15px 0; gap: 10px; }
-.timer-box { flex: 1; background: #2d3748; padding: 10px; border-radius: 6px; text-align: center; transition: all 0.3s; }
-.timer-box.active { background: #4a5568; border: 2px solid #f8c555; box-shadow: 0 0 10px rgba(248, 197, 85, 0.5); }
-.timer-value { font-size: 1.4rem; font-weight: bold; font-family: monospace; }
-.player-info { background: #2d3748; padding: 10px; border-radius: 6px; margin-top: 15px; }
-.player-row { display: flex; justify-content: space-between; margin: 5px 0; }
-.player-color { padding: 3px 10px; border-radius: 15px; font-weight: bold; }
-.player-color.white { background: white; color: black; }
-.player-color.black { background: black; color: white; }
-.game-id-display { background: #2d3748; padding: 10px; border-radius: 6px; margin-top: 15px; }
-.connection-status { position: fixed; top: 20px; right: 20px; padding: 8px 15px; border-radius: 20px; font-weight: bold; z-index: 1001; }
-.connected { background: green; }
-.disconnected { background: red; }
-.waiting { background: orange; }
-.notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1f4068; color: white; padding: 10px 20px; border-radius: 8px; display: none; z-index: 1001; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-.possible-move { position: relative; }
-.possible-move::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; background: rgba(0, 255, 0, 0.3); border-radius: 50%; }
-.highlight { background: rgba(255, 255, 0, 0.3) !important; }
-.last-move { background: rgba(100, 200, 255, 0.4) !important; }
-.captured-pieces { background: #2d3748; padding: 10px; border-radius: 8px; margin: 10px 0; }
-.captured-row { display: flex; justify-content: space-between; gap: 15px; margin-top: 5px; }
-.captured-side { flex: 1; min-height: 40px; }
-.captured-container { min-height: 40px; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 8px; margin-top: 5px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
-.captured-piece { font-size: 24px; padding: 2px; background: rgba(255,255,255,0.1); border-radius: 4px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
-.captured-placeholder { color: #666; font-style: italic; padding: 10px; text-align: center; }
-.chat-panel { background: #1f4068; padding: 15px; border-radius: 8px; display: none; }
-.chat-messages { height: 200px; overflow-y: auto; border: 1px solid #3d3d5c; border-radius: 6px; padding: 10px; margin-bottom: 10px; background: #2d3748; }
-.chat-message { margin-bottom: 8px; padding: 8px; border-radius: 6px; background: rgba(255,255,255,0.1); }
-.chat-message.you { background: rgba(76, 175, 80, 0.2); text-align: right; }
-.chat-message.opponent { background: rgba(244, 67, 54, 0.2); }
-.chat-message.system { background: rgba(248, 197, 85, 0.2); }
-.chat-input { display: flex; gap: 5px; }
-.chat-input input { flex: 1; padding: 10px; border-radius: 6px; border: 2px solid #3d3d5c; background: #2d3748; color: white; }
-.chat-input button { padding: 10px 15px; background: #f8c555; color: black; border: none; border-radius: 6px; cursor: pointer; }
-.computer-panel { background: #1f4068; padding: 15px; border-radius: 8px; display: none; }
-.difficulty-selector { margin: 10px 0; }
-.difficulty-selector select { width: 100%; padding: 10px; border-radius: 6px; border: 2px solid #3d3d5c; background: #2d3748; color: white; }
-.computer-status { font-style: italic; color: #ccc; margin: 10px 0; }
-.tabs { display: flex; gap: 5px; margin-bottom: 15px; }
-.tab-btn { flex: 1; padding: 10px; background: #3d3d5c; color: white; border: none; border-radius: 6px; cursor: pointer; }
-.tab-btn.active { background: #f8c555; color: black; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-.additional-options { 
-    background: #2d3748; 
-    padding: 15px; 
-    border-radius: 8px; 
-    margin-top: 10px;
-    border-left: 4px solid #f8c555;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --bg-primary: #080c14;
+    --bg-secondary: rgba(17, 24, 39, 0.7);
+    --bg-card: rgba(30, 41, 59, 0.45);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --accent-color: #6366f1;
+    --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --accent-glow: rgba(99, 102, 241, 0.3);
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    
+    --btn-bg: rgba(51, 65, 85, 0.5);
+    --btn-hover: rgba(71, 85, 105, 0.75);
+    
+    --timer-inactive: #1e293b;
+    --timer-active: rgba(245, 158, 11, 0.15);
+    --timer-active-border: #f59e0b;
 }
-.option-group { 
-    margin: 10px 0; 
-    display: flex; 
-    align-items: center; 
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 24px;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    padding-top: 10px;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        grid-template-columns: 1fr;
+        max-width: 650px;
+    }
+}
+
+.header {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.header-brand {
+    display: flex;
+    flex-direction: column;
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 2px;
+}
+
+.header p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.connection-status {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.connection-status::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: statusPulse 2s infinite alternate;
+}
+
+@keyframes statusPulse {
+    0% { opacity: 0.5; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+}
+
+.connection-status.connected {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.2);
+}
+.connection-status.connected::before {
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.connection-status.disconnected {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+.connection-status.disconnected::before {
+    background: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+}
+
+.connection-status.waiting {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border-color: rgba(245, 158, 11, 0.2);
+}
+.connection-status.waiting::before {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+}
+
+.notification {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 41, 59, 0.9);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: none;
+    z-index: 10000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    font-weight: 500;
+    font-size: 0.9rem;
+    animation: toastFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toastFadeIn {
+    from { opacity: 0; transform: translate(-50%, 10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.board-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.board-container {
+    position: relative;
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chess-board {
+    width: 100%;
+    max-width: 580px;
+    aspect-ratio: 1;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+    border: 6px solid #1e293b;
+}
+
+.chess-board td {
+    width: 12.5%;
+    height: 12.5%;
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 36px;
+    padding: 0;
+    user-select: none;
+}
+
+.chess-board img {
+    width: 82%;
+    height: 82%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chess-board td:hover img {
+    transform: scale(1.08);
+}
+
+.player-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 8px 16px;
+    min-height: 52px;
+}
+
+.player-bar-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.player-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #fff;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.35);
+}
+
+.player-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.captured-container-bar {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-top: 2px;
+    min-height: 20px;
+}
+
+.captured-piece-mini {
+    height: 20px;
+    width: 20px;
+    object-fit: contain;
+    opacity: 0.75;
+}
+
+.captured-count-mini {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-left: 1px;
+    margin-right: 4px;
+}
+
+.player-clock {
+    background: var(--timer-inactive);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.player-clock.active {
+    background: var(--timer-active);
+    border-color: var(--timer-active-border);
+    color: var(--timer-active-border);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+}
+
+.controls {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: auto;
+}
+
+.tabs {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px 6px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    color: #fff;
+}
+
+.tab-btn.active {
+    background: var(--accent-gradient);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.tab-content {
+    display: none;
+    animation: tabFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes tabFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.setup-panel, .computer-panel, .training-panel, .chat-panel, .info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    border-left: 3px solid var(--accent-color);
+    padding-left: 10px;
+    margin-bottom: 4px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.input-group input, .input-group select, .time-control-select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.25);
+    color: #fff;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus, .input-group select:focus, .time-control-select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.option-group label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.option-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-color);
+    cursor: pointer;
+}
+
+.additional-options {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.setup-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--btn-bg);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.action-btn:hover:not(:disabled) {
+    background: var(--btn-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.action-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.action-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--accent-gradient);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btn-success:hover:not(:disabled) {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
+}
+
+.moves-history {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    max-height: 250px;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
-.option-group label { 
-    flex: 1; 
-    color: #ccc; 
-    font-size: 0.9rem;
+
+.moves-history h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
-.option-group select { 
-    padding: 8px; 
-    border-radius: 6px; 
-    border: 1px solid #3d3d5c; 
-    background: #1f4068; 
-    color: white; 
-    min-width: 150px;
+
+#movesList {
+    list-style: none;
+    overflow-y: auto;
+    max-height: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 4px;
 }
-.time-control-select { 
-    padding: 8px; 
-    border-radius: 6px; 
-    border: 1px solid #3d3d5c; 
-    background: #1f4068; 
-    color: white; 
+
+#movesList li {
+    font-family: 'Plus Jakarta Sans', monospace;
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    display: flex;
+    justify-content: space-between;
+    color: #e2e8f0;
+}
+
+.move-number {
+    color: var(--accent-color);
+    font-weight: 700;
+    width: 32px;
+}
+
+.chat-messages {
+    height: 220px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.chat-message {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 85%;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.chat-message.you {
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    color: #e0e7ff;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.chat-message.opponent {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.chat-message.system {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    color: #fde68a;
+    max-width: 100%;
+    text-align: center;
+    align-self: center;
+    font-style: italic;
+    font-size: 0.8rem;
+}
+
+.chat-input {
+    display: flex;
+    gap: 8px;
+}
+
+.chat-input input {
+    flex: 1;
+}
+
+.chat-input button {
+    padding: 10px 16px;
+    background: var(--accent-gradient);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+.chat-input button:hover {
+    opacity: 0.9;
+}
+
+.quick-chat-btns {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.quick-chat-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.quick-chat-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.training-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.training-stat {
+    text-align: center;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    flex: 1;
+}
+
+.training-stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.training-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    background: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 24px;
+    animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.theme-default.light-cell { background: #f0d9b5; }
-.theme-default.dark-cell { background: #b58863; }
-.theme-dark.light-cell { background: #eeeed2; }
-.theme-dark.dark-cell { background: #769656; }
-.theme-blue.light-cell { background: #dee3e6; }
-.theme-blue.dark-cell { background: #8ca2ad; }
-.theme-green.light-cell { background: #ffffdd; }
-.theme-green.dark-cell { background: #86a666; }
-.theme-purple.light-cell { background: #e8d6e8; }
-.theme-purple.dark-cell { background: #9f6b9f; }
-.theme-gray.light-cell { background: #d3d3d3; }
-.theme-gray.dark-cell { background: #a9a9a9; }
-.theme-ocean.light-cell { background: #a8d8ea; }
-.theme-ocean.dark-cell { background: #3b6978; }
-.theme-sunset.light-cell { background: #ffd3b6; }
-.theme-sunset.dark-cell { background: #ffaaa7; }
-.training-hint { background: rgba(255, 215, 0, 0.3) !important; }
-.training-correct { background: rgba(0, 255, 0, 0.3) !important; }
-.training-wrong { background: rgba(255, 0, 0, 0.3) !important; }
-.training-panel { background: #1f4068; padding: 15px; border-radius: 8px; margin-top: 10px; }
-.training-stats { display: flex; justify-content: space-between; margin-top: 10px; }
-.training-stat { text-align: center; padding: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; flex: 1; margin: 0 5px; }
-.training-stat-value { font-size: 1.5rem; font-weight: bold; color: #f8c555; }
-.training-stat-label { font-size: 0.8rem; color: #ccc; }
-.tab-training { background: #2196F3; }
-.tab-training.active { background: #1976D2; }
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.winner-trophy {
+    font-size: 4rem;
+    filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.4));
+    margin-bottom: 12px;
+    animation: bounceTrophy 2s infinite ease-in-out;
+}
+
+@keyframes bounceTrophy {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.winner-text {
+    font-size: 1.8rem;
+    color: #fbbf24;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 24px;
+    text-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.overlay-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.overlay-btn {
+    padding: 10px 20px;
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.25s ease;
+}
+
+.overlay-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.overlay-btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+.overlay-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Hide redundant original clock boxes and captured pieces in CSS */
+#gamePanel .timer-container,
+#gamePanel .captured-pieces {
+    display: none !important;
+}
+
+/* Cell Highlight Themes & Variables */
+.theme-default .light-cell { background: #f0d9b5; color: #b58863; }
+.theme-default .dark-cell { background: #b58863; color: #f0d9b5; }
+
+.theme-dark .light-cell { background: #eeeed2; color: #769656; }
+.theme-dark .dark-cell { background: #769656; color: #eeeed2; }
+
+.theme-blue .light-cell { background: #dee3e6; color: #8ca2ad; }
+.theme-blue .dark-cell { background: #8ca2ad; color: #dee3e6; }
+
+.theme-green .light-cell { background: #e2e8f0; color: #3b6944; }
+.theme-green .dark-cell { background: #3b6944; color: #e2e8f0; }
+
+.theme-purple .light-cell { background: #f5f3ff; color: #7c3aed; }
+.theme-purple .dark-cell { background: #7c3aed; color: #f5f3ff; }
+
+.theme-gray .light-cell { background: #e2e8f0; color: #64748b; }
+.theme-gray .dark-cell { background: #64748b; color: #e2e8f0; }
+
+.theme-ocean .light-cell { background: #e0f2fe; color: #0284c7; }
+.theme-ocean .dark-cell { background: #0284c7; color: #e0f2fe; }
+
+.theme-sunset .light-cell { background: #ffedd5; color: #f97316; }
+.theme-sunset .dark-cell { background: #f97316; color: #ffedd5; }
+
+/* Coordinate labels inside edge cells */
+.coordinate {
+    position: absolute;
+    font-size: 10px;
+    font-weight: 800;
+    opacity: 0.85;
+    pointer-events: none;
+    user-select: none;
+}
+.rank-coordinate {
+    top: 4px;
+    left: 4px;
+}
+.file-coordinate {
+    bottom: 4px;
+    right: 4px;
+}
+
+/* Selected cell outline */
+.selected-cell {
+    box-shadow: inset 0 0 0 4px #fbbf24, 0 0 10px #fbbf24;
+    z-index: 5;
+}
+
+/* Legal Move Highlights */
+.possible-move::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background: rgba(16, 185, 129, 0.45);
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+    z-index: 2;
+}
+
+.possible-move:hover::after {
+    width: 22px;
+    height: 22px;
+    background: rgba(16, 185, 129, 0.6);
+}
+
+.possible-move.capture-move::after {
+    width: 80%;
+    height: 80%;
+    background: transparent;
+    border: 4px solid rgba(239, 68, 68, 0.5);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+}
+
+.possible-move.capture-move:hover::after {
+    border-color: rgba(239, 68, 68, 0.8);
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* Last move cells glow */
+.last-move {
+    box-shadow: inset 0 0 0 3px rgba(99, 102, 241, 0.5);
+    background: rgba(99, 102, 241, 0.2) !important;
+}
+
+/* King Check pulsating overlay */
+.highlight {
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.6) 0%, rgba(239, 68, 68, 0.15) 70%) !important;
+    animation: checkPulse 1.5s infinite alternate;
+}
+@keyframes checkPulse {
+    0% { box-shadow: inset 0 0 4px #ef4444; }
+    100% { box-shadow: inset 0 0 18px #ef4444, 0 0 8px rgba(239, 68, 68, 0.5); }
+}
+
+/* Training Indicators */
+.training-hint {
+    background: rgba(245, 158, 11, 0.35) !important;
+    box-shadow: inset 0 0 0 3px #f59e0b;
+}
+.training-correct {
+    background: rgba(16, 185, 129, 0.35) !important;
+    box-shadow: inset 0 0 0 3px #10b981;
+}
+.training-wrong {
+    background: rgba(239, 68, 68, 0.35) !important;
+    box-shadow: inset 0 0 0 3px #ef4444;
+}
+
+/* Text alignment & styling */
+.status {
+    color: #ef4444;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    animation: pulseStatus 1s infinite alternate;
+}
+@keyframes pulseStatus {
+    from { opacity: 0.7; }
+    to { opacity: 1; }
+}
+
+.turn-indicator {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 </style>
 </head>
 <body>
 
-<div class="connection-status" id="connectionStatus">Local Game</div>
 <div class="notification" id="notification"></div>
 
 <div class="container">
     <div class="header">
-        <h1>Chess Game</h1>
-        <p>Play chess online with friends, vs computer, or locally</p>
+        <div class="header-brand">
+            <h1>GRAVITY CHESS</h1>
+            <p>Real-time chess room, AI practice, and tactical training</p>
+        </div>
+        <div class="connection-status disconnected" id="connectionStatus">Local Game</div>
     </div>
     
-    <div class="board-container">
-        <div class="game-overlay" id="gameOverlay">
-            <div style="font-size: 5rem; margin-bottom: 20px;">🏆</div>
-            <div class="winner-text" id="winnerText"></div>
-            <button class="overlay-btn" onclick="initBoard()">New Game</button>
-            <button class="overlay-btn" onclick="document.getElementById('gameOverlay').style.display = 'none'">Close</button>
+    <div class="board-layout">
+        <!-- Opponent Player Bar (Black) -->
+        <div class="player-bar" id="topPlayerBar">
+            <div class="player-bar-info">
+                <div class="player-avatar" style="background: linear-gradient(135deg, #334155 0%, #1e293b 100%); border: 1px solid rgba(255,255,255,0.1);">♟</div>
+                <div class="player-details">
+                    <span class="player-name" id="topPlayerName">Opponent</span>
+                    <div class="captured-container-bar" id="topPlayerCaptured"></div>
+                </div>
+            </div>
+            <div class="player-clock" id="topPlayerTime">05:00</div>
         </div>
-        <table class="chess-board" id="chessBoard"></table>
+
+        <div class="board-container">
+            <div class="game-overlay" id="gameOverlay">
+                <div class="winner-trophy">🏆</div>
+                <div class="winner-text" id="winnerText"></div>
+                <div class="overlay-buttons">
+                    <button class="overlay-btn" onclick="initBoard()">New Game</button>
+                    <button class="overlay-btn overlay-btn-secondary" onclick="document.getElementById('gameOverlay').style.display = 'none'">Close</button>
+                </div>
+            </div>
+            <table class="chess-board" id="chessBoard"></table>
+        </div>
+
+        <!-- Player Player Bar (White) -->
+        <div class="player-bar" id="bottomPlayerBar">
+            <div class="player-bar-info">
+                <div class="player-avatar" style="background: var(--accent-gradient);">♟</div>
+                <div class="player-details">
+                    <span class="player-name" id="bottomPlayerName">You</span>
+                    <div class="captured-container-bar" id="bottomPlayerCaptured"></div>
+                </div>
+            </div>
+            <div class="player-clock" id="bottomPlayerTime">05:00</div>
+        </div>
     </div>
     
     <div class="controls">
         <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('gameTab')">Game</button>
-            <button class="tab-btn" onclick="showTab('computerTab')">VS Computer</button>
-            <button class="tab-btn" onclick="showTab('trainingTab')">Training</button>
-            <button class="tab-btn" onclick="showTab('chatTab')">Chat</button>
+            <button class="tab-btn active" id="btnGameTab" onclick="showTab('gameTab')">Game</button>
+            <button class="tab-btn" id="btnComputerTab" onclick="showTab('computerTab')">VS Computer</button>
+            <button class="tab-btn" id="btnTrainingTab" onclick="showTab('trainingTab')">Training</button>
+            <button class="tab-btn" id="btnChatTab" onclick="showTab('chatTab')">Chat</button>
         </div>
         
         <div class="tab-content active" id="gameTab">
@@ -187,7 +1015,7 @@ body { background: #1a1a2e; font-family: Arial; color: white; padding: 20px; }
                 </div>
                 
                 <div class="additional-options">
-                    <h4 style="margin-top: 0; margin-bottom: 10px; color: #f8c555;">Additional Options</h4>
+                    <h4 style="margin-top: 0; margin-bottom: 4px; color: var(--accent-color); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">Additional Options</h4>
                     
                     <div class="input-group">
                         <label for="timeControl">Time Control:</label>
@@ -248,54 +1076,31 @@ body { background: #1a1a2e; font-family: Arial; color: white; padding: 20px; }
                 <h3>Game Status</h3>
                 <div class="turn-indicator" id="turnIndicator">White's Turn</div>
                 
-                <div class="captured-pieces">
-                    <div>Captured Pieces:</div>
-                    <div class="captured-row">
-                        <div class="captured-side">
-                            <div style="font-size: 0.9rem; color: #ccc;">White Captured:</div>
-                            <div id="whiteCaptured" class="captured-container">
-                                <div class="captured-placeholder">None</div>
-                            </div>
-                        </div>
-                        <div class="captured-side">
-                            <div style="font-size: 0.9rem; color: #ccc;">Black Captured:</div>
-                            <div id="blackCaptured" class="captured-container">
-                                <div class="captured-placeholder">None</div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Redundant element structures kept in DOM for backward compatibility, hidden visually -->
+                <div class="captured-pieces" style="display: none;">
+                    <div id="whiteCaptured"><div class="captured-placeholder">None</div></div>
+                    <div id="blackCaptured"><div class="captured-placeholder">None</div></div>
                 </div>
-                
-                <div class="timer-container">
+                <div class="timer-container" style="display: none;">
                     <div class="timer-box" id="whiteTimer">
-                        <div>White</div>
                         <div class="timer-value" id="whiteTime">10:00</div>
                     </div>
                     <div class="timer-box" id="blackTimer">
-                        <div>Black</div>
                         <div class="timer-value" id="blackTime">10:00</div>
                     </div>
                 </div>
-                <div class="status" id="gameStatus"></div>
-                <div class="player-info">
-                    <div class="player-row">
-                        <div>You:</div>
-                        <div>
-                            <span id="myNameDisplay">-</span>
-                            <span class="player-color" id="myColorDisplay">-</span>
-                        </div>
-                    </div>
-                    <div class="player-row">
-                        <div>Opponent:</div>
-                        <div>
-                            <span id="opponentNameDisplay">-</span>
-                            <span class="player-color" id="opponentColorDisplay">-</span>
-                        </div>
-                    </div>
+                <div class="player-info" style="display: none;">
+                    <span id="myNameDisplay">-</span>
+                    <span id="myColorDisplay">-</span>
+                    <span id="opponentNameDisplay">-</span>
+                    <span id="opponentColorDisplay">-</span>
                 </div>
-                <div class="game-id-display">
-                    <div>Game ID:</div>
-                    <div style="font-weight: bold; color: #f8c555;" id="currentGameId">-</div>
+
+                <div class="status" id="gameStatus"></div>
+                
+                <div class="game-id-display" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.04); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Room ID:</span>
+                    <span style="font-weight: 700; color: var(--accent-color);" id="currentGameId">-</span>
                 </div>
             </div>
             
@@ -327,13 +1132,15 @@ body { background: #1a1a2e; font-family: Arial; color: white; padding: 20px; }
                     </select>
                 </div>
                 <div class="difficulty-selector">
-                    <label>Computer Difficulty:</label>
-                    <select id="computerDifficulty">
-                        <option value="1">Easy (Beginner)</option>
-                        <option value="2" selected>Medium (Intermediate)</option>
-                        <option value="3">Hard (Advanced)</option>
-                        <option value="4">Expert (Master)</option>
-                    </select>
+                    <div class="input-group">
+                        <label>Computer Difficulty:</label>
+                        <select id="computerDifficulty">
+                            <option value="1">Easy (Beginner)</option>
+                            <option value="2" selected>Medium (Intermediate)</option>
+                            <option value="3">Hard (Advanced)</option>
+                            <option value="4">Expert (Master)</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label for="computerBoardTheme">Board Theme:</label>
@@ -349,7 +1156,7 @@ body { background: #1a1a2e; font-family: Arial; color: white; padding: 20px; }
                     </select>
                 </div>
                 <button class="action-btn btn-primary" onclick="startComputerGame()">Start vs Computer</button>
-                <div class="computer-status" id="computerStatus"></div>
+                <div class="computer-status" id="computerStatus" style="font-style: italic; color: #fbbf24; text-align: center; font-size: 0.85rem;"></div>
                 <div class="buttons" style="margin-top: 15px;">
                     <button class="action-btn" onclick="undoMove()" id="computerUndoBtn">Undo</button>
                     <button class="action-btn btn-danger" onclick="resignGame()">Resign</button>
@@ -407,7 +1214,7 @@ body { background: #1a1a2e; font-family: Arial; color: white; padding: 20px; }
                         <div class="training-stat-label">Wrong</div>
                     </div>
                 </div>
-                <div class="training-status" id="trainingStatus" style="margin-top: 15px; font-style: italic; color: #ccc;"></div>
+                <div class="training-status" id="trainingStatus" style="margin-top: 15px; font-style: italic; color: #94a3b8; text-align: center; font-size: 0.85rem;"></div>
                 <div class="buttons" style="margin-top: 15px; display: none;" id="trainingButtons">
                     <button class="action-btn" onclick="showHint()">Show Hint</button>
                     <button class="action-btn btn-success" onclick="nextPuzzle()">Next Puzzle</button>
@@ -426,15 +1233,15 @@ body { background: #1a1a2e; font-family: Arial; color: white; padding: 20px; }
                     <input type="text" id="chatInput" placeholder="Type your message..." maxlength="100">
                     <button onclick="sendChatMessage()">Send</button>
                 </div>
-                <div style="margin-top: 10px; font-size: 0.9rem; color: #ccc;">
-                    <div>Quick Messages:</div>
-                    <div style="display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap;">
-                        <button class="action-btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="quickChat('Good game!')">Good game!</button>
-                        <button class="action-btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="quickChat('Check!')">Check!</button>
-                        <button class="action-btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="quickChat('Well played')">Well played</button>
-                        <button class="action-btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="quickChat('Good luck!')">Good luck!</button>
-                        <button class="action-btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="quickChat('Nice move!')">Nice move!</button>
-                        <button class="action-btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="quickChat('I resign')">I resign</button>
+                <div style="margin-top: 10px;">
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Quick Messages:</div>
+                    <div class="quick-chat-btns">
+                        <button class="quick-chat-btn" onclick="quickChat('Good game!')">Good game!</button>
+                        <button class="quick-chat-btn" onclick="quickChat('Check!')">Check!</button>
+                        <button class="quick-chat-btn" onclick="quickChat('Well played')">Well played</button>
+                        <button class="quick-chat-btn" onclick="quickChat('Good luck!')">Good luck!</button>
+                        <button class="quick-chat-btn" onclick="quickChat('Nice move!')">Nice move!</button>
+                        <button class="quick-chat-btn" onclick="quickChat('I resign')">I resign</button>
                     </div>
                 </div>
             </div>
@@ -804,12 +1611,29 @@ function drawBoard() {
             cell.className = (r + c) % 2 === 0 ? 'light-cell' : 'dark-cell';
             cell.classList.add('theme-' + boardTheme);
             
+            // Add coordinate labels inside edge cells
+            if (c === 0) {
+                const rankLabel = document.createElement('span');
+                rankLabel.className = 'coordinate rank-coordinate';
+                rankLabel.textContent = 8 - r;
+                cell.appendChild(rankLabel);
+            }
+            if (r === 7) {
+                const fileLabel = document.createElement('span');
+                fileLabel.className = 'coordinate file-coordinate';
+                fileLabel.textContent = String.fromCharCode(97 + c);
+                cell.appendChild(fileLabel);
+            }
+            
             if (selected && selected.row === r && selected.col === c) {
                 cell.classList.add('selected-cell');
             }
             
             if (highlightLegalMoves && possibleMoves.some(m => m.row === r && m.col === c)) {
                 cell.classList.add('possible-move');
+                if (board[r][c]) {
+                    cell.classList.add('capture-move');
+                }
             }
             
             if ((lastMoveFrom && lastMoveFrom.row === r && lastMoveFrom.col === c) ||
@@ -824,7 +1648,25 @@ function drawBoard() {
             
             const piece = board[r][c];
             if (piece) {
-                cell.textContent = symbols[piece.color][piece.type];
+                const pieceLetter = piece.type === 'knight' ? 'N' : piece.type.charAt(0).toUpperCase();
+                const colorLetter = piece.color === 'white' ? 'w' : 'b';
+                const code = colorLetter + pieceLetter;
+                const imgUrl = `https://lichess1.org/assets/piece/cburnett/${code}.svg`;
+                
+                const unicodeChar = symbols[piece.color][piece.type];
+                
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                img.className = 'chess-piece-img';
+                img.alt = unicodeChar;
+                img.onerror = function() {
+                    // Fallback to unicode text if image fails to load
+                    const textNode = document.createTextNode(unicodeChar);
+                    cell.appendChild(textNode);
+                    img.remove();
+                };
+                
+                cell.appendChild(img);
                 cell.classList.add(`${piece.color}-piece`);
                 
                 if (piece.type === 'king' && kingInCheck(piece.color)) {
@@ -920,11 +1762,30 @@ function updateCapturedDisplay() {
             whiteHasPieces = true;
             const pieceDiv = document.createElement('div');
             pieceDiv.className = 'captured-piece black-piece';
-            pieceDiv.textContent = symbols.black[pieceType];
             pieceDiv.title = `${count} ${pieceType}(s) captured`;
+            
+            const pieceLetter = pieceType === 'knight' ? 'N' : pieceType.charAt(0).toUpperCase();
+            const code = 'b' + pieceLetter; // White captured Black pieces
+            
+            const img = document.createElement('img');
+            img.src = `https://lichess1.org/assets/piece/cburnett/${code}.svg`;
+            img.style.height = '24px';
+            img.style.width = '24px';
+            img.style.verticalAlign = 'middle';
+            img.alt = symbols.black[pieceType];
+            img.onerror = function() {
+                pieceDiv.textContent = symbols.black[pieceType];
+                img.remove();
+            };
+            pieceDiv.appendChild(img);
+            
             if (count > 1) {
-                pieceDiv.textContent += ` ×${count}`;
-                pieceDiv.style.fontSize = '20px';
+                const countSpan = document.createElement('span');
+                countSpan.textContent = ` ×${count}`;
+                countSpan.style.fontSize = '12px';
+                countSpan.style.fontWeight = 'bold';
+                countSpan.style.color = '#94a3b8';
+                pieceDiv.appendChild(countSpan);
             }
             whiteDiv.appendChild(pieceDiv);
         }
@@ -941,11 +1802,30 @@ function updateCapturedDisplay() {
             blackHasPieces = true;
             const pieceDiv = document.createElement('div');
             pieceDiv.className = 'captured-piece white-piece';
-            pieceDiv.textContent = symbols.white[pieceType];
             pieceDiv.title = `${count} ${pieceType}(s) captured`;
+            
+            const pieceLetter = pieceType === 'knight' ? 'N' : pieceType.charAt(0).toUpperCase();
+            const code = 'w' + pieceLetter; // Black captured White pieces
+            
+            const img = document.createElement('img');
+            img.src = `https://lichess1.org/assets/piece/cburnett/${code}.svg`;
+            img.style.height = '24px';
+            img.style.width = '24px';
+            img.style.verticalAlign = 'middle';
+            img.alt = symbols.white[pieceType];
+            img.onerror = function() {
+                pieceDiv.textContent = symbols.white[pieceType];
+                img.remove();
+            };
+            pieceDiv.appendChild(img);
+            
             if (count > 1) {
-                pieceDiv.textContent += ` ×${count}`;
-                pieceDiv.style.fontSize = '20px';
+                const countSpan = document.createElement('span');
+                countSpan.textContent = ` ×${count}`;
+                countSpan.style.fontSize = '12px';
+                countSpan.style.fontWeight = 'bold';
+                countSpan.style.color = '#94a3b8';
+                pieceDiv.appendChild(countSpan);
             }
             blackDiv.appendChild(pieceDiv);
         }
@@ -953,6 +1833,11 @@ function updateCapturedDisplay() {
     
     if (!blackHasPieces) {
         blackDiv.innerHTML = '<div class="captured-placeholder">None</div>';
+    }
+    
+    // Sync the custom player bar widgets
+    if (typeof syncPlayerBars === 'function') {
+        syncPlayerBars();
     }
 }
 
@@ -1750,6 +2635,8 @@ function updateInfo() {
         document.getElementById('undoBtn').disabled = moveHistory.length === 0;
         document.getElementById('takeBackBtn').disabled = moveHistory.length === 0;
     }
+    
+    syncPlayerBars();
 }
 
 function updateClock() {
@@ -1779,6 +2666,130 @@ function updateClock() {
         endGame("Black wins on time!");
     } else if (blackTime <= 0) {
         endGame("White wins on time!");
+    }
+    
+    syncPlayerBars();
+}
+
+function syncPlayerBars() {
+    const topName = document.getElementById('topPlayerName');
+    const bottomName = document.getElementById('bottomPlayerName');
+    const topTime = document.getElementById('topPlayerTime');
+    const bottomTime = document.getElementById('bottomPlayerTime');
+    const topCaptured = document.getElementById('topPlayerCaptured');
+    const bottomCaptured = document.getElementById('bottomPlayerCaptured');
+    
+    if (!topName || !bottomName || !topTime || !bottomTime) return;
+    
+    let whiteNameText = "White";
+    let blackNameText = "Black";
+    
+    if (trainingMode) {
+        whiteNameText = "Student";
+        blackNameText = "Puzzle";
+    } else if (vsComputer) {
+        if (myColor === 'white') {
+            whiteNameText = myName || "Player";
+            blackNameText = "Computer";
+        } else {
+            whiteNameText = "Computer";
+            blackNameText = myName || "Player";
+        }
+    } else if (online) {
+        if (myColor === 'white') {
+            whiteNameText = myName || "Player";
+            blackNameText = opponent || "Opponent";
+        } else {
+            whiteNameText = opponent || "Opponent";
+            blackNameText = myName || "Player";
+        }
+    } else {
+        whiteNameText = "White";
+        blackNameText = "Black";
+    }
+    
+    // Bottom player is always White, top player is always Black (aligning with board view)
+    topName.textContent = blackNameText;
+    bottomName.textContent = whiteNameText;
+    
+    // Clocks
+    const wt = document.getElementById('whiteTime').textContent;
+    const bt = document.getElementById('blackTime').textContent;
+    bottomTime.textContent = wt;
+    topTime.textContent = bt;
+    
+    // Timer active states
+    const wtActive = document.getElementById('whiteTimer').classList.contains('active');
+    const btActive = document.getElementById('blackTimer').classList.contains('active');
+    bottomTime.classList.toggle('active', wtActive);
+    topTime.classList.toggle('active', btActive);
+    
+    // Clock low time warning coloring
+    bottomTime.style.color = document.getElementById('whiteTime').style.color === 'white' ? '' : '#ff6b6b';
+    topTime.style.color = document.getElementById('blackTime').style.color === 'white' ? '' : '#ff6b6b';
+    
+    // Clear player bar captured containers
+    topCaptured.innerHTML = '';
+    bottomCaptured.innerHTML = '';
+    
+    // White Captured (black pieces) -> goes to Bottom Player Bar (White)
+    const whiteCapDiv = document.getElementById('whiteCaptured');
+    if (whiteCapDiv) {
+        Array.from(whiteCapDiv.children).forEach(child => {
+            if (child.classList.contains('captured-placeholder')) return;
+            const img = child.querySelector('img');
+            if (img) {
+                const miniImg = document.createElement('img');
+                miniImg.src = img.src;
+                miniImg.className = 'captured-piece-mini';
+                miniImg.alt = img.alt;
+                bottomCaptured.appendChild(miniImg);
+                
+                const countSpan = child.querySelector('span');
+                if (countSpan) {
+                    const miniCount = document.createElement('span');
+                    miniCount.className = 'captured-count-mini';
+                    miniCount.textContent = countSpan.textContent;
+                    bottomCaptured.appendChild(miniCount);
+                }
+            } else {
+                const fallbackSpan = document.createElement('span');
+                fallbackSpan.textContent = child.textContent;
+                fallbackSpan.style.fontSize = '14px';
+                fallbackSpan.style.fontWeight = 'bold';
+                bottomCaptured.appendChild(fallbackSpan);
+            }
+        });
+    }
+    
+    // Black Captured (white pieces) -> goes to Top Player Bar (Black)
+    const blackCapDiv = document.getElementById('blackCaptured');
+    if (blackCapDiv) {
+        Array.from(blackCapDiv.children).forEach(child => {
+            if (child.classList.contains('captured-placeholder')) return;
+            const img = child.querySelector('img');
+            if (img) {
+                const miniImg = document.createElement('img');
+                miniImg.src = img.src;
+                miniImg.className = 'captured-piece-mini';
+                miniImg.alt = img.alt;
+                topCaptured.appendChild(miniImg);
+                
+                const countSpan = child.querySelector('span');
+                if (countSpan) {
+                    const miniCount = document.createElement('span');
+                    miniCount.className = 'captured-count-mini';
+                    miniCount.textContent = countSpan.textContent;
+                    topCaptured.appendChild(miniCount);
+                }
+            } else {
+                const fallbackSpan = document.createElement('span');
+                fallbackSpan.textContent = child.textContent;
+                fallbackSpan.style.fontSize = '14px';
+                fallbackSpan.style.fontWeight = 'bold';
+                topCaptured.appendChild(fallbackSpan);
+            }
+        });
     }
 }
 
