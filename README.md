@@ -1,31 +1,51 @@
-# Real-Time Chess: Structured Monolithic Application
+# Real-Time Chess & Chess Master Knowledge System
 
-A full-featured, high-performance Chess application featuring a robust Java HTTP backend server and a responsive, modern HTML5/CSS3/JavaScript frontend client. The application supports multiple gameplay modes (including real-time online room multiplayer, local 2-player mode, AI computer opponent, and tactical practice modes), live room chats, customizable themes, game variants, and automated JDK auto-detection.
+A full-featured, high-performance Chess application featuring a robust Java HTTP backend server and a responsive, modern HTML5/CSS3/JavaScript frontend client. The application supports multiple gameplay modes (including real-time online room multiplayer, local 2-player mode, AI computer opponent with 4 difficulty levels, interactive tactical practice modes, and a deep **Chess Master** strategy knowledge system with live position analysis).
 
 ---
 
-## 🎮 Game Modes & Features
+## 🎮 Game Modes & Core Features
 
-### 1. Online Multiplayer Rooms
-- **Room-Based Matching**: Host a match to generate a unique 6-character room ID, or enter an existing room ID to join a game.
-- **Turn & Move Synchronization**: Real-time board state and turn updates powered by backend state polling.
+### 1. ♟️ Chess Master Knowledge & Strategy System (NEW)
+- **Deep Strategy & Tactics Knowledge Base**: A complete knowledge system covering 10 main categories (not basic rules):
+  1. ⚔️ **Attack Techniques**: King-side, Queen-side, Pawn storm, Uncastled king, Opposite castling, Opening king position, Removing defenders, Queen+Bishop, Rook lift, Sacrificial attacks.
+  2. 🎯 **Tactics**: Fork, Pin, Skewer, Discovered attack/check, Double attack, Double check, Deflection, Decoy, Removing defender, Overloading, Zwischenzug, Clearance, Interference, X-Ray attack, Trapping pieces.
+  3. 🛡️ **Defense Techniques**: Defending attacks, Counterattack, Simplification, Trading attacking pieces, Blocking, Defensive sacrifice, Escape squares, Perpetual check, Fortress, Prophylaxis, Counterplay.
+  4. 👑 **Checkmate Patterns**: Back-rank mate, Smothered mate, Anastasia's mate, Arabian mate, Boden's mate, Greek Gift attack, Queen+Bishop, Rook, Knight patterns.
+  5. 🧠 **Positional Strategy**: Improving worst piece, Open/half-open files, Outposts, Weak squares, Passed pawns, Pawn structure, Space advantage, Good vs Bad Bishop, Bishop vs Knight, Rook on 7th, Minority attack, Restricting opponent.
+  6. 💥 **Sacrifices**: Pawn, Piece, Exchange, Queen, Greek Gift, Deflection, Decoy, Clearance, Removing defender.
+  7. 🏰 **King Safety**: When to castle, When not to castle, Pawn shield, Weakening king, Open files, Opposite castling, Escape squares, Attacking defenders.
+  8. 🏆 **Winning Techniques**: Winning material, Trapping queen, Exploiting pinned pieces, Double attacks, Converting material advantage, Simplifying winning positions, Passed pawns, Removing counterplay, Converting winning endgames.
+  9. 🔥 **Defending a Worse Position**: Perpetual check, Counterattack, Complications, Trading dangerous pieces, Fortress, Repetition, Stalemate tricks, Passed pawns, Tactical resources.
+  10. 📖 **Opening Strategy**: Guides for 8 major openings (Ruy Lopez, Sicilian Defense, Queen's Gambit, French Defense, Italian Game, King's Indian Defense, Caro-Kann, English Opening) covering 8 structured points: Main Idea, Best Plans, Typical Tactics, Common Mistakes, King Safety, Middlegame Plans, How to Attack, How to Defend.
+- **“What Should I Do Here?” Interactive Position Analyzer**:
+  - **Inputs**: Preset tactical setups (Greek Gift, Smothered Mate, Back-Rank Mate, Rook Endgame, Sicilian Dragon, Italian Game), Custom FEN input, or **"📥 Current Game Board Position"** loader.
+  - **Live Evaluation Output**: Position evaluation score (+/- delta) & visual advantage bar, Ranked Candidate Moves (#1, #2, #3) with exact notation and evaluation deltas, Recommended Strategic Plan, Tactical Opportunities & Defensive Resources, and a detailed explanation of **WHY** the top move is best.
+  - **Play Best Move on Board**: One-click button to execute recommended candidate moves on the active board.
+
+### 2. 🤖 VS Computer (AI Opponent)
+- **Minimax Engine**: Driven by Minimax search with Alpha-Beta pruning, positional evaluations, and king safety heuristics.
+- **4 Difficulty Levels**: Easy (Beginner), Medium (Intermediate), Hard (Advanced), and Expert (Master).
+- **AI Companion Chat**: Computer responds with contextual commentary during games.
+- **Automated Pawn Promotion**: Computer automatically promotes pawns to Queen on the 8th/1st rank.
+
+### 3. 🌐 Online Multiplayer Rooms
+- **Room-Based Matching**: Host a match to generate a unique 6-character room ID, or enter an existing room ID to join.
+- **Turn & Move Synchronization**: Real-time board state and turn updates powered by backend polling.
 - **Clocks & Timeouts**: Synchronized timers supporting bullet, blitz, classical, and untimed matches.
-- **In-Game Chat**: Chat with your opponent in real-time within your multiplayer room.
-- **Resignation Handling**: Clean resignation triggers that immediately conclude the game and notify both players.
+- **In-Game Chat**: Live room chat between players.
+- **Resignation Handling**: Clean resignation triggers with instant victory notifications.
 
-### 2. VS Computer (AI Opponent)
-- **Minimax Engine**: Features an AI opponent driven by the Minimax search algorithm with Alpha-Beta pruning.
-- **Progressive Difficulty**: 4 difficulty levels (Easy, Medium, Hard, Expert) with varying search depths and positional evaluation strategies.
+### 4. 🎯 Chess Training & Practice Mode
+- **Category Filters**: Practice Tactics, Checkmate Patterns, Endgame Techniques, and Opening Traps.
+- **Hints & Scoring**: Show hints highlighting target squares, and track score, correct vs. wrong moves.
 
-### 3. Chess Training & Practice Mode
-- **Structured Practice**: Interactive scenarios including chess puzzles, openings, endgame practices, and tactical scenarios.
-- **Hints & Scoring**: Displays legal moves, checks, and tracks correct vs. wrong moves in real-time.
-
-### 4. Game Variants & Visual Options
-- **Game Variants**: Supports Standard Chess, Chess960 (Fischer Random), Atomic Chess, King of the Hill, and Three Check.
-- **Board Customization**: 8 built-in themes (Classic Brown, Dark Green, Blue, Green, Purple, Gray, Ocean, and Sunset).
-- **Time Controls**: Flexible time limits including 1 min (Bullet), 3 min, 5 min (Default), 10 min, 15 min, 30 min (Classical), and Untimed.
-- **Sound Effects & Legal Move Highlights**: Interactive audio feedback for moves, captures, checks, and checkmates, along with optional legal move highlights.
+### 5. 🎨 Customization, Focus Mode & Game Enhancements
+- **Persistent Board Themes**: 8 built-in themes (Classic Brown, Dark Green, Blue, Green, Purple, Gray, Ocean, Sunset) saved in `localStorage` and synchronized across all tab dropdowns.
+- **Focus Mode & Collapsible Panel**: Toggle button (**`◧ Focus Mode (Hide Panel)`**) allows hiding the right control panel so the Chess Board expands into a grand **740px** centered view.
+- **Checkmate Visual Display**: Floating checkmate banner (`"♔ CHECKMATE! [COLOR] WINS!"`), checkmated king glowing red aura (`.checkmate-king`), audio fanfare, and victory overlay modal.
+- **Real-Time Live Timer**: Continuous 1-second interval tick loop (`setInterval`) ensuring clocks tick down live second-by-second (`04:59`, `04:58`, `04:57`...) without freezing.
+- **Interactive Pawn Promotion Modal**: Modal picker for Queen ♕, Rook ♖, Bishop ♗, or Knight ♘ when a pawn reaches the 8th/1st rank.
 
 ---
 
@@ -38,22 +58,20 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   │   └── src/
   │       └── ChessServe.java  # Java HTTP server, REST endpoints, room state, & board logic
   ├── frontend/
-  │   └── index.html           # Single-page HTML5/CSS3/JS UI layout, themes, & client logic
-  ├── run.bat                  # Enhanced one-click Windows startup & JDK auto-detect script
-  └── README.md                # Project documentation
+  │   └── index.html           # HTML5/CSS3/Vanilla JS UI layout, themes, Chess Master engine, & client logic
+  ├── run.bat                  # One-click Windows startup & JDK auto-detect script
+  └── README.md                # Updated project documentation
 ```
 
-### Key Changes & Fixes Made
-1. **Backend Compilation & Method Overloading Fix**:
-   - Fixed a method signature mismatch in [`backend/src/ChessServe.java`](file:///d:/CHESS/backend/src/ChessServe.java) by adding an overloaded `initializeBoard(String variant)` method. This allows board initialization with game variant parameters (e.g. Standard, Chess960, etc.) without breaking existing calls.
-2. **Automatic JDK Detection in `run.bat`**:
-   - Enhanced [`run.bat`](file:///d:/CHESS/run.bat) with automatic JDK discovery. If `javac` is not configured on the system `%PATH%`, the script automatically scans standard Windows installation locations (`C:\Program Files\Java\jdk*`, `C:\Program Files (x86)\Java\jdk*`, `%JAVA_HOME%`) and sets `%PATH%` dynamically.
-3. **Comprehensive Backend REST Endpoints**:
-   - Implemented and documented 14 backend HTTP handlers managing routing, room initialization, move validation, live state retrieval, health monitoring, and chat messaging.
-4. **Duplicate Player Name Collisions**:
-   - Prevents player name collisions by appending suffixes (e.g. `Player_2`) when both players join with identical names.
-5. **Recursion & Stack Overflow Fixes**:
-   - Guarded checkmate validation (`attacked()`) and king movement calculations (`kingMoves()`) with recursion depth flags to prevent stack overflows.
+### Recent Key Updates & Fixes
+1. **Chess Master Knowledge System & Interactive Analyzer**: Built the 10-category knowledge system and "What Should I Do Here?" engine with live evaluation, candidate moves, strategic plans, and move explanations.
+2. **Board Theme Persistence & Dropdown Sync**: Saved themes in `localStorage` and synced all theme dropdown controls across tabs.
+3. **Checkmate Visual Display & Audio**: Added floating checkmate banners, glowing red checkmate king highlights, checkmate sound effects, and victory modal overlay.
+4. **VS Computer Mode Fix**: Fixed `initBoard(keepModes)` ensuring `vsComputer = true` is preserved upon game start.
+5. **Real-Time Live Timer Tick Loop**: Added a 1-second live interval tick loop so timers tick continuously second-by-second for human and AI players without freezing.
+6. **Interactive Pawn Promotion Modal**: Added piece selection modal (Queen, Rook, Bishop, Knight) upon pawn reaching promotion ranks.
+7. **Focus Mode & Collapsible Side Panel**: Added header toggle to collapse side controls for a grand full-screen board view.
+8. **Automatic JDK Detection in `run.bat`**: Automatic JDK discovery scanning standard installation paths (`C:\Program Files\Java\jdk*`, `C:\Program Files (x86)\Java\jdk*`, `%JAVA_HOME%`).
 
 ---
 
@@ -62,10 +80,10 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 ### Requirements
 - **Java Development Kit (JDK 8 or higher)** installed on your machine.
 
-### 1. Compile & Start the Server
+### 1. Start the Server
 
 * **Option A: Using the Windows Startup Script (Recommended)**
-  Double-click **`run.bat`** in the project root directory. It automatically detects your JDK installation, compiles `backend/src/ChessServe.java`, and launches the HTTP server.
+  Double-click **`run.bat`** in the project root directory. It automatically detects your JDK, compiles `backend/src/ChessServe.java`, and launches the HTTP server.
 
 * **Option B: Manual Terminal Execution**
   Open PowerShell or Command Prompt in `d:\CHESS` and run:
@@ -77,58 +95,21 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   java -cp backend/src ChessServe
   ```
 
-Upon success, you will see the console output:
-```text
-=================================================================
-                   Chess Server Startup Script
-=================================================================
-
-Searching for Java JDK installation...
-Compiling Java Chess Backend...
-[SUCCESS] Compiled successfully.
-
-Starting Chess Server on http://localhost:9090 ...
-Press Ctrl+C to stop the server.
-
-Chess Server started successfully on port 9090
-Server URL: http://localhost:9090
-```
-
 ### 2. Open the Game in Your Browser
 Navigate to:
 👉 **[http://localhost:9090](http://localhost:9090)**
-
-### 3. Testing Multiplayer Locally
-1. Open `http://localhost:9090` in your browser. Click **Create Game** under Game Setup. A unique 6-character room ID (e.g. `LQ2BUW`) will be generated.
-2. Open a second browser tab or incognito window at `http://localhost:9090`. Enter the room ID and click **Join Game**.
-3. Board moves, clocks, and chat will synchronize in real-time between both windows.
 
 ---
 
 ## 💻 Technical Details
 
 ### Backend (Java)
-- **Core HTTP Server**: Implemented using standard `com.sun.net.httpserver.HttpServer` with zero external dependencies.
-- **Multithreading**: Uses a fixed thread pool of 50 worker threads for concurrent HTTP request processing.
-- **State Management & Concurrency**: Uses `ConcurrentHashMap` and thread-safe lists for room storage, access timestamps, and chat history.
-- **Automated Memory Cleanup**: Background daemon thread (`Auto-Cleanup-Thread`) runs every 5 minutes to purge inactive games exceeding the 2-hour idle threshold.
-- **Available Backend Endpoints**:
-  - `GET /` or `/index.html` - Serves the frontend single-page application.
-  - `GET /health` - Server health check (uptime, memory, active games).
-  - `GET /ping` - Server connectivity test.
-  - `GET /create` - Creates a new game room with custom options.
-  - `GET /join` - Joins an existing game room.
-  - `GET /listGames` - Returns list of active game IDs.
-  - `GET /sendMove` - Validates and executes a move.
-  - `GET /getMoves` - Gets valid legal moves for a piece.
-  - `GET /validateMove` - Validates move legality.
-  - `GET /getState` - Polling endpoint for live board state, clocks, and turn.
-  - `GET /sendChat` - Appends a message to room chat.
-  - `GET /resign` - Processes player resignation.
-  - `GET /resetGame` - Resets game state.
-  - `GET /cleanup` - Triggers manual cleanup of inactive rooms.
+- **Core HTTP Server**: Built with `com.sun.net.httpserver.HttpServer` (zero external dependencies).
+- **Multithreading**: Fixed thread pool of 50 worker threads for concurrent HTTP requests.
+- **State Management & Concurrency**: Uses `ConcurrentHashMap` and thread-safe collections.
+- **Automated Memory Cleanup**: Daemon thread purges inactive games exceeding 2 hours of inactivity every 5 minutes.
 
 ### Frontend (HTML5 / CSS3 / Vanilla JS)
-- **Glassmorphism Design System**: Modern dark UI featuring smooth gradients, cards, and tabbed controls.
-- **Web Audio Synthesis**: Dynamic sound generation using `AudioContext` for move/capture/check audio without external file dependencies.
-- **Polling Synchronization Loop**: Client polls state every 1 second to update board positions, timers, turn indicators, and room chat.
+- **Glassmorphism Design System**: Modern dark UI featuring smooth gradients and tabbed navigation.
+- **Web Audio Synthesis**: Dynamic sound generation using Web Audio API (`AudioContext`).
+- **Chess Master Engine & Live Analyzer**: Built-in minimax evaluator, material balance, position analysis, candidate move ranker, and FEN parser.
