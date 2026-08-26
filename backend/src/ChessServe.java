@@ -89,8 +89,9 @@ public class ChessServe {
     
     static final ExecutorService executor = Executors.newFixedThreadPool(50);
     static final AtomicInteger requestCounter = new AtomicInteger(0);
-    static final int PORT = 9090;
+    static final int PORT = System.getenv("PORT") != null ? Integer.parseInt(System.getenv("PORT")) : 9090;
     
+
     public static void main(String[] args) throws Exception {
         System.setProperty("sun.net.httpserver.maxReqTime", "30");
         System.setProperty("sun.net.httpserver.maxRspTime", "30");
