@@ -1,0 +1,41 @@
+# Compiled Java Bytecode
+*.class
+*.jar
+*.war
+*.ear
+
+# Build Directories & Output
+bin/
+build/
+target/
+out/
+
+# IDE & Editor Files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Environment & Local Secrets
+.env
+.env.local
+.env.*.local
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & Temporary Files
+*.log
+tmp/
+temp/
+*.tmp
+*.swp
+*.bak

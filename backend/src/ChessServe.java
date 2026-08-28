@@ -872,14 +872,12 @@ public class ChessServe {
     }
     
     private static File findIndexHtml() {
-    File f = new File("frontend/index.html");
-
-    if (f.exists()) {
-        return f;
+        File f = new File("frontend/index.html");
+        if (f.exists()) {
+            return f;
+        }
+        return null;
     }
-
-    return null;
-}
     
     private static void handleSendChatRequest(HttpExchange exchange) throws IOException {
         requestCounter.incrementAndGet();
