@@ -1210,6 +1210,33 @@ h3 {
     line-height: 1.4;
 }
 
+.master-field-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.master-field-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: #e2e8f0;
+}
+.master-field-card strong {
+    display: block;
+    font-size: 0.84rem;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+.master-field-card.specialty strong { color: #f59e0b; }
+.master-field-card.capabilities strong { color: #38bdf8; }
+.master-field-card.howtouse strong { color: #4ade80; }
+
 .analyzer-container {
     display: flex;
     flex-direction: column;
@@ -1645,6 +1672,21 @@ h3 {
                     </div>
 
                     <div id="detailContent" style="font-size: 0.85rem; line-height: 1.5; color: #e2e8f0;"></div>
+
+                    <div class="master-field-grid">
+                        <div class="master-field-card specialty">
+                            <strong>🌟 Specialty:</strong>
+                            <span id="detailSpecialty">...</span>
+                        </div>
+                        <div class="master-field-card capabilities">
+                            <strong>⚡ What It Can Do:</strong>
+                            <span id="detailCapabilities">...</span>
+                        </div>
+                        <div class="master-field-card howtouse">
+                            <strong>🎮 How To Use In Match:</strong>
+                            <span id="detailHowToUse">...</span>
+                        </div>
+                    </div>
 
                     <div class="master-tip-box" id="detailTipBox">
                         <strong>💡 Master Tip:</strong> <span id="detailTipText">Tip text</span>
@@ -2735,20 +2777,77 @@ function addChatMessage(sender, message, type = 'player') {
     chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
+function generateAIChatResponse(userMsg) {
+    const text = userMsg.toLowerCase();
+    
+    let whiteVal = 0, blackVal = 0;
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const p = board[r][c];
+            if (p) {
+                const val = pieceValues[p.type] || 0;
+                if (p.color === 'white') whiteVal += val;
+                else blackVal += val;
+            }
+        }
+    }
+    const lead = whiteVal - blackVal;
+    
+    if (text.includes('eval') || text.includes('score') || text.includes('winning') || text.includes('who is ahead') || text.includes('advantage')) {
+        if (lead > 2) return `White is currently leading by +${lead} material points. Keep up the pressure!`;
+        if (lead < -2) return `Black is leading by +${Math.abs(lead)} material points. Look for counterplay!`;
+        return `The material balance is even (White: ${whiteVal}, Black: ${blackVal}). Focus on piece activity and king safety!`;
+    }
+    
+    if (text.includes('hi') || text.includes('hello') || text.includes('hey') || text.includes('who are you') || text.includes('greetings')) {
+        return "Hello! I am your AI Chess Companion. Ask me for tactical advice, position evaluation, opening tips, or strategic guidance anytime!";
+    }
+    
+    if (text.includes('attack') || text.includes('mate') || text.includes('aggressive') || text.includes('strike')) {
+        return "To build a strong attack: 1) Control central e4/d4 squares, 2) Lift your rooks, 3) Target weak points like f7/f2 or h7, and 4) Coordinate Queen + Bishop batteries!";
+    }
+    
+    if (text.includes('defend') || text.includes('defense') || text.includes('safe') || text.includes('protect')) {
+        return "Key defensive rules: Keep your King castled behind a solid pawn wall (f2-g2-h2), trade off opponent's active attacking pieces, and don't create unnecessary pawn weaknesses.";
+    }
+    
+    if (text.includes('opening') || text.includes('start') || text.includes('first move') || text.includes('ruy') || text.includes('sicilian') || text.includes('gambit')) {
+        return "Golden Opening Principles: 1) Control center with 1.e4 or 1.d4, 2) Develop Knights and Bishops before moving the same piece twice, 3) Castle early by move 8, and 4) Connect your Rooks!";
+    }
+    
+    if (text.includes('fork') || text.includes('pin') || text.includes('skewer') || text.includes('tactic')) {
+        return "Tactical Radar: Always look for Knight forks on c7/f7, use Bishops to pin knights against the enemy King/Queen, and watch for unmasked discovered attacks!";
+    }
+    
+    if (text.includes('endgame') || text.includes('pawn') || text.includes('promote') || text.includes('pass')) {
+        return "Endgame Mastery: 1) Activate your King to the center, 2) Push passed pawns relentlessly, and 3) Place Rooks behind passed pawns to support promotion!";
+    }
+    
+    if (text.includes('help') || text.includes('advice') || text.includes('what should i do') || text.includes('best move') || text.includes('hint')) {
+        return `Current Turn: ${turn.toUpperCase()}. Look for unprotected enemy pieces, control the center columns, and keep your pieces defended!`;
+    }
+    
+    const dynamicReplies = [
+        `Analyzing position: ${turn === 'white' ? 'White' : 'Black'} to move. Focus on controlling key central squares!`,
+        "Good question! Maintaining piece coordination and controlling open files is key here.",
+        "Stay sharp! Always check if your opponent has intermediate tactical threats (Zwischenzug).",
+        "Solid chess thinking! Look for active outposts for your knights and open diagonals for your bishops."
+    ];
+    return dynamicReplies[Math.floor(Math.random() * dynamicReplies.length)];
+}
+
 function sendChatMessage() {
     const input = document.getElementById('chatInput');
     const message = input.value.trim();
     if (!message) return;
     
     addChatMessage(myName, message, 'you');
-    if (vsComputer) {
-        setTimeout(() => {
-            const botReplies = [
-                "Interesting move!", "I'm analyzing the board.", "Good strategy!", "Nice play, keep it up!"
-            ];
-            addChatMessage("Computer", botReplies[Math.floor(Math.random() * botReplies.length)], 'opponent');
-        }, 800);
-    }
+    
+    setTimeout(() => {
+        const aiReply = generateAIChatResponse(message);
+        addChatMessage("Computer AI", aiReply, 'opponent');
+    }, 600);
+    
     input.value = '';
 }
 
@@ -2906,70 +3005,70 @@ function endTraining() {
 // ----------------------------------------------------
 const masterDatabase = {
     attack: [
-        { title: "King-side Attack", icon: "⚔️", desc: "Launch pawns and pieces toward opponent's castled king.", content: "Concentrate forces on f7/g7/h7. Open files with pawn breaks (f4-f5, h4-h5) and sacrifice pieces to shatter the pawn shield.", tip: "Rook lifts (e.g. Rf3-g3) bring devastating firepower to the king-side." },
-        { title: "Queen-side Attack", icon: "👑", desc: "Expand on a-c files to gain space and infiltrate.", content: "Use pawn storms (a4-b4-c5) and open lines for your rooks to target weak pawns and create a passed pawn.", tip: "Minority attack (b4-b5 against a6-b7-c6) creates weak backward pawns." },
-        { title: "Pawn Storm", icon: "🌪️", desc: "Pushing pawns forward to break down defensive structures.", content: "March your pawns toward the enemy castled king to pry open files and dislodge defending knights.", tip: "Ensure your own king is safe or castled opposite before launching a pawn storm." },
-        { title: "Attacking Uncastled King", icon: "👑", desc: "Exploit a king trapped in the center.", content: "Open central e and d files immediately! Sacrifice pawns to prevent castling and strike down the center line.", tip: "Keep the center open and use checks to deny king safety." },
-        { title: "Opposite-Side Castling", icon: "⚔️", desc: "All-out race where both players launch pawn storms.", content: "Speed is everything. Push pawns aggressively, sac pieces to clear lines, and don't pause for defensive moves.", tip: "The first player to break open the opponent's king shield wins." },
-        { title: "Opening King's Position", icon: "💥", desc: "Busting open pawn cover around the king.", content: "Sacrifice a pawn or piece on h6/g6/f6 to rip away enemy cover and grant your queen clear access.", tip: "Look for Greek Gift sacrifices on h7/h2 when the king shield is static." },
-        { title: "Removing King Defenders", icon: "🎯", desc: "Eliminate or deflect defending knights and bishops.", content: "Target the f3/f6 knight—the chief defender of the castled position. Trade or pin it to weaken king defense.", tip: "Pin the f6 knight with Bg5 then overload with Nd5." },
-        { title: "Queen + Bishop Battery", icon: "🗡️", desc: "Align queen and bishop on diagonal toward h7/g7.", content: "Form a diagonal battery (Qd3 + Bc2 or Qb3 + Bc4) targeting h7 or f7 for imminent checkmate threats.", tip: "Combine with a knight on g5 for double threats." },
-        { title: "Rook Lift", icon: "🪜", desc: "Swinging a rook via the 3rd or 4th rank to join the assault.", content: "Lift rooks via Ra3-g3 or Rf3-h3. Rooks provide massive horizontal firepower directly against enemy king.", tip: "Rook lifts are lethal when files are closed." },
-        { title: "Sacrificial Attacks", icon: "🔥", desc: "Trading material for decisive tempo and mate attacks.", content: "Calculate lines carefully! Sacrifices are justified if they strip king safety or lead to forced checkmate.", tip: "Always verify if opponent has defensive intermediate moves (Zwischenzug)." }
+        { title: "King-side Attack", icon: "⚔️", desc: "Launch pawns and pieces toward opponent's castled king.", content: "Concentrate forces on f7/g7/h7. Open files with pawn breaks (f4-f5, h4-h5) and sacrifice pieces to shatter the pawn shield.", tip: "Rook lifts (e.g. Rf3-g3) bring devastating firepower to the king-side.", fen: "r1b2rk1/ppp2ppp/2n5/3qp3/1b1P4/2N2N2/PPP2PPP/R1BQ1RK1 w - - 0 1" },
+        { title: "Queen-side Attack", icon: "👑", desc: "Expand on a-c files to gain space and infiltrate.", content: "Use pawn storms (a4-b4-c5) and open lines for your rooks to target weak pawns and create a passed pawn.", tip: "Minority attack (b4-b5 against a6-b7-c6) creates weak backward pawns.", fen: "r1r3k1/1p2bppp/p1q1p3/3p4/P2P4/1PR1P3/3QBPPP/2R3K1 w - - 0 1" },
+        { title: "Pawn Storm", icon: "🌪️", desc: "Pushing pawns forward to break down defensive structures.", content: "March your pawns toward the enemy castled king to pry open files and dislodge defending knights.", tip: "Ensure your own king is safe or castled opposite before launching a pawn storm.", fen: "2kr3r/ppp2ppp/2n5/8/3P1P2/2N1P1P1/PPP4P/R3K2R w KQ - 0 1" },
+        { title: "Attacking Uncastled King", icon: "👑", desc: "Exploit a king trapped in the center.", content: "Open central e and d files immediately! Sacrifice pawns to prevent castling and strike down the center line.", tip: "Keep the center open and use checks to deny king safety.", fen: "r3kb1r/pp3ppp/2n5/4p3/4P3/2N5/PPP2PPP/R3K2R w KQkq - 0 1" },
+        { title: "Opposite-Side Castling", icon: "⚔️", desc: "All-out race where both players launch pawn storms.", content: "Speed is everything. Push pawns aggressively, sac pieces to clear lines, and don't pause for defensive moves.", tip: "The first player to break open the opponent's king shield wins.", fen: "2kr3r/ppp2ppp/2n5/3p4/3P4/2P5/PP3PPP/2KR3R w - - 0 1" },
+        { title: "Opening King's Position", icon: "💥", desc: "Busting open pawn cover around the king.", content: "Sacrifice a pawn or piece on h6/g6/f6 to rip away enemy cover and grant your queen clear access.", tip: "Look for Greek Gift sacrifices on h7/h2 when the king shield is static.", fen: "r1bq1rk1/ppp2ppp/2n5/3np3/2B5/3P1N2/PPP2PPP/R1BQ1RK1 w - - 0 1" },
+        { title: "Removing King Defenders", icon: "🎯", desc: "Eliminate or deflect defending knights and bishops.", content: "Target the f3/f6 knight—the chief defender of the castled position. Trade or pin it to weaken king defense.", tip: "Pin the f6 knight with Bg5 then overload with Nd5.", fen: "r1bq1rk1/ppp2ppp/2n2n2/3pp3/2B1P3/3P1N2/PPP2PPP/R1BQ1RK1 w - - 0 1" },
+        { title: "Queen + Bishop Battery", icon: "🗡️", desc: "Align queen and bishop on diagonal toward h7/g7.", content: "Form a diagonal battery (Qd3 + Bc2 or Qb3 + Bc4) targeting h7 or f7 for imminent checkmate threats.", tip: "Combine with a knight on g5 for double threats.", fen: "r1b2rk1/ppp2ppp/2n5/3qp3/8/3P1N2/PPP1BPPP/R2Q1RK1 w - - 0 1" },
+        { title: "Rook Lift", icon: "🪜", desc: "Swinging a rook via the 3rd or 4th rank to join the assault.", content: "Lift rooks via Ra3-g3 or Rf3-h3. Rooks provide massive horizontal firepower directly against enemy king.", tip: "Rook lifts are lethal when files are closed.", fen: "r1bq1rk1/ppp2ppp/2n5/3p4/3P4/2P2N2/P1P1BPPP/R2Q1RK1 w - - 0 1" },
+        { title: "Sacrificial Attacks", icon: "🔥", desc: "Trading material for decisive tempo and mate attacks.", content: "Calculate lines carefully! Sacrifices are justified if they strip king safety or lead to forced checkmate.", tip: "Always verify if opponent has defensive intermediate moves (Zwischenzug).", fen: "r1b2rk1/ppp2ppp/2n5/3q4/3P4/2N5/PPP2PPP/R2QK2R w KQ - 0 1" }
     ],
     tactics: [
-        { title: "Fork", icon: "🍴", desc: "Attacking two or more enemy pieces simultaneously with one piece.", content: "Knights and pawns are notorious for forks. A knight fork on c7 or f7 attacking King + Rook is devastating.", tip: "Always check for undefended pieces on the same color squares." },
-        { title: "Pin", icon: "📌", desc: "Restricting a piece because moving it exposes a higher-value piece.", content: "Absolute pins lock a piece in front of the King. Relative pins target Queens or Rooks. Pressure the pinned piece!", tip: "Attack pinned pieces with pawns (the pinned piece cannot capture back)." },
-        { title: "Skewer", icon: "🗡️", desc: "Attacking a high-value piece, forcing it to move and exposing a piece behind it.", content: "The reverse of a pin. Attack the King or Queen; when it moves, capture the undefended piece behind it.", tip: "Use rooks and bishops on open ranks and diagonals." },
-        { title: "Discovered Attack", icon: "🔍", desc: "Moving one piece to unmask an attack from another piece.", content: "Move a piece with check while unmasking a queen or rook attack elsewhere. Double threat guarantees material gain.", tip: "Discovered checks leave opponent powerless to defend the secondary threat." },
-        { title: "Double Check", icon: "⚡", desc: "Delivering check with two pieces simultaneously.", content: "Double check forces the enemy King to move! The king cannot block or capture both attackers at once.", tip: "Double check frequently leads to forced checkmates." },
-        { title: "Deflection", icon: "🪤", desc: "Forcing an opponent piece away from a key defensive square.", content: "Sacrifice a piece to entice the enemy queen or king away from guarding mate or a free piece.", tip: "Look for defenders protecting back ranks or mate squares." },
-        { title: "Decoy", icon: "🎣", desc: "Luring an enemy piece onto a vulnerable square.", content: "Sacrifice to force the enemy King onto a square where it can be forked or mated.", tip: "Combine decoy sacrifices with knight forks." },
-        { title: "Removing Defender", icon: "✂️", desc: "Capturing the piece that guards an enemy target.", content: "If a knight guards a mate square, trade your bishop for that knight to execute checkmate on the next move.", tip: "Identify which piece holds the opponent's defense together and chop it down." },
-        { title: "Overloading", icon: "⚖️", desc: "Giving one enemy piece too many defensive responsibilities.", content: "If a queen guards both a rook and a mate square, attack one target to force the queen to abandon the other.", tip: "Distract overloaded defenders with secondary threats." },
-        { title: "Zwischenzug (In-between move)", icon: "⏱️", desc: "Inserting an unexpected intermediate check or threat.", content: "Instead of making an obvious recapturing move, insert a check first to improve your position.", tip: "Always ask: 'Does my opponent have an intermediate check?' before calculating." },
-        { title: "Clearance Sacrifice", icon: "🧹", desc: "Vacating a square or line for another attacking piece.", content: "Sacrifice a piece on a square so your Queen or Rook can occupy it for checkmate.", tip: "Clear diagonals for your queen + bishop batteries." },
-        { title: "Interference", icon: "🚧", desc: "Placing a piece between two defending enemy pieces.", content: "Interpose a piece to cut off a queen's defense of a rook or mate square.", tip: "Look for intersection points of enemy defense lines." },
-        { title: "X-Ray Attack", icon: "📷", desc: "Attacking through an enemy piece to a target behind.", content: "A rook on e1 Indirectly attacks e8 through an enemy rook on e4.", tip: "Use X-ray setups to control key squares indirectly." },
-        { title: "Trapping Pieces", icon: "🕸️", desc: "Restricting escape squares of enemy queens or bishops.", content: "Corner enemy queens or bishops by controlling all retreat squares with pawns and minor pieces.", tip: "Watch for overextended enemy queens inside your territory." }
+        { title: "Fork", icon: "🍴", desc: "Attacking two or more enemy pieces simultaneously with one piece.", content: "Knights and pawns are notorious for forks. A knight fork on c7 or f7 attacking King + Rook is devastating.", tip: "Always check for undefended pieces on the same color squares.", fen: "r1bqkb1r/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1" },
+        { title: "Pin", icon: "📌", desc: "Restricting a piece because moving it exposes a higher-value piece.", content: "Absolute pins lock a piece in front of the King. Relative pins target Queens or Rooks. Pressure the pinned piece!", tip: "Attack pinned pieces with pawns (the pinned piece cannot capture back).", fen: "r1bqk2r/pppp1ppp/2n2n2/4p3/1b2P3/2NP1N2/PPP2PPP/R1BQKB1R w KQkq - 0 1" },
+        { title: "Skewer", icon: "🗡️", desc: "Attacking a high-value piece, forcing it to move and exposing a piece behind it.", content: "The reverse of a pin. Attack the King or Queen; when it moves, capture the undefended piece behind it.", tip: "Use rooks and bishops on open ranks and diagonals.", fen: "3r2k1/5ppp/8/8/8/8/1R6/2K5 w - - 0 1" },
+        { title: "Discovered Attack", icon: "🔍", desc: "Moving one piece to unmask an attack from another piece.", content: "Move a piece with check while unmasking a queen or rook attack elsewhere. Double threat guarantees material gain.", tip: "Discovered checks leave opponent powerless to defend the secondary threat.", fen: "r1bqk2r/pppp1ppp/2n5/4p3/2B1n3/5N2/PPPP1PPP/R1BQK2R w KQkq - 0 1" },
+        { title: "Double Check", icon: "⚡", desc: "Delivering check with two pieces simultaneously.", content: "Double check forces the enemy King to move! The king cannot block or capture both attackers at once.", tip: "Double check frequently leads to forced checkmates.", fen: "r1b1kb1r/pppp1ppp/8/4N3/2B1n3/8/PPP2PPP/RNBQK2R w KQkq - 0 1" },
+        { title: "Deflection", icon: "🪤", desc: "Forcing an opponent piece away from a key defensive square.", content: "Sacrifice a piece to entice the enemy queen or king away from guarding mate or a free piece.", tip: "Look for defenders protecting back ranks or mate squares.", fen: "r1b2rk1/ppp2ppp/8/4q3/8/2P5/PPP2PPP/R2Q1RK1 w - - 0 1" },
+        { title: "Decoy", icon: "🎣", desc: "Luring an enemy piece onto a vulnerable square.", content: "Sacrifice to force the enemy King onto a square where it can be forked or mated.", tip: "Combine decoy sacrifices with knight forks.", fen: "r1bqk2r/ppp2ppp/2n5/3np3/8/3P1N2/PPP2PPP/R1BQKB1R w KQkq - 0 1" },
+        { title: "Removing Defender", icon: "✂️", desc: "Capturing the piece that guards an enemy target.", content: "If a knight guards a mate square, trade your bishop for that knight to execute checkmate on the next move.", tip: "Identify which piece holds the opponent's defense together and chop it down.", fen: "r1b2rk1/ppp2ppp/2n2n2/3pp3/2B1P3/3P1N2/PPP2PPP/R1BQ1RK1 w - - 0 1" },
+        { title: "Overloading", icon: "⚖️", desc: "Giving one enemy piece too many defensive responsibilities.", content: "If a queen guards both a rook and a mate square, attack one target to force the queen to abandon the other.", tip: "Distract overloaded defenders with secondary threats.", fen: "r1bq1rk1/ppp2ppp/2n5/3p4/3P4/2PB1N2/P4PPP/R2QK2R w KQ - 0 1" },
+        { title: "Zwischenzug (In-between move)", icon: "⏱️", desc: "Inserting an unexpected intermediate check or threat.", content: "Instead of making an obvious recapturing move, insert a check first to improve your position.", tip: "Always ask: 'Does my opponent have an intermediate check?' before calculating.", fen: "r1b2rk1/ppp2ppp/2n5/3p4/3P4/2P2N2/P3PPPP/R2QKB1R w KQ - 0 1" },
+        { title: "Clearance Sacrifice", icon: "🧹", desc: "Vacating a square or line for another attacking piece.", content: "Sacrifice a piece on a square so your Queen or Rook can occupy it for checkmate.", tip: "Clear diagonals for your queen + bishop batteries.", fen: "r1b2rk1/ppp2ppp/2n5/3p4/3P4/2P2N2/PP1NBPPP/R2Q1RK1 w - - 0 1" },
+        { title: "Interference", icon: "🚧", desc: "Placing a piece between two defending enemy pieces.", content: "Interpose a piece to cut off a queen's defense of a rook or mate square.", tip: "Look for intersection points of enemy defense lines.", fen: "r1b2rk1/ppp2ppp/2n5/3p4/3P4/2P2N2/PP1NBPPP/R2Q1RK1 w - - 0 1" },
+        { title: "X-Ray Attack", icon: "📷", desc: "Attacking through an enemy piece to a target behind.", content: "A rook on e1 Indirectly attacks e8 through an enemy rook on e4.", tip: "Use X-ray setups to control key squares indirectly.", fen: "3r2k1/5ppp/8/8/8/8/3R4/3R2K1 w - - 0 1" },
+        { title: "Trapping Pieces", icon: "🕸️", desc: "Restricting escape squares of enemy queens or bishops.", content: "Corner enemy queens or bishops by controlling all retreat squares with pawns and minor pieces.", tip: "Watch for overextended enemy queens inside your territory.", fen: "r1bq1rk1/ppp2ppp/2n5/3p4/3P4/2PB1N2/P4PPP/R2Q1RK1 w - - 0 1" }
     ],
     defense: [
-        { title: "Defending Against Attacks", icon: "🛡️", desc: "Solidifying your pawn structure and maintaining piece coordination.", content: "Identify opponent threats early. Do not create unnecessary weaknesses (like pushing h6/g6 without need).", tip: "Keep minor pieces active to cover critical entry squares." },
-        { title: "Counterattack", icon: "⚔️", desc: "Responding to enemy attacks by launching your own strike.", content: "The best defense is a good offense. If opponent attacks your wing, strike directly in the center!", tip: "When attacked on the flank, open the center immediately." },
-        { title: "Simplification", icon: "🔄", desc: "Trading pieces when ahead in material or under heavy attack.", content: "Trading off attacking pieces relieves defensive pressure and neutralizes enemy initiative.", tip: "When under attack, trade queens to neutralize mating threats." },
-        { title: "Trading Attacking Pieces", icon: "🤝", desc: "Eliminating enemy key attackers.", content: "Identify enemy's strongest attacking piece (e.g. aggressive bishop or knight) and trade it off immediately.", tip: "Never let enemy knights sit on active outposts." },
-        { title: "Prophylaxis", icon: "🔮", desc: "Preventing opponent's tactical plans before they happen.", content: "Ask every turn: 'What is my opponent planning?' Make prophylactic moves (like h3/a3 or Kh1) to stop enemy breaks.", tip: "Prophylaxis stops counterplay before it starts." }
+        { title: "Defending Against Attacks", icon: "🛡️", desc: "Solidifying your pawn structure and maintaining piece coordination.", content: "Identify opponent threats early. Do not create unnecessary weaknesses (like pushing h6/g6 without need).", tip: "Keep minor pieces active to cover critical entry squares.", fen: "r1bq1rk1/ppp2ppp/2n5/3p4/3P4/2PB1N2/P4PPP/R2Q1RK1 b - - 0 1" },
+        { title: "Counterattack", icon: "⚔️", desc: "Responding to enemy attacks by launching your own strike.", content: "The best defense is a good offense. If opponent attacks your wing, strike directly in the center!", tip: "When attacked on the flank, open the center immediately.", fen: "r1bq1rk1/ppp2ppp/2n5/3p4/3P4/2PB1N2/P4PPP/R2QK2R b KQ - 0 1" },
+        { title: "Simplification", icon: "🔄", desc: "Trading pieces when ahead in material or under heavy attack.", content: "Trading off attacking pieces relieves defensive pressure and neutralizes enemy initiative.", tip: "When under attack, trade queens to neutralize mating threats.", fen: "r1b2rk1/ppp2ppp/8/3q4/3Q4/8/PPP2PPP/R4RK1 w - - 0 1" },
+        { title: "Trading Attacking Pieces", icon: "🤝", desc: "Eliminating enemy key attackers.", content: "Identify enemy's strongest attacking piece (e.g. aggressive bishop or knight) and trade it off immediately.", tip: "Never let enemy knights sit on active outposts.", fen: "r1b2rk1/ppp2ppp/2n5/3q4/3B4/8/PPP2PPP/R4RK1 w - - 0 1" },
+        { title: "Prophylaxis", icon: "🔮", desc: "Preventing opponent's tactical plans before they happen.", content: "Ask every turn: 'What is my opponent planning?' Make prophylactic moves (like h3/a3 or Kh1) to stop enemy breaks.", tip: "Prophylaxis stops counterplay before it starts.", fen: "r1bq1rk1/ppp2ppp/2n5/3p4/3P4/2PB1N2/P4PPP/R2Q1RK1 w - - 0 1" }
     ],
     checkmate: [
-        { title: "Back-Rank Mate", icon: "🏰", desc: "Mating a king trapped behind its own pawn shield.", content: "A rook or queen delivers checkmate on the 8th (or 1st) rank while enemy pawns block escape.", tip: "Always create an escape square (luft) with h3/h6." },
-        { title: "Smothered Mate", icon: "🐴", desc: "Knight checkmating a king suffocated by its own pieces.", content: "A knight delivers checkmate to a king trapped in the corner surrounded by its own rooks and pawns.", tip: "Often setup by a queen sacrifice on g8/g1." },
-        { title: "Anastasia's Mate", icon: "🏹", desc: "Knight and rook trapping king on the edge file.", content: "Knight on e7 covers g8 & g6 escape squares while Rook delivers checkmate down the open h-file.", tip: "Sacrifice a queen on h7 to open the h-file for the rook." },
-        { title: "Arabian Mate", icon: "🐫", desc: "Rook and Knight coordinating on the corner square.", content: "Knight on f6 protects Rook on h7 and covers g8 escape square for a clean mate.", tip: "One of the oldest and most reliable end/middlegame mates." },
-        { title: "Greek Gift Attack", icon: "🎁", desc: "Bxh7+ sacrifice to draw out the enemy king.", content: "Sacrifice Bishop on h7 (Bxh7+!), follow with Ng5+ and Qh5 to hunt down the exposed king.", tip: "Works best when opponent lacks a defending knight on f6." }
+        { title: "Back-Rank Mate", icon: "🏰", desc: "Mating a king trapped behind its own pawn shield.", content: "A rook or queen delivers checkmate on the 8th (or 1st) rank while enemy pawns block escape.", tip: "Always create an escape square (luft) with h3/h6.", fen: "3r2k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1" },
+        { title: "Smothered Mate", icon: "🐴", desc: "Knight checkmating a king suffocated by its own pieces.", content: "A knight delivers checkmate to a king trapped in the corner surrounded by its own rooks and pawns.", tip: "Often setup by a queen sacrifice on g8/g1.", fen: "6rk/5Npp/8/8/8/8/8/7K w - - 0 1" },
+        { title: "Anastasia's Mate", icon: "🏹", desc: "Knight and rook trapping king on the edge file.", content: "Knight on e7 covers g8 & g6 escape squares while Rook delivers checkmate down the open h-file.", tip: "Sacrifice a queen on h7 to open the h-file for the rook.", fen: "5rk1/5Npp/8/8/8/8/7P/5R1K w - - 0 1" },
+        { title: "Arabian Mate", icon: "🐫", desc: "Rook and Knight coordinating on the corner square.", content: "Knight on f6 protects Rook on h7 and covers g8 escape square for a clean mate.", tip: "One of the oldest and most reliable end/middlegame mates.", fen: "6rk/7R/5N2/8/8/8/8/7K w - - 0 1" },
+        { title: "Greek Gift Attack", icon: "🎁", desc: "Bxh7+ sacrifice to draw out the enemy king.", content: "Sacrifice Bishop on h7 (Bxh7+!), follow with Ng5+ and Qh5 to hunt down the exposed king.", tip: "Works best when opponent lacks a defending knight on f6.", fen: "r1bq1rk1/ppp2ppp/2n5/3np3/2B5/3P1N2/PPP2PPP/R1BQ1RK1 w - - 0 1" }
     ],
     strategy: [
-        { title: "Improve Worst Piece", icon: "📈", desc: "Repositioning inactive or trapped pieces to active squares.", content: "Identify your least active piece and maneuver it toward outposts or center control.", tip: "If a bishop is blocked by own pawns, reroute it to a better diagonal." },
-        { title: "Open/Half-Open Files", icon: "🛣️", desc: "Dominating files with rooks and heavy pieces.", content: "Place rooks on open files (no pawns) or half-open files (only enemy pawns) to infiltrate enemy territory.", tip: "Double rooks on open files to control the game." },
-        { title: "Outposts", icon: "🚩", desc: "Square protected by a pawn that enemy pawns cannot attack.", content: "Occupying d5 or e5 with a knight creates an impenetrable fortress that dominates enemy position.", tip: "Knights on outposts in enemy territory are worth as much as rooks." },
-        { title: "Passed Pawns", icon: "🏃", desc: "A pawn with no enemy pawns ahead to block its march to promotion.", content: "Passed pawns MUST be pushed! They force opponent to tie down heavy pieces to block promotion.", tip: "Create passed pawns in endgames and support them from behind with rooks." }
+        { title: "Improve Worst Piece", icon: "📈", desc: "Repositioning inactive or trapped pieces to active squares.", content: "Identify your least active piece and maneuver it toward outposts or center control.", tip: "If a bishop is blocked by own pawns, reroute it to a better diagonal.", fen: "r1bq1rk1/ppp2ppp/2n5/3p4/3P4/2PB1N2/P4PPP/R2Q1RK1 w - - 0 1" },
+        { title: "Open/Half-Open Files", icon: "🛣️", desc: "Dominating files with rooks and heavy pieces.", content: "Place rooks on open files (no pawns) or half-open files (only enemy pawns) to infiltrate enemy territory.", tip: "Double rooks on open files to control the game.", fen: "r1r3k1/1p2bppp/p1q1p3/3p4/P2P4/1PR1P3/3QBPPP/2R3K1 w - - 0 1" },
+        { title: "Outposts", icon: "🚩", desc: "Square protected by a pawn that enemy pawns cannot attack.", content: "Occupying d5 or e5 with a knight creates an impenetrable fortress that dominates enemy position.", tip: "Knights on outposts in enemy territory are worth as much as rooks.", fen: "r1bq1rk1/ppp2ppp/2n5/3Np3/3P4/3B1N2/PPP2PPP/R2Q1RK1 w - - 0 1" },
+        { title: "Passed Pawns", icon: "🏃", desc: "A pawn with no enemy pawns ahead to block its march to promotion.", content: "Passed pawns MUST be pushed! They force opponent to tie down heavy pieces to block promotion.", tip: "Create passed pawns in endgames and support them from behind with rooks.", fen: "8/4k3/8/3P4/8/8/4K3/8 w - - 0 1" }
     ],
     sacrifices: [
-        { title: "Exchange Sacrifice", icon: "💎", desc: "Trading a rook for a bishop or knight to gain positional dominance.", content: "Sacrifice a rook for a key defender to gain control of outposts and weak diagonals.", tip: "Common in Sicilian defense (Rxc3 sacrifice)." },
-        { title: "Pawn Sacrifice", icon: "♟️", desc: "Giving up a pawn for quick development and open lines.", content: "Sacrifice a pawn in the opening (Gambit) to accelerate piece deployment and seize initiative.", tip: "Lead in development is worth more than a single pawn." }
+        { title: "Exchange Sacrifice", icon: "💎", desc: "Trading a rook for a bishop or knight to gain positional dominance.", content: "Sacrifice a rook for a key defender to gain control of outposts and weak diagonals.", tip: "Common in Sicilian defense (Rxc3 sacrifice).", fen: "r1r3k1/1p2bppp/p1q1p3/3p4/P2P4/1PR1P3/3QBPPP/2R3K1 w - - 0 1" },
+        { title: "Pawn Sacrifice", icon: "♟️", desc: "Giving up a pawn for quick development and open lines.", content: "Sacrifice a pawn in the opening (Gambit) to accelerate piece deployment and seize initiative.", tip: "Lead in development is worth more than a single pawn.", fen: "r1bqkb1r/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1" }
     ],
     kingsafety: [
-        { title: "When to Castle", icon: "🏰", desc: "Timing castling to secure king and connect rooks.", content: "Castle early (moves 4-8) to protect the king behind a solid pawn shield and centralize rooks.", tip: "Castle before launching central attacks." }
+        { title: "When to Castle", icon: "🏰", desc: "Timing castling to secure king and connect rooks.", content: "Castle early (moves 4-8) to protect the king behind a solid pawn shield and centralize rooks.", tip: "Castle before launching central attacks.", fen: "r1bqk2r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1" }
     ],
     winning: [
-        { title: "Converting Material Advantage", icon: "🏆", desc: "Simplifying to a winning endgame when ahead.", content: "When ahead in material (e.g. +piece), trade queens and pieces. Avoid complications and promote passed pawns.", tip: "Trade pieces when ahead; trade pawns when behind." }
+        { title: "Converting Material Advantage", icon: "🏆", desc: "Simplifying to a winning endgame when ahead.", content: "When ahead in material (e.g. +piece), trade queens and pieces. Avoid complications and promote passed pawns.", tip: "Trade pieces when ahead; trade pawns when behind.", fen: "r1b2rk1/ppp2ppp/8/3q4/3Q4/8/PPP2PPP/R4RK1 w - - 0 1" }
     ],
     worsepos: [
-        { title: "Creating Complications", icon: "🔥", desc: "Setting traps and creating chaos in losing positions.", content: "When losing, do not play passively. Create tactical complications, open lines, and set sneaky mate traps.", tip: "Chaos favors the defender looking for counterplay." }
+        { title: "Creating Complications", icon: "🔥", desc: "Setting traps and creating chaos in losing positions.", content: "When losing, do not play passively. Create tactical complications, open lines, and set sneaky mate traps.", tip: "Chaos favors the defender looking for counterplay.", fen: "r1bq1rk1/ppp2ppp/2n5/3p4/3P4/2PB1N2/P4PPP/R2Q1RK1 b - - 0 1" }
     ],
     openings: [
-        { title: "Ruy Lopez (1. e4 e5 2. Nf3 Nc6 3. Bb5)", icon: "📖", desc: "The Classical King's Pawn opening testing center control.", content: "<b>Main Idea:</b> Pressure black's c6 knight to control e4/d4.<br><b>Best Plans:</b> c3+d4 pawn center, d3+Nbd2-f1-g3 maneuver.<br><b>Tactical Ideas:</b> Pin on c6, Ba4-b3 diagonal pressure.<br><b>Common Mistakes:</b> Giving up center with early d4 without preparation.<br><b>King Safety:</b> Castle early kingside.<br><b>How to Attack:</b> Push d4, lift knight to g3, launch f4 break.<br><b>How to Defend:</b> Play a6 (Morphy defense), b5, and solid d6 structure.", tip: "Ruy Lopez teaches fundamental positional chess." },
-        { title: "Sicilian Defense (1. e4 c5)", icon: "📖", desc: "Asymmetrical counter-attacking defense for Black.", content: "<b>Main Idea:</b> Fight for d4 control using c-pawn, creating open c-file.<br><b>Best Plans:</b> Open Sicilian with d4, Black counters on c-file.<br><b>Tactical Ideas:</b> Rxc3 exchange sacrifice, d5 pawn break for Black.<br><b>Common Mistakes:</b> Overextending pawns early as White.<br><b>King Safety:</b> Opposite-side castling leads to sharp races.<br><b>How to Attack:</b> White storms kingside with f4-g4-h4.<br><b>How to Defend:</b> Black attacks down c-file with Qc7, Rb8, b5-b4.", tip: "Most popular and highest winning percentage opening against 1.e4." },
-        { title: "Queen's Gambit (1. d4 d5 2. c4)", icon: "📖", desc: "Dominating the center with 1.d4.", content: "<b>Main Idea:</b> Offer c4 pawn to exchange Black's central d5 pawn for White's flank c-pawn.<br><b>Best Plans:</b> Minority attack with b4-b5 or central e4 push.<br><b>Tactical Ideas:</b> Bg5 pinning f6 knight, queen side pressure.<br><b>Common Mistakes:</b> Black trying to hold onto c4 pawn.<br><b>King Safety:</b> Solid kingside castling for both sides.<br><b>How to Attack:</b> Central e4 break or Minority attack on queenside.<br><b>How to Defend:</b> Solidify with e6 (Declined) or c6 (Slav).", tip: "White gains long-term strategic control." }
+        { title: "Ruy Lopez (1. e4 e5 2. Nf3 Nc6 3. Bb5)", icon: "📖", desc: "The Classical King's Pawn opening testing center control.", content: "<b>Main Idea:</b> Pressure black's c6 knight to control e4/d4.<br><b>Best Plans:</b> c3+d4 pawn center, d3+Nbd2-f1-g3 maneuver.<br><b>Tactical Ideas:</b> Pin on c6, Ba4-b3 diagonal pressure.<br><b>Common Mistakes:</b> Giving up center with early d4 without preparation.<br><b>King Safety:</b> Castle early kingside.<br><b>How to Attack:</b> Push d4, lift knight to g3, launch f4 break.<br><b>How to Defend:</b> Play a6 (Morphy defense), b5, and solid d6 structure.", tip: "Ruy Lopez teaches fundamental positional chess.", fen: "r1bqkb1r/pppp1ppp/2n5/4p3/1B2P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1" },
+        { title: "Sicilian Defense (1. e4 c5)", icon: "📖", desc: "Asymmetrical counter-attacking defense for Black.", content: "<b>Main Idea:</b> Fight for d4 control using c-pawn, creating open c-file.<br><b>Best Plans:</b> Open Sicilian with d4, Black counters on c-file.<br><b>Tactical Ideas:</b> Rxc3 exchange sacrifice, d5 pawn break for Black.<br><b>Common Mistakes:</b> Overextending pawns early as White.<br><b>King Safety:</b> Opposite-side castling leads to sharp races.<br><b>How to Attack:</b> White storms kingside with f4-g4-h4.<br><b>How to Defend:</b> Black attacks down c-file with Qc7, Rb8, b5-b4.", tip: "Most popular and highest winning percentage opening against 1.e4.", fen: "r1bqkb1r/pp1pppp1/2n2n1p/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 1" },
+        { title: "Queen's Gambit (1. d4 d5 2. c4)", icon: "📖", desc: "Dominating the center with 1.d4.", content: "<b>Main Idea:</b> Offer c4 pawn to exchange Black's central d5 pawn for White's flank c-pawn.<br><b>Best Plans:</b> Minority attack with b4-b5 or central e4 push.<br><b>Tactical Ideas:</b> Bg5 pinning f6 knight, queen side pressure.<br><b>Common Mistakes:</b> Black trying to hold onto c4 pawn.<br><b>King Safety:</b> Solid kingside castling for both sides.<br><b>How to Attack:</b> Central e4 break or Minority attack on queenside.<br><b>How to Defend:</b> Solidify with e6 (Declined) or c6 (Slav).", tip: "White gains long-term strategic control.", fen: "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2" }
     ],
     analyzer: []
 };
@@ -3022,6 +3121,41 @@ function openMasterTopicDetail(topic) {
     document.getElementById('detailTitle').textContent = topic.title;
     document.getElementById('detailContent').innerHTML = topic.content;
     document.getElementById('detailTipText').textContent = topic.tip || "Focus on controlling center and king safety.";
+    
+    const cat = activeMasterCategory;
+    const specialtyText = topic.specialty || (
+        cat === 'attack' ? "Focuses firepower directly on vulnerable enemy targets, destroying protective pawn shields and creating forced mating nets." :
+        cat === 'tactics' ? "Exploits geometry and piece coordination to deliver immediate forcing tactical blows against opponent pieces." :
+        cat === 'defense' ? "Solidifies piece coordination and pawn structure to neutralize enemy attacks and prevent tactical breakthroughs." :
+        cat === 'checkmate' ? "Delivers forced checkmate patterns by trapping the enemy King with synchronized piece coordination." :
+        cat === 'strategy' ? "Builds long-term positional advantages, outposts, and open files to control key sectors of the board." :
+        cat === 'openings' ? "Establishes immediate central control, rapid piece deployment, and secure early castling." :
+        "Mastering this pattern grants superior tactical awareness and strategic initiative."
+    );
+    
+    const capText = topic.capabilities || (
+        cat === 'attack' ? "Pries open files, forces enemy piece displacement, and opens winning entry paths for Queen and Rooks." :
+        cat === 'tactics' ? "Wins material, forces double threats, and leaves the opponent unable to defend all targets at once." :
+        cat === 'defense' ? "Extinguishes enemy initiative, forces piece trades, and protects critical entry squares." :
+        cat === 'checkmate' ? "Executes unstoppable checkmate attacks that bypass enemy defensive blockers." :
+        cat === 'strategy' ? "Creates strong outposts, passed pawns, and open lines that dominate enemy position." :
+        cat === 'openings' ? "Establishes strong 2-pawn central control and connects Rooks for middlegame plans." :
+        "Forces enemy piece displacement, creates severe weaknesses, and opens winning tactical avenues."
+    );
+    
+    const howText = topic.howToUse || (
+        cat === 'attack' ? "Advance flank pawns, lift Rooks via 3rd rank, and coordinate Queen + Bishop batteries toward f7/h7." :
+        cat === 'tactics' ? "Identify undefended enemy pieces, calculate forcing lines down 2-3 moves, and strike decisively." :
+        cat === 'defense' ? "Keep your King castled behind a solid pawn shield and trade off opponent's active attacking pieces." :
+        cat === 'checkmate' ? "Sacrifice key pieces to strip King cover, then execute forcing checks to deliver checkmate." :
+        cat === 'strategy' ? "Identify your worst piece, reroute it toward central outposts, and push passed pawns." :
+        cat === 'openings' ? "Control center with 1.e4 or 1.d4, develop Knights and Bishops, and castle early by move 8." :
+        "Identify target weakness, calculate forcing lines, prepare pawn/piece coordination, and strike decisively."
+    );
+    
+    document.getElementById('detailSpecialty').textContent = specialtyText;
+    document.getElementById('detailCapabilities').textContent = capText;
+    document.getElementById('detailHowToUse').textContent = howText;
 }
 
 function closeMasterDetail() {
@@ -3038,8 +3172,38 @@ function filterMasterTopics() {
     });
 }
 
+function getBoardFen() {
+    let fen = '';
+    for (let r = 0; r < 8; r++) {
+        let empty = 0;
+        for (let c = 0; c < 8; c++) {
+            const piece = board[r][c];
+            if (!piece) {
+                empty++;
+            } else {
+                if (empty > 0) {
+                    fen += empty;
+                    empty = 0;
+                }
+                const char = piece.type === 'knight' ? 'n' : piece.type.charAt(0);
+                fen += piece.color === 'white' ? char.toUpperCase() : char.toLowerCase();
+            }
+        }
+        if (empty > 0) fen += empty;
+        if (r < 7) fen += '/';
+    }
+    fen += ` ${turn === 'white' ? 'w' : 'b'} - - 0 1`;
+    return fen;
+}
+
 function selectAnalyzerPreset(val) {
-    if (val === 'current') return;
+    if (!val) return;
+    if (val === 'current') {
+        const currentFen = getBoardFen();
+        document.getElementById('analyzerFenInput').value = currentFen;
+        loadFenToAnalyzer();
+        return;
+    }
     const presets = {
         'greekgift': "r1bq1rk1/ppp2ppp/2n5/3np3/2B5/3P1N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
         'smothered': "6rk/5Npp/8/8/8/8/8/7K w - - 0 1",
@@ -3061,6 +3225,8 @@ function loadFenToAnalyzer() {
     showMsg("Position loaded to analyzer board!");
 }
 
+let currentAnalyzerCandidates = [];
+
 function runPositionAnalysis() {
     const evalScore = (Math.random() * 2.5).toFixed(2);
     const isWhitePlus = Math.random() > 0.3;
@@ -3073,15 +3239,15 @@ function runPositionAnalysis() {
     const fillPercent = isWhitePlus ? 50 + (parseFloat(evalScore) * 15) : 50 - (parseFloat(evalScore) * 15);
     document.getElementById('evalBarFill').style.width = `${Math.min(95, Math.max(5, fillPercent))}%`;
     
-    const candidates = [
-        { rank: 1, move: "Nxf7", delta: "+2.40", note: "Sacrifices knight for forced king displacement and fork." },
-        { rank: 2, move: "Bxh7+", delta: "+1.85", note: "Greek gift sacrifice opening enemy king shield." },
-        { rank: 3, move: "d4", delta: "+0.95", note: "Central pawn break seizing d-file control." }
+    currentAnalyzerCandidates = [
+        { rank: 1, move: "Nxf7", delta: "+2.40", note: "Sacrifices knight for forced king displacement and fork.", from: {r: 3, c: 5}, to: {r: 1, c: 5} },
+        { rank: 2, move: "Bxh7+", delta: "+1.85", note: "Greek gift sacrifice opening enemy king shield.", from: {r: 4, c: 2}, to: {r: 1, c: 7} },
+        { rank: 3, move: "d4", delta: "+0.95", note: "Central pawn break seizing d-file control.", from: {r: 6, c: 3}, to: {r: 4, c: 3} }
     ];
     
     const candContainer = document.getElementById('candidateMovesList');
     candContainer.innerHTML = '';
-    candidates.forEach(c => {
+    currentAnalyzerCandidates.forEach(c => {
         const item = document.createElement('div');
         item.className = 'candidate-move-card';
         item.innerHTML = `
@@ -3102,13 +3268,32 @@ function runPositionAnalysis() {
 }
 
 function playBestCandidateMoveOnBoard() {
-    showMsg("Top candidate move executed on board!");
+    if (currentAnalyzerCandidates && currentAnalyzerCandidates.length > 0) {
+        const top = currentAnalyzerCandidates[0];
+        if (top && top.from && top.to && board[top.from.r] && board[top.from.r][top.from.c]) {
+            makeMove(top.from.r, top.from.c, top.to.r, top.to.c, top.promo || null);
+        }
+    }
     showTab('gameTab');
+    showMsg("Top recommended move executed on board!");
 }
 
 function loadDetailPositionToBoard() {
-    showMsg("Example position loaded onto board!");
+    if (!selectedMasterTopic) {
+        showMsg("Please select a topic first!");
+        return;
+    }
+    
+    const fen = selectedMasterTopic.fen || "r1bqkb1r/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1";
+    loadPuzzlePosition(fen);
+    
+    gameActive = true;
+    ended = false;
+    document.getElementById('boardCheckmateBanner').style.display = 'none';
+    document.getElementById('gameOverlay').style.display = 'none';
+    
     showTab('gameTab');
+    showMsg(`Loaded "${selectedMasterTopic.title}" example on board!`);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
