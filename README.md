@@ -1,13 +1,13 @@
 # Real-Time Chess & Chess Master Knowledge System
 
-A full-featured, high-performance Chess application featuring a robust Java HTTP backend server and a responsive, modern HTML5/CSS3/JavaScript frontend client. The application supports multiple gameplay modes (including real-time online room multiplayer, local 2-player mode, AI computer opponent with 4 difficulty levels, interactive tactical practice modes, and a deep **Chess Master** strategy knowledge system with live position analysis).
+A full-featured, high-performance Chess application featuring a robust Java HTTP backend server and a responsive, modern HTML5/CSS3/JavaScript frontend client. The application supports multiple gameplay modes (including real-time online room multiplayer, local 2-player mode, AI computer opponent with 4 difficulty levels, interactive tactical practice modes, intelligent AI chat assistant, and a deep **Chess Master** strategy knowledge system with live position analysis).
 
 ---
 
 ## 🎮 Game Modes & Core Features
 
-### 1. ♟️ Chess Master Knowledge & Strategy System (NEW)
-- **Deep Strategy & Tactics Knowledge Base**: A complete knowledge system covering 10 main categories (not basic rules):
+### 1. ♟️ Chess Master Knowledge & Strategy System (ENHANCED)
+- **Deep Strategy & Tactics Knowledge Base**: A complete knowledge system covering 10 main categories:
   1. ⚔️ **Attack Techniques**: King-side, Queen-side, Pawn storm, Uncastled king, Opposite castling, Opening king position, Removing defenders, Queen+Bishop, Rook lift, Sacrificial attacks.
   2. 🎯 **Tactics**: Fork, Pin, Skewer, Discovered attack/check, Double attack, Double check, Deflection, Decoy, Removing defender, Overloading, Zwischenzug, Clearance, Interference, X-Ray attack, Trapping pieces.
   3. 🛡️ **Defense Techniques**: Defending attacks, Counterattack, Simplification, Trading attacking pieces, Blocking, Defensive sacrifice, Escape squares, Perpetual check, Fortress, Prophylaxis, Counterplay.
@@ -18,22 +18,31 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   8. 🏆 **Winning Techniques**: Winning material, Trapping queen, Exploiting pinned pieces, Double attacks, Converting material advantage, Simplifying winning positions, Passed pawns, Removing counterplay, Converting winning endgames.
   9. 🔥 **Defending a Worse Position**: Perpetual check, Counterattack, Complications, Trading dangerous pieces, Fortress, Repetition, Stalemate tricks, Passed pawns, Tactical resources.
   10. 📖 **Opening Strategy**: Guides for 8 major openings (Ruy Lopez, Sicilian Defense, Queen's Gambit, French Defense, Italian Game, King's Indian Defense, Caro-Kann, English Opening) covering 8 structured points: Main Idea, Best Plans, Typical Tactics, Common Mistakes, King Safety, Middlegame Plans, How to Attack, How to Defend.
+- **Three Structured Feature Fields for Every Package**:
+  - 🌟 **Specialty**: Unique focus and strategic value of the technique.
+  - ⚡ **What It Can Do**: Tactical and material advantages created.
+  - 🎮 **How To Use In Match**: Step-by-step practical guide on when and how to apply the tactic in live play.
+- **Interactive Board Example Loader**: Every topic across all 10 categories has an assigned illustrative FEN position. Clicking **"♟ Load Example Position onto Board"** loads that position directly onto the interactive chess board for exploration and play.
 - **“What Should I Do Here?” Interactive Position Analyzer**:
   - **Inputs**: Preset tactical setups (Greek Gift, Smothered Mate, Back-Rank Mate, Rook Endgame, Sicilian Dragon, Italian Game), Custom FEN input, or **"📥 Current Game Board Position"** loader.
-  - **Live Evaluation Output**: Position evaluation score (+/- delta) & visual advantage bar, Ranked Candidate Moves (#1, #2, #3) with exact notation and evaluation deltas, Recommended Strategic Plan, Tactical Opportunities & Defensive Resources, and a detailed explanation of **WHY** the top move is best.
-  - **Play Best Move on Board**: One-click button to execute recommended candidate moves on the active board.
+  - **Live Evaluation Output**: Position evaluation score (+/- delta) & visual advantage bar, Ranked Candidate Moves (#1, #2, #3) with exact notation and evaluation deltas, Recommended Strategic Plan, Tactical Opportunities & Defensive Resources, and explanation of **WHY** the top move is best.
+  - **Play Best Move on Board**: One-click button (**"▶ Play Top Recommended Move on Board"**) executes recommended candidate moves directly on the active board.
 
-### 2. 🤖 VS Computer (AI Opponent)
+### 2. 🤖 VS Computer & Context-Aware Intelligent AI Chat
 - **Minimax Engine**: Driven by Minimax search with Alpha-Beta pruning, positional evaluations, and king safety heuristics.
 - **4 Difficulty Levels**: Easy (Beginner), Medium (Intermediate), Hard (Advanced), and Expert (Master).
-- **AI Companion Chat**: Computer responds with contextual commentary during games.
+- **Smart AI Chat Assistant**: In the Chat tab and VS Computer games, the Computer AI analyzes the player's message intent, keywords, and live board state in real time:
+  - *Evaluation / Winning*: Calculates material lead (`White +4` / `Black +2` / `Even`) and comments on who has the advantage.
+  - *Tactics & Openings*: Provides specific advice when asked about forks, pins, skewering, Ruy Lopez, Sicilian, gambits, or opening principles.
+  - *Attack & Defense*: Gives actionable plans for launching attacks or building defenses.
+  - *Endgame & Advice*: Offers guidance based on active turn and board state.
 - **Automated Pawn Promotion**: Computer automatically promotes pawns to Queen on the 8th/1st rank.
 
 ### 3. 🌐 Online Multiplayer Rooms
 - **Room-Based Matching**: Host a match to generate a unique 6-character room ID, or enter an existing room ID to join.
 - **Turn & Move Synchronization**: Real-time board state and turn updates powered by backend polling.
 - **Clocks & Timeouts**: Synchronized timers supporting bullet, blitz, classical, and untimed matches.
-- **In-Game Chat**: Live room chat between players.
+- **In-Game Chat**: Live room chat between players with AI companion integration.
 - **Resignation Handling**: Clean resignation triggers with instant victory notifications.
 
 ### 4. 🎯 Chess Training & Practice Mode
@@ -49,7 +58,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 
 ---
 
-## 🛠️ Project Structure & Recent Improvements
+## 🛠️ Project Structure & Architecture
 
 ### Project Layout
 ```text
@@ -58,20 +67,24 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   │   └── src/
   │       └── ChessServe.java  # Java HTTP server, REST endpoints, room state, & board logic
   ├── frontend/
-  │   └── index.html           # HTML5/CSS3/Vanilla JS UI layout, themes, Chess Master engine, & client logic
+  │   └── index.html           # Single-page HTML5/CSS3/JS UI layout, themes, Chess Master engine, & client logic
   ├── run.bat                  # One-click Windows startup & JDK auto-detect script
-  └── README.md                # Updated project documentation
+  ├── Dockerfile               # Production multi-stage Docker build config
+  ├── .dockerignore            # Docker build ignore rules
+  ├── .gitignore               # Git version control ignore rules
+  ├── .env.example             # Environment variable configuration template
+  └── README.md                # Project documentation
 ```
 
-### Recent Key Updates & Fixes
-1. **Chess Master Knowledge System & Interactive Analyzer**: Built the 10-category knowledge system and "What Should I Do Here?" engine with live evaluation, candidate moves, strategic plans, and move explanations.
-2. **Board Theme Persistence & Dropdown Sync**: Saved themes in `localStorage` and synced all theme dropdown controls across tabs.
-3. **Checkmate Visual Display & Audio**: Added floating checkmate banners, glowing red checkmate king highlights, checkmate sound effects, and victory modal overlay.
-4. **VS Computer Mode Fix**: Fixed `initBoard(keepModes)` ensuring `vsComputer = true` is preserved upon game start.
-5. **Real-Time Live Timer Tick Loop**: Added a 1-second live interval tick loop so timers tick continuously second-by-second for human and AI players without freezing.
-6. **Interactive Pawn Promotion Modal**: Added piece selection modal (Queen, Rook, Bishop, Knight) upon pawn reaching promotion ranks.
-7. **Focus Mode & Collapsible Side Panel**: Added header toggle to collapse side controls for a grand full-screen board view.
-8. **Automatic JDK Detection in `run.bat`**: Automatic JDK discovery scanning standard installation paths (`C:\Program Files\Java\jdk*`, `C:\Program Files (x86)\Java\jdk*`, `%JAVA_HOME%`).
+### Recent Key Updates & Improvements
+1. **Interactive FEN Position Loader**: Added FEN position loading to every topic package in the Chess Master section.
+2. **Three Feature Fields for Topics**: Added 🌟 Specialty, ⚡ What It Can Do, and 🎮 How To Use In Match to every topic detail view.
+3. **Context-Aware AI Chatbot**: Upgraded chat engine to parse message intent, keywords, and live board material lead.
+4. **Position Evaluator & Live Analyzer Enhancements**: Added current game board FEN importer and one-click candidate move execution.
+5. **Board Theme Persistence & Dropdown Sync**: Saved themes in `localStorage` and synced all theme dropdown controls across tabs.
+6. **Checkmate Visual Display & Audio**: Added floating checkmate banners, glowing red checkmate king highlights, checkmate sound effects, and victory modal overlay.
+7. **Real-Time Live Timer Tick Loop**: Added a 1-second live interval tick loop so timers tick continuously second-by-second.
+8. **Focus Mode & Collapsible Side Panel**: Added header toggle to collapse side controls for a grand full-screen board view.
 
 ---
 
@@ -112,4 +125,4 @@ Navigate to:
 ### Frontend (HTML5 / CSS3 / Vanilla JS)
 - **Glassmorphism Design System**: Modern dark UI featuring smooth gradients and tabbed navigation.
 - **Web Audio Synthesis**: Dynamic sound generation using Web Audio API (`AudioContext`).
-- **Chess Master Engine & Live Analyzer**: Built-in minimax evaluator, material balance, position analysis, candidate move ranker, and FEN parser.
+- **Chess Master Engine & Live Analyzer**: Built-in minimax evaluator, material balance calculator, position analyzer, candidate move ranker, and FEN parser.
