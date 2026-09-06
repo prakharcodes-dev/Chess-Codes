@@ -49,8 +49,12 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 - **Category Filters**: Practice Tactics, Checkmate Patterns, Endgame Techniques, and Opening Traps.
 - **Hints & Scoring**: Show hints highlighting target squares, and track score, correct vs. wrong moves.
 
-### 5. 🎨 Customization, Focus Mode & Game Enhancements
-- **Persistent Board Themes**: 8 built-in themes (Classic Brown, Dark Green, Blue, Green, Purple, Gray, Ocean, Sunset) saved in `localStorage` and synchronized across all tab dropdowns.
+### 5. 🎨 Customization, Piece Sets, Piece Styles & Interaction Enhancements
+- **Multiple Piece Sets**: Selectable complete piece sets: **Classic Set (Staunton)**, **Modern Set (Merida)**, **Fantasy Set (Horsey)**, and **Minimal Set (California)**. Saved in `localStorage` and applied across all piece views.
+- **Multiple Piece Visual Styles**: Selectable visual styles: **Classic Vector**, **Modern Vector**, **3D Rendered Depth** (perspective depth filter & drop-shadows), and **Neon Glow Cyber** (glowing cyan/rose cyberpunk drop-shadow filters).
+- **Smooth Animations & Capture Effects**: Smooth piece scale transitions, capture burst animations (`@keyframes captureBurst`), king check pulsating danger aura (`.highlight`), checkmate golden trophy aura (`.checkmate-king`), and invalid move shake feedback (`@keyframes shakeCell`).
+- **Interactive Piece Movement & Drag-and-Drop**: Native HTML5 Drag and Drop piece movement (`draggable="true"`, `ondragstart`, `ondragover`, `ondrop`), legal move target dots (`.possible-move`), capture target rings (`.capture-move`), last-move highlight (`.last-move`), and selected-piece outline (`.selected-cell`).
+- **Persistent Board Themes**: 8 built-in themes (Classic Brown, Dark Green, Blue, Green, Purple, Gray, Ocean, Sunset) saved in `localStorage`.
 - **Focus Mode & Collapsible Panel**: Toggle button (**`◧ Focus Mode (Hide Panel)`**) allows hiding the right control panel so the Chess Board expands into a grand **740px** centered view.
 - **Checkmate Visual Display**: Floating checkmate banner (`"♔ CHECKMATE! [COLOR] WINS!"`), checkmated king glowing red aura (`.checkmate-king`), audio fanfare, and victory overlay modal.
 - **Real-Time Live Timer**: Continuous 1-second interval tick loop (`setInterval`) ensuring clocks tick down live second-by-second (`04:59`, `04:58`, `04:57`...) without freezing.
