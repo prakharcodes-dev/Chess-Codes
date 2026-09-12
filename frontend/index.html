@@ -1136,6 +1136,190 @@ h3 {
 .piece-style-neon .light-cell { background: #0f172a !important; color: #38bdf8; }
 .piece-style-neon .dark-cell { background: #020617 !important; color: #f43f5e; }
 
+/* ----------------------------------------------------
+   ♟️ DASHBOARD & MODE SELECTION UI (ULTRA CLEAN & INTUITIVE)
+   ---------------------------------------------------- */
+
+.mode-welcome-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.welcome-hero-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+
+.welcome-hero-desc {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+}
+
+.mode-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mode-card {
+    background: rgba(30, 41, 59, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.mode-card:hover {
+    background: rgba(30, 41, 59, 0.85);
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.mode-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mode-icon {
+    font-size: 1.4rem;
+}
+
+.mode-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+
+.badge-ai { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+.badge-local { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+.badge-online { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+.badge-gold { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+.badge-training { background: rgba(236, 72, 153, 0.2); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
+
+.mode-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.mode-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+}
+
+.mode-quick-options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.mode-quick-options label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+.mode-select {
+    flex: 1;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 0.8rem;
+}
+
+.mode-inputs-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 2px;
+}
+.mode-inputs-row input {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+}
+
+.mode-buttons-row {
+    display: flex;
+    gap: 8px;
+}
+
+.mode-btn {
+    width: 100%;
+    padding: 9px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.settings-accordion-box {
+    margin-top: 10px;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.settings-accordion-header {
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #a5b4fc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+.settings-accordion-header:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.settings-accordion-content {
+    padding: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.settings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 /* Text alignment & styling */
 .status {
     color: #ef4444;
@@ -1475,88 +1659,161 @@ h3 {
         <!-- GAME TAB -->
         <div class="tab-content active" id="gameTab">
             <div class="setup-panel" id="setupPanel">
-                <h3>Game Setup</h3>
-                <div class="input-group">
-                    <label>Your Name:</label>
-                    <input type="text" id="playerName" value="Player" maxlength="10">
+                <!-- Welcome Quick-Start Hero -->
+                <div class="mode-welcome-card">
+                    <div class="welcome-hero-title">♟️ Select Game Mode</div>
+                    <div class="welcome-hero-desc">Choose how you want to play or study below to start immediately!</div>
                 </div>
-                <div class="input-group">
-                    <label>Game ID (for multiplayer):</label>
-                    <input type="text" id="gameId" placeholder="Enter game ID" maxlength="6">
-                </div>
-                
-                <div class="additional-options">
-                    <h4 style="margin-top: 0; margin-bottom: 4px; color: var(--accent-color); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">Additional Options</h4>
-                    
-                    <div class="input-group">
-                        <label for="timeControl">Time Control:</label>
-                        <select id="timeControl" class="time-control-select">
-                            <option value="10">10 minutes</option>
-                            <option value="5" selected>5 minutes (Default)</option>
-                            <option value="3">3 minutes</option>
-                            <option value="1">1 minute (Bullet)</option>
-                            <option value="15">15 minutes</option>
-                            <option value="30">30 minutes (Classical)</option>
-                            <option value="0">No time limit</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="gameVariant">Game Variant:</label>
-                        <select id="gameVariant" class="time-control-select">
-                            <option value="standard" selected>Standard Chess</option>
-                            <option value="960">Chess960 (Fischer Random)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="boardTheme">Board Theme:</label>
-                        <select id="boardTheme" class="time-control-select" onchange="setBoardTheme(this.value)">
-                            <option value="default" selected>Classic Brown</option>
-                            <option value="dark">Dark (Green)</option>
-                            <option value="blue">Blue</option>
-                            <option value="green">Green</option>
-                            <option value="purple">Purple</option>
-                            <option value="gray">Gray</option>
-                            <option value="ocean">Ocean</option>
-                            <option value="sunset">Sunset</option>
-                        </select>
+
+                <!-- Mode Selection Cards Grid -->
+                <div class="mode-cards-grid">
+                    <!-- CARD 1: VS COMPUTER -->
+                    <div class="mode-card card-ai" onclick="quickLaunchAI()">
+                        <div class="mode-card-header">
+                            <span class="mode-icon">🤖</span>
+                            <span class="mode-badge badge-ai">Single Player</span>
+                        </div>
+                        <div class="mode-title">VS Computer (AI)</div>
+                        <div class="mode-desc">Play against smart AI with 4 difficulty levels from Beginner to Master.</div>
+                        <div class="mode-quick-options" onclick="event.stopPropagation()">
+                            <label>Difficulty:</label>
+                            <select id="quickAiDiff" class="mode-select" onchange="document.getElementById('computerDifficulty').value = this.value">
+                                <option value="1">Easy (Beginner)</option>
+                                <option value="2" selected>Medium (Intermediate)</option>
+                                <option value="3">Hard (Advanced)</option>
+                                <option value="4">Expert (Master)</option>
+                            </select>
+                        </div>
+                        <button class="mode-btn btn-primary" onclick="quickLaunchAI()">▶ Play VS Computer</button>
                     </div>
 
-                    <div class="input-group">
-                        <label for="pieceSet">Chess Piece Set:</label>
-                        <select id="pieceSet" class="time-control-select" onchange="setPieceSet(this.value)">
-                            <option value="cburnett" selected>Classic Set (Staunton)</option>
-                            <option value="merida">Modern Set (Merida)</option>
-                            <option value="horsey">Fantasy Set (Horsey)</option>
-                            <option value="california">Minimal Set (California)</option>
-                        </select>
+                    <!-- CARD 2: LOCAL 2-PLAYER -->
+                    <div class="mode-card card-local" onclick="startLocalMatch()">
+                        <div class="mode-card-header">
+                            <span class="mode-icon">👥</span>
+                            <span class="mode-badge badge-local">Pass & Play</span>
+                        </div>
+                        <div class="mode-title">Local 2-Player</div>
+                        <div class="mode-desc">Play side-by-side with a friend on this device with live timers.</div>
+                        <button class="mode-btn btn-success" onclick="startLocalMatch()">♟️ Start Local Game</button>
                     </div>
 
-                    <div class="input-group">
-                        <label for="pieceStyle">Chess Piece Visual Style:</label>
-                        <select id="pieceStyle" class="time-control-select" onchange="setPieceStyle(this.value)">
-                            <option value="classic" selected>Classic Vector</option>
-                            <option value="modern">Modern Vector</option>
-                            <option value="3d">3D Rendered Depth</option>
-                            <option value="neon">Neon Glow Cyber</option>
-                        </select>
+                    <!-- CARD 3: ONLINE MULTIPLAYER -->
+                    <div class="mode-card card-online" onclick="event.stopPropagation()">
+                        <div class="mode-card-header">
+                            <span class="mode-icon">🌐</span>
+                            <span class="mode-badge badge-online">Room Match</span>
+                        </div>
+                        <div class="mode-title">Online Multiplayer Room</div>
+                        <div class="mode-desc">Host a room to get a 6-digit code or join a friend's room ID.</div>
+                        <div class="mode-inputs-row">
+                            <input type="text" id="playerName" value="Player" placeholder="Your Name" maxlength="10">
+                            <input type="text" id="gameId" placeholder="Room ID" maxlength="6">
+                        </div>
+                        <div class="mode-buttons-row">
+                            <button class="mode-btn btn-success" onclick="joinGame()">Join Room</button>
+                            <button class="mode-btn btn-gold" onclick="createGame()">Create Room</button>
+                        </div>
                     </div>
-                    
-                    <div class="option-group">
-                        <label for="soundToggle">Enable Sound:</label>
-                        <input type="checkbox" id="soundToggle" checked>
+
+                    <!-- CARD 4: CHESS MASTER ACADEMY -->
+                    <div class="mode-card card-master" onclick="showTab('masterTab')">
+                        <div class="mode-card-header">
+                            <span class="mode-icon">♟️</span>
+                            <span class="mode-badge badge-gold">Academy</span>
+                        </div>
+                        <div class="mode-title">Chess Master Academy</div>
+                        <div class="mode-desc">Learn tactics, openings, attacks & live position analysis engine.</div>
+                        <button class="mode-btn btn-gold" onclick="showTab('masterTab')">📖 Explore Strategy</button>
                     </div>
-                    <div class="option-group">
-                        <label for="highlightMoves">Highlight Legal Moves:</label>
-                        <input type="checkbox" id="highlightMoves" checked>
+
+                    <!-- CARD 5: TACTICAL TRAINING -->
+                    <div class="mode-card card-training" onclick="showTab('trainingTab')">
+                        <div class="mode-card-header">
+                            <span class="mode-icon">🎯</span>
+                            <span class="mode-badge badge-training">Puzzles</span>
+                        </div>
+                        <div class="mode-title">Tactical Training</div>
+                        <div class="mode-desc">Practice checkmates, tactical tricks & level up your score.</div>
+                        <button class="mode-btn btn-primary" onclick="showTab('trainingTab')">🎯 Start Practice</button>
                     </div>
                 </div>
-                
-                <div class="setup-buttons">
-                    <button class="action-btn btn-primary" onclick="newLocalGame()">Local Game</button>
-                    <button class="action-btn btn-success" onclick="joinGame()">Join Game</button>
-                    <button class="action-btn" onclick="createGame()">Create Game</button>
+
+                <!-- Collapsible Board Settings Accordion -->
+                <div class="settings-accordion-box">
+                    <div class="settings-accordion-header" onclick="toggleSettingsAccordion()">
+                        <span>⚙️ Match & Board Customization</span>
+                        <span id="settingsAccordionIcon">▼</span>
+                    </div>
+                    <div class="settings-accordion-content" id="settingsAccordionContent" style="display: none;">
+                        <div class="settings-grid">
+                            <div class="input-group">
+                                <label for="timeControl">⏱️ Time Control:</label>
+                                <select id="timeControl" class="time-control-select">
+                                    <option value="10">10 minutes</option>
+                                    <option value="5" selected>5 minutes (Default)</option>
+                                    <option value="3">3 minutes</option>
+                                    <option value="1">1 minute (Bullet)</option>
+                                    <option value="15">15 minutes</option>
+                                    <option value="30">30 minutes (Classical)</option>
+                                    <option value="0">No time limit</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="gameVariant">♟️ Game Variant:</label>
+                                <select id="gameVariant" class="time-control-select">
+                                    <option value="standard" selected>Standard Chess</option>
+                                    <option value="960">Chess960 (Fischer Random)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="boardTheme">🎨 Board Theme:</label>
+                                <select id="boardTheme" class="time-control-select" onchange="setBoardTheme(this.value)">
+                                    <option value="default" selected>Classic Brown</option>
+                                    <option value="dark">Dark (Green)</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="green">Green</option>
+                                    <option value="purple">Purple</option>
+                                    <option value="gray">Gray</option>
+                                    <option value="ocean">Ocean</option>
+                                    <option value="sunset">Sunset</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="pieceSet">👑 Chess Piece Set:</label>
+                                <select id="pieceSet" class="time-control-select" onchange="setPieceSet(this.value)">
+                                    <option value="cburnett" selected>Classic Set (Staunton)</option>
+                                    <option value="merida">Modern Set (Merida)</option>
+                                    <option value="horsey">Fantasy Set (Horsey)</option>
+                                    <option value="california">Minimal Set (California)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="pieceStyle">✨ Piece Visual Style:</label>
+                                <select id="pieceStyle" class="time-control-select" onchange="setPieceStyle(this.value)">
+                                    <option value="classic" selected>Classic Vector</option>
+                                    <option value="modern">Modern Vector</option>
+                                    <option value="3d">3D Rendered Depth</option>
+                                    <option value="neon">Neon Glow Cyber</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <div class="option-group">
+                                    <label for="soundToggle">🔊 Sound Effects:</label>
+                                    <input type="checkbox" id="soundToggle" checked>
+                                </div>
+                                <div class="option-group" style="margin-top: 6px;">
+                                    <label for="highlightMoves">🎯 Highlight Legal Moves:</label>
+                                    <input type="checkbox" id="highlightMoves" checked>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -3069,11 +3326,45 @@ function quickChat(msg) {
     sendChatMessage();
 }
 
-function newLocalGame() {
-    if (confirm('Start new local game?')) {
-        initBoard(false);
-        showTab('gameTab');
+function quickLaunchAI() {
+    const diff = document.getElementById('quickAiDiff') ? parseInt(document.getElementById('quickAiDiff').value) : 2;
+    const diffSelect = document.getElementById('computerDifficulty');
+    if (diffSelect) diffSelect.value = diff;
+    showTab('gameTab');
+    startComputerGame();
+}
+
+function startLocalMatch() {
+    initBoard(true);
+    vsComputer = false;
+    trainingMode = false;
+    online = false;
+    gameActive = true;
+    
+    document.getElementById('setupPanel').style.display = 'none';
+    document.getElementById('gamePanel').style.display = 'block';
+    document.getElementById('connectionStatus').className = 'connection-status connected';
+    document.getElementById('connectionStatus').textContent = 'Local Match Active';
+    
+    addChatMessage("System", "Local 2-Player match started!", "system");
+    showMsg("Local 2-Player Match Started!");
+}
+
+function toggleSettingsAccordion() {
+    const content = document.getElementById('settingsAccordionContent');
+    const icon = document.getElementById('settingsAccordionIcon');
+    if (!content) return;
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        if (icon) icon.textContent = '▲';
+    } else {
+        content.style.display = 'none';
+        if (icon) icon.textContent = '▼';
     }
+}
+
+function newLocalGame() {
+    startLocalMatch();
 }
 
 function undoMove() {

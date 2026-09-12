@@ -6,7 +6,14 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 
 ---
 
-## 🎮 Game Modes & Core Features
+### 0. 🎮 Mode Selection Dashboard & Landing UX Redesign (NEW)
+- **Visual Mode Selection Cards**: Instant 1-click landing cards replacing raw form setup with intuitive visual cards:
+  - 🤖 **VS Computer (AI)**: Launch AI games with 4 difficulty levels (Easy, Medium, Hard, Expert).
+  - 👥 **Local 2-Player**: Pass & play side-by-side on the same device with live timers.
+  - 🌐 **Online Room Match**: Host or Join a 6-digit multiplayer room code.
+  - ♟️ **Chess Master Academy**: 10 strategy categories, tactical patterns & live position evaluator.
+  - 🎯 **Tactical Training**: Solve curated tactical puzzles & level up accuracy.
+- **Collapsible Customization Accordion**: Organized settings (**Time Control, Game Variant, Board Theme, Piece Set, Piece Visual Style, Sound Effects, Highlight Legal Moves**) inside a neat **⚙️ Match & Board Customization** accordion.
 
 ### 1. ♟️ Chess Master Knowledge & Strategy System (ENHANCED)
 - **Deep Strategy & Tactics Knowledge Base**: A complete knowledge system covering 10 main categories:
@@ -91,6 +98,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 6. **Checkmate Visual Display & Audio**: Added floating checkmate banners, glowing red checkmate king highlights, checkmate sound effects, and victory modal overlay.
 7. **Real-Time Live Timer Tick Loop**: Added a 1-second live interval tick loop so timers tick continuously second-by-second.
 8. **Focus Mode & Collapsible Side Panel**: Added header toggle to collapse side controls for a grand full-screen board view.
+9. **Mode Selection Dashboard & Landing UX Redesign**: Added intuitive 1-click game mode cards (VS Computer, Local 2-Player, Online Room, Chess Master Academy, Tactical Training) and a collapsible match customization accordion for an ultra-clean, beginner-friendly onboarding experience.
 
 ---
 
@@ -116,7 +124,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 
 ### 2. Open the Game in Your Browser
 Navigate to:
-👉 **[http://localhost:9090](http://localhost:9090)**
+👉 **[http://localhost:9090]**
 
 ---
 
