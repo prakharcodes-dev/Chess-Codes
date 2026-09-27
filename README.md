@@ -63,7 +63,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 - **Multiple Piece Visual Styles**: Selectable visual styles: **Classic Vector**, **Modern Vector**, **3D Rendered Depth** (perspective depth filter & drop-shadows), and **Neon Glow Cyber** (glowing cyan/rose cyberpunk drop-shadow filters).
 - **Smooth Animations & Capture Effects**: Smooth piece scale transitions, capture burst animations (`@keyframes captureBurst`), king check pulsating danger aura (`.highlight`), checkmate golden trophy aura (`.checkmate-king`), and invalid move shake feedback (`@keyframes shakeCell`).
 - **Interactive Piece Movement & Drag-and-Drop**: Native HTML5 Drag and Drop piece movement (`draggable="true"`, `ondragstart`, `ondragover`, `ondrop`), legal move target dots (`.possible-move`), capture target rings (`.capture-move`), last-move highlight (`.last-move`), and selected-piece outline (`.selected-cell`).
-- **Persistent Board Themes**: 8 built-in themes (Classic Brown, Dark Green, Blue, Green, Purple, Gray, Ocean, Sunset) saved in `localStorage`.
+- **Persistent Board Themes**: 14 built-in themes (Classic Brown, Dark Green, Blue, Green, Purple, Gray, Ocean, Sunset, Walnut Wood, Cyberpunk Neon, Emerald Forest, Crimson Ruby, Glacier Ice, Luxury Gold) saved in `localStorage`.
 - **Focus Mode & Collapsible Panel**: Toggle button (**`◧ Focus Mode (Hide Panel)`**) allows hiding the right control panel so the Chess Board expands into a grand **740px** centered view.
 - **Checkmate Visual Display**: Floating checkmate banner (`"♔ CHECKMATE! [COLOR] WINS!"`), checkmated king glowing red aura (`.checkmate-king`), audio fanfare, and victory overlay modal.
 - **Real-Time Live Timer**: Continuous 1-second interval tick loop (`setInterval`) ensuring clocks tick down live second-by-second (`04:59`, `04:58`, `04:57`...) without freezing.
@@ -99,6 +99,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 7. **Real-Time Live Timer Tick Loop**: Added a 1-second live interval tick loop so timers tick continuously second-by-second.
 8. **Focus Mode & Collapsible Side Panel**: Added header toggle to collapse side controls for a grand full-screen board view.
 9. **Mode Selection Dashboard & Landing UX Redesign**: Added intuitive 1-click game mode cards (VS Computer, Local 2-Player, Online Room, Chess Master Academy, Tactical Training) and a collapsible match customization accordion for an ultra-clean, beginner-friendly onboarding experience.
+10. **Refined Board UI Spacing & Rounded Corners**: Enhanced `.board-container` padding and smooth rounded corner framing (`border-radius: 24px` / `16px`) for an elegant glassmorphism board design.
 
 ---
 
