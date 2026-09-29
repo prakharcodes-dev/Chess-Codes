@@ -15,7 +15,32 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   - 🎯 **Tactical Training**: Solve curated tactical puzzles & level up accuracy.
 - **Collapsible Customization Accordion**: Organized settings (**Time Control, Game Variant, Board Theme, Piece Set, Piece Visual Style, Sound Effects, Highlight Legal Moves**) inside a neat **⚙️ Match & Board Customization** accordion.
 
-### 1. ♟️ Chess Master Knowledge & Strategy System (ENHANCED)
+### 1. 🤖 AI Chess Coach & Real-Time Move Analysis (NEW)
+- **Live Move-by-Move Evaluation**: Evaluates every move made during a match using Piece-Square Tables (PST) and centipawn material balance.
+- **Move Quality Classification**: Detects and badges every move into 6 clear tactical tiers:
+  - ✨ **Brilliant**: Game-changing tactical sacrifices or decisive checkmate execution.
+  - ⭐ **Best Move**: Top computer engine recommendation with optimal square control.
+  - 👍 **Good Move**: Solid, stable move maintaining positional harmony.
+  - ⚠️ **Inaccuracy**: Slight loss of tempo or suboptimal square placement.
+  - ❌ **Mistake**: Significant tactical error conceding counterplay or central pressure.
+  - 💥 **Blunder**: Severe tactical blunder losing material or compromising king safety.
+- **Actionable Tactical Explanations**: Plain-English explanations explaining *why* a move was great or where it fell short.
+- **Better Move Suggestions & Board Highlighting**: Suggests the optimal engine continuation with an interactive **"👁️ Show on Board"** toggle that highlights the exact source and target squares on the chessboard.
+- **Live Position Evaluation Meter**: Numerical centipawn score (e.g. `+1.85`, `-0.75`, `0.00`) and a smooth visual advantage bar with White vs Black win chance percentages.
+- **Dedicated AI Coach Tab & Live In-Game Ticker**: Includes both a dedicated **"🤖 AI Coach"** tab in the main controls and a compact **Live AI Coach Ticker** inside the active Game panel.
+- **Comprehensive Post-Game Analysis & Report**:
+  - **Player Accuracy Percentages**: Scientific accuracy scoring for both White and Black.
+  - **Move Quality Breakdown Counters**: Total counts for Brilliant, Best, Good, Inaccuracies, Mistakes, and Blunders.
+  - **Key Turning Point of the Match**: Pinpoints the single biggest swing move of the game with evaluation delta and best continuation.
+  - **Personalized Weaknesses & Training Plan**: Automatically diagnoses error patterns (e.g. Tactical Blunder Proneness, Opening Inaccuracies, Endgame Technique) and provides **1-click action buttons** that directly launch the corresponding puzzle drill or Master Academy lesson.
+
+### 2. 🖥️ Balanced Desktop Layout & Professional Chess Platform UX (NEW)
+- **Balanced 52/48 Grid**: Left chessboard column (52%) and right control panel (48%) are proportionally balanced with `grid-template-columns: minmax(0, 52fr) minmax(0, 48fr)`.
+- **Top Alignment (`align-items: start;`)**: Prevents vertical over-stretching or visual distortion between the chessboard and control cards.
+- **Compact Card Sizing**: Right-side cards, buttons, and accordions are streamlined with reduced vertical spacing to eliminate empty gaps and maintain a clean, compact interface.
+- **Responsive Mobile Layout**: Automatically transitions to a single-column layout on screens under 1080px without sacrificing any feature or functionality.
+
+### 3. ♟️ Chess Master Knowledge & Strategy System (ENHANCED)
 - **Deep Strategy & Tactics Knowledge Base**: A complete knowledge system covering 10 main categories:
   1. ⚔️ **Attack Techniques**: King-side, Queen-side, Pawn storm, Uncastled king, Opposite castling, Opening king position, Removing defenders, Queen+Bishop, Rook lift, Sacrificial attacks.
   2. 🎯 **Tactics**: Fork, Pin, Skewer, Discovered attack/check, Double attack, Double check, Deflection, Decoy, Removing defender, Overloading, Zwischenzug, Clearance, Interference, X-Ray attack, Trapping pieces.
@@ -37,7 +62,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   - **Live Evaluation Output**: Position evaluation score (+/- delta) & visual advantage bar, Ranked Candidate Moves (#1, #2, #3) with exact notation and evaluation deltas, Recommended Strategic Plan, Tactical Opportunities & Defensive Resources, and explanation of **WHY** the top move is best.
   - **Play Best Move on Board**: One-click button (**"▶ Play Top Recommended Move on Board"**) executes recommended candidate moves directly on the active board.
 
-### 2. 🤖 VS Computer & Context-Aware Intelligent AI Chat
+### 4. 🤖 VS Computer & Context-Aware Intelligent AI Chat
 - **Minimax Engine**: Driven by Minimax search with Alpha-Beta pruning, positional evaluations, and king safety heuristics.
 - **4 Difficulty Levels**: Easy (Beginner), Medium (Intermediate), Hard (Advanced), and Expert (Master).
 - **Smart AI Chat Assistant**: In the Chat tab and VS Computer games, the Computer AI analyzes the player's message intent, keywords, and live board state in real time:
@@ -47,18 +72,18 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   - *Endgame & Advice*: Offers guidance based on active turn and board state.
 - **Automated Pawn Promotion**: Computer automatically promotes pawns to Queen on the 8th/1st rank.
 
-### 3. 🌐 Online Multiplayer Rooms
+### 5. 🌐 Online Multiplayer Rooms
 - **Room-Based Matching**: Host a match to generate a unique 6-character room ID, or enter an existing room ID to join.
 - **Turn & Move Synchronization**: Real-time board state and turn updates powered by backend polling.
 - **Clocks & Timeouts**: Synchronized timers supporting bullet, blitz, classical, and untimed matches.
 - **In-Game Chat**: Live room chat between players with AI companion integration.
 - **Resignation Handling**: Clean resignation triggers with instant victory notifications.
 
-### 4. 🎯 Chess Training & Practice Mode
+### 6. 🎯 Chess Training & Practice Mode
 - **Category Filters**: Practice Tactics, Checkmate Patterns, Endgame Techniques, and Opening Traps.
 - **Hints & Scoring**: Show hints highlighting target squares, and track score, correct vs. wrong moves.
 
-### 5. 🎨 Customization, Piece Sets, Piece Styles & Interaction Enhancements
+### 7. 🎨 Customization, Piece Sets, Piece Styles & Interaction Enhancements
 - **Multiple Piece Sets**: Selectable complete piece sets: **Classic Set (Staunton)**, **Modern Set (Merida)**, **Fantasy Set (Horsey)**, and **Minimal Set (California)**. Saved in `localStorage` and applied across all piece views.
 - **Multiple Piece Visual Styles**: Selectable visual styles: **Classic Vector**, **Modern Vector**, **3D Rendered Depth** (perspective depth filter & drop-shadows), and **Neon Glow Cyber** (glowing cyan/rose cyberpunk drop-shadow filters).
 - **Smooth Animations & Capture Effects**: Smooth piece scale transitions, capture burst animations (`@keyframes captureBurst`), king check pulsating danger aura (`.highlight`), checkmate golden trophy aura (`.checkmate-king`), and invalid move shake feedback (`@keyframes shakeCell`).
@@ -105,27 +130,115 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 
 ## 🚀 How to Run the Project (Localhost)
 
-### Requirements
-- **Java Development Kit (JDK 8 or higher)** installed on your machine.
+You can run this project using any of the following convenient methods:
 
-### 1. Start the Server
+---
 
-* **Option A: Using the Windows Startup Script (Recommended)**
-  Double-click **`run.bat`** in the project root directory. It automatically detects your JDK, compiles `backend/src/ChessServe.java`, and launches the HTTP server.
+### Option 1: ⚡ 1-Click Startup (Windows - Recommended)
+1. Double-click the **`run.bat`** file located in the project root directory.
+2. The script will automatically:
+   - Search and detect your Java JDK installation (`JAVA_HOME` or system paths).
+   - Compile `backend/src/ChessServe.java`.
+   - Start the HTTP backend server on **`http://localhost:9090`**.
+3. Open your browser and go to:
+   👉 **[http://localhost:9090](http://localhost:9090)**
 
-* **Option B: Manual Terminal Execution**
-  Open PowerShell or Command Prompt in `d:\CHESS` and run:
+---
+
+### Option 2: 💻 Command Line (Windows, macOS, Linux)
+
+#### Prerequisites:
+* **Java Development Kit (JDK 8 or higher)** installed on your machine (`javac -version`).
+
+#### Steps:
+1. Open your terminal (PowerShell, Command Prompt, or Bash) in the project root directory:
+   ```bash
+   cd d:\CHESS
+   ```
+
+2. Compile the Java backend:
+   ```bash
+   javac backend/src/ChessServe.java
+   ```
+
+3. Launch the server:
+   ```bash
+   java -cp backend/src ChessServe
+   ```
+
+4. You will see:
+   ```text
+   Chess Server started successfully on port 9090
+   Server URL: http://localhost:9090
+   Thread pool: 50 threads ready
+   Memory management: Active games limit: 1000
+   ```
+
+5. Open your web browser and visit:
+   👉 **[http://localhost:9090](http://localhost:9090)**
+
+> **Tip - Custom Port:**
+> By default, the server runs on port `9090`. You can change the port using an environment variable:
+> - **PowerShell:** `$env:PORT=8080; java -cp backend/src ChessServe`
+> - **CMD:** `set PORT=8080 && java -cp backend/src ChessServe`
+> - **Linux/macOS:** `PORT=8080 java -cp backend/src ChessServe`
+
+---
+
+### Option 3: 🌐 Instant Browser-Only Mode (Zero Setup / No Java Required)
+If you don't have Java installed or just want to play offline immediately:
+1. Simply double-click **`frontend/index.html`** or right-click and select **"Open with Chrome / Edge / Firefox"**.
+2. **All core features work immediately out-of-the-box in standalone client mode:**
+   - 🤖 **VS Computer (AI)** with 4 difficulty levels.
+   - 🧠 **AI Chess Coach** with real-time blunder detection, position evaluation, and post-game reports.
+   - 👥 **Local 2-Player Pass & Play** with live clocks.
+   - 🎯 **Tactical Practice Puzzles & Hints**.
+   - ♟️ **Chess Master Academy & Strategy Packages**.
+   - 🎨 **14 Board Themes, Custom Piece Sets & Visual Styles**.
+
+*(Note: Live multiplayer room matching across different devices uses the Java backend).*
+
+---
+
+### Option 4: 🐳 Docker Container
+
+If you prefer containerized deployment:
+
+```bash
+# 1. Build the Docker container
+docker build -t chess-app .
+
+# 2. Run the container on port 9090
+docker run -d -p 9090:9090 --name chess-app chess-app
+
+# 3. Open in browser
+http://localhost:9090
+```
+
+---
+
+### 🔍 Verification & Health Check Endpoints
+Once the server is running, you can test the backend endpoints directly:
+* **Web App**: `http://localhost:9090/`
+* **Ping Test**: `http://localhost:9090/ping` *(returns `{"status":"pong"}`)*
+* **Health Metrics**: `http://localhost:9090/health` *(returns uptime, active games, and memory stats)*
+
+---
+
+### ❓ Troubleshooting
+
+* **"javac is not recognized as an internal or external command"**:
+  Ensure you have JDK installed. Add your JDK `bin` directory (e.g. `C:\Program Files\Java\jdk-xx\bin`) to your system's `PATH` environment variable, or simply use **Option 3** to run `frontend/index.html` directly in your browser.
+* **"Address already in use: bind" (Port 9090 occupied)**:
+  Another service is using port 9090. Either free the port:
   ```powershell
-  # Compile the Java class
-  javac backend/src/ChessServe.java
-
-  # Start the HTTP server on port 9090
-  java -cp backend/src ChessServe
+  # Find PID using port 9090
+  Get-Process -Id (Get-NetTCPConnection -LocalPort 9090).OwningProcess | Stop-Process -Force
   ```
-
-### 2. Open the Game in Your Browser
-Navigate to:
-👉 **[http://localhost:9090]**
+  Or launch on a different port:
+  ```powershell
+  $env:PORT=9091; java -cp backend/src ChessServe
+  ```
 
 ---
 

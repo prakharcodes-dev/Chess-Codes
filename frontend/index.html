@@ -60,18 +60,20 @@ body {
 }
 
 .container {
-    max-width: 1480px;
+    max-width: 1260px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 680px 1fr;
-    gap: 24px;
-    padding-top: 5px;
+    grid-template-columns: minmax(0, 50fr) minmax(0, 50fr);
+    align-items: start;
+    gap: 16px;
+    padding: 8px 14px 16px 14px;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1080px) {
     .container {
         grid-template-columns: 1fr;
-        max-width: 720px;
+        max-width: 600px;
+        gap: 14px;
     }
 }
 
@@ -80,13 +82,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 24px;
+    padding: 8px 18px;
     background: var(--bg-card);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--border-color);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .header-brand {
@@ -95,17 +97,17 @@ body {
 }
 
 .header h1 {
-    font-size: 1.7rem;
+    font-size: 1.35rem;
     font-weight: 800;
     letter-spacing: -0.5px;
     background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 2px;
+    margin-bottom: 0px;
 }
 
 .header p {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
 }
 
@@ -227,7 +229,7 @@ body {
 .board-layout {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .board-container {
@@ -236,9 +238,9 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-color);
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.35);
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -246,14 +248,14 @@ body {
 
 .chess-board {
     width: 100%;
-    max-width: 650px;
+    max-width: min(480px, calc(100vh - 190px));
     aspect-ratio: 1;
     border-collapse: separate;
     border-spacing: 0;
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.5), 0 10px 15px -5px rgba(0, 0, 0, 0.4);
-    border: 6px solid #1e293b;
+    box-shadow: 0 16px 28px -5px rgba(0, 0, 0, 0.45);
+    border: 4px solid #1e293b;
     position: relative;
 }
 
@@ -291,9 +293,9 @@ body {
     background: var(--bg-card);
     backdrop-filter: blur(8px);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 8px 16px;
-    min-height: 52px;
+    border-radius: 10px;
+    padding: 5px 12px;
+    min-height: 40px;
 }
 
 .player-bar-info {
@@ -376,13 +378,14 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    height: auto;
+    gap: 10px;
+    max-height: calc(100vh - 95px);
+    overflow-y: auto;
 }
 
 .tabs {
@@ -392,16 +395,17 @@ body {
     padding: 4px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     gap: 4px;
+    overflow-x: auto;
 }
 
 .tab-btn {
     flex: 1;
-    padding: 9px 8px;
+    padding: 8px 6px;
     background: transparent;
     border: none;
     color: var(--text-muted);
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -418,6 +422,19 @@ body {
     background: var(--accent-gradient);
     color: #fff;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.tab-btn.coach-tab-btn {
+    background: rgba(14, 165, 233, 0.12);
+    color: #38bdf8;
+    border: 1px solid rgba(14, 165, 233, 0.25);
+}
+
+.tab-btn.coach-tab-btn.active {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
 }
 
 .tab-btn.master-tab-btn {
@@ -525,9 +542,9 @@ h3 {
 }
 
 .buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
 }
 
 .setup-buttons {
@@ -538,10 +555,10 @@ h3 {
 
 .action-btn {
     width: 100%;
-    padding: 11px;
+    padding: 8px 10px;
     border: none;
     border-radius: 8px;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: #fff;
     background: var(--btn-bg);
@@ -1160,52 +1177,62 @@ h3 {
    ---------------------------------------------------- */
 
 .mode-welcome-card {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
-    border: 1px solid rgba(99, 102, 241, 0.25);
-    border-radius: 14px;
-    padding: 14px 18px;
-    margin-bottom: 4px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.08) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 10px;
+    padding: 7px 12px;
+    margin-bottom: 2px;
     text-align: center;
 }
 
 .welcome-hero-title {
-    font-size: 1.15rem;
+    font-size: 0.95rem;
     font-weight: 800;
     color: #ffffff;
-    letter-spacing: 0.5px;
-    margin-bottom: 3px;
+    letter-spacing: 0.4px;
+    margin-bottom: 1px;
 }
 
 .welcome-hero-desc {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     color: #cbd5e1;
-    line-height: 1.4;
+    line-height: 1.25;
 }
 
 .mode-cards-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+}
+
+@media (max-width: 600px) {
+    .mode-cards-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .mode-card {
     background: rgba(30, 41, 59, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    padding: 12px 14px;
+    border-radius: 10px;
+    padding: 8px 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+}
+
+.mode-card.card-online {
+    grid-column: 1 / -1;
 }
 
 .mode-card:hover {
     background: rgba(30, 41, 59, 0.85);
     border-color: rgba(99, 102, 241, 0.4);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 .mode-card-header {
@@ -1215,16 +1242,16 @@ h3 {
 }
 
 .mode-icon {
-    font-size: 1.4rem;
+    font-size: 1.15rem;
 }
 
 .mode-badge {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     font-weight: 800;
     text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 6px;
-    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.4px;
 }
 
 .badge-ai { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
@@ -1234,50 +1261,50 @@ h3 {
 .badge-training { background: rgba(236, 72, 153, 0.2); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
 
 .mode-title {
-    font-size: 1rem;
+    font-size: 0.86rem;
     font-weight: 700;
     color: #ffffff;
 }
 
 .mode-desc {
-    font-size: 0.78rem;
+    font-size: 0.71rem;
     color: var(--text-muted);
-    line-height: 1.35;
+    line-height: 1.25;
 }
 
 .mode-quick-options {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 2px;
+    gap: 6px;
+    margin-top: 1px;
 }
 
 .mode-quick-options label {
-    font-size: 0.78rem;
+    font-size: 0.71rem;
     font-weight: 600;
     color: #cbd5e1;
 }
 
 .mode-select {
     flex: 1;
-    padding: 6px 10px;
-    border-radius: 6px;
+    padding: 4px 6px;
+    border-radius: 5px;
     background: rgba(15, 23, 42, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
 }
 
 .mode-inputs-row {
     display: flex;
-    gap: 8px;
-    margin-top: 2px;
+    gap: 6px;
+    margin-top: 1px;
 }
 .mode-inputs-row input {
     flex: 1;
-    padding: 8px 10px;
-    font-size: 0.82rem;
-    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 0.76rem;
+    border-radius: 5px;
     border: 1px solid rgba(255,255,255,0.1);
     background: rgba(0,0,0,0.3);
     color: #fff;
@@ -1285,35 +1312,35 @@ h3 {
 
 .mode-buttons-row {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .mode-btn {
     width: 100%;
-    padding: 9px;
-    border-radius: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     border: none;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .settings-accordion-box {
-    margin-top: 10px;
+    margin-top: 6px;
     background: rgba(15, 23, 42, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
 .settings-accordion-header {
-    padding: 10px 14px;
-    font-size: 0.82rem;
+    padding: 8px 12px;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #a5b4fc;
     display: flex;
@@ -1599,6 +1626,516 @@ h3 {
     color: #fbbf24;
     margin-bottom: 4px;
 }
+
+/* AI Coach Tab & Panel Styles */
+.coach-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.coach-hero-card {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.coach-hero-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0284c7 0%, #6366f1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+    flex-shrink: 0;
+}
+
+.coach-hero-info {
+    flex: 1;
+}
+
+.coach-hero-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #f0fdf4;
+    letter-spacing: -0.2px;
+}
+
+.coach-hero-sub {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 1px;
+}
+
+.coach-refresh-btn {
+    padding: 5px 10px;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 8px;
+    color: #38bdf8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.coach-refresh-btn:hover {
+    background: #0284c7;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
+}
+
+.coach-eval-card, .coach-feedback-card, .coach-postgame-card, .coach-timeline-card {
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.coach-eval-header, .coach-feedback-header, .coach-card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coach-card-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.coach-eval-score {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #38bdf8;
+    font-family: monospace;
+}
+
+.coach-eval-meter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.coach-eval-meter-track {
+    width: 100%;
+    height: 10px;
+    background: #1e293b;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.coach-eval-meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981 0%, #38bdf8 100%);
+    width: 50%;
+    transition: width 0.4s ease;
+}
+
+.coach-eval-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+/* Badges */
+.coach-badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.badge-brilliant {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+.badge-best {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.45);
+}
+.badge-good {
+    background: rgba(6, 182, 212, 0.2);
+    color: #22d3ee;
+    border: 1px solid rgba(6, 182, 212, 0.4);
+}
+.badge-inaccuracy {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.45);
+}
+.badge-mistake {
+    background: rgba(249, 115, 22, 0.2);
+    color: #fb923c;
+    border: 1px solid rgba(249, 115, 22, 0.45);
+}
+.badge-blunder {
+    background: rgba(239, 68, 68, 0.25);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.35);
+}
+.badge-neutral {
+    background: rgba(148, 163, 184, 0.15);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.coach-move-summary {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.coach-explanation {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px 10px;
+    border-radius: 8px;
+    border-left: 3px solid #38bdf8;
+}
+
+.coach-suggestion-box {
+    background: rgba(56, 189, 248, 0.06);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.coach-suggestion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #38bdf8;
+}
+
+.coach-show-board-btn {
+    padding: 3px 8px;
+    background: rgba(56, 189, 248, 0.2);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 6px;
+    color: #7dd3fc;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.coach-show-board-btn:hover, .coach-show-board-btn.active {
+    background: #0284c7;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
+}
+
+.coach-suggestion-text {
+    font-size: 0.78rem;
+    color: #f1f5f9;
+    font-weight: 600;
+}
+
+/* Post Game Analysis Section */
+.coach-run-report-btn {
+    padding: 4px 10px;
+    background: var(--gold-gradient);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.coach-accuracy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.coach-accuracy-box {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.accuracy-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(15, 23, 42, 0.8) 100%);
+    border: 3px solid #10b981;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+
+.accuracy-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.coach-breakdown-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.coach-breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+
+.breakdown-pill {
+    padding: 5px 7px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+}
+.breakdown-pill span { color: #94a3b8; font-weight: 600; }
+.breakdown-pill strong { font-weight: 800; color: #fff; }
+.pill-brilliant strong { color: #34d399; }
+.pill-best strong { color: #a5b4fc; }
+.pill-good strong { color: #22d3ee; }
+.pill-inaccuracy strong { color: #fbbf24; }
+.pill-mistake strong { color: #fb923c; }
+.pill-blunder strong { color: #f87171; }
+
+.coach-turning-point {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.turning-point-title {
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: #f87171;
+}
+
+.turning-point-desc {
+    font-size: 0.74rem;
+    color: #cbd5e1;
+    line-height: 1.35;
+}
+
+.coach-weaknesses-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 2px;
+}
+
+.weaknesses-title {
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: #f59e0b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.weaknesses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.weakness-item {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.74rem;
+    color: #cbd5e1;
+}
+
+.weakness-item-name {
+    font-weight: 700;
+    color: #fbbf24;
+}
+
+.weakness-action-btn {
+    padding: 3px 8px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+    margin-top: 2px;
+}
+
+.weakness-action-btn:hover {
+    background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+/* Timeline */
+.coach-timeline-list {
+    max-height: 160px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.coach-timeline-row {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    padding: 5px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.74rem;
+}
+
+.coach-timeline-move {
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.coach-timeline-score {
+    font-family: monospace;
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.coach-timeline-empty {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 6px;
+    text-align: center;
+}
+
+/* Live Ticker in Game Panel */
+.live-coach-ticker {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(30, 41, 59, 0.7) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 6px;
+}
+
+.live-coach-ticker:hover {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+    border-color: #38bdf8;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+}
+
+.coach-ticker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coach-ticker-title {
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: #38bdf8;
+    letter-spacing: 0.2px;
+}
+
+.coach-ticker-eval-bar {
+    width: 100%;
+    height: 5px;
+    background: #1e293b;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.coach-eval-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981 0%, #38bdf8 100%);
+    transition: width 0.3s ease;
+}
+
+.coach-ticker-text {
+    font-size: 0.74rem;
+    color: #cbd5e1;
+    line-height: 1.3;
+}
+
+/* Board Highlighting for Coach Suggestions */
+.coach-suggest-from {
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.6) 0%, rgba(14, 165, 233, 0.25) 75%) !important;
+    box-shadow: inset 0 0 12px #38bdf8 !important;
+}
+.coach-suggest-to {
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.65) 0%, rgba(16, 185, 129, 0.3) 75%) !important;
+    box-shadow: inset 0 0 14px #22c55e !important;
+    animation: coachPulse 1.4s infinite alternate;
+}
+@keyframes coachPulse {
+    from { box-shadow: inset 0 0 8px #22c55e; }
+    to { box-shadow: inset 0 0 18px #4ade80, 0 0 10px rgba(74, 222, 128, 0.5); }
+}
 </style>
 </head>
 <body>
@@ -1647,6 +2184,7 @@ h3 {
                 <div class="winner-text" id="winnerText"></div>
                 <div class="overlay-buttons">
                     <button class="overlay-btn" onclick="initBoard()">New Game</button>
+                    <button class="overlay-btn" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);" onclick="document.getElementById('gameOverlay').style.display = 'none'; showTab('coachTab');">🤖 AI Coach Report</button>
                     <button class="overlay-btn overlay-btn-secondary" onclick="document.getElementById('gameOverlay').style.display = 'none'">Close</button>
                 </div>
             </div>
@@ -1669,6 +2207,7 @@ h3 {
     <div class="controls">
         <div class="tabs">
             <button class="tab-btn active" id="btnGameTab" onclick="showTab('gameTab')">Game</button>
+            <button class="tab-btn coach-tab-btn" id="btnCoachTab" onclick="showTab('coachTab')">🤖 AI Coach</button>
             <button class="tab-btn" id="btnComputerTab" onclick="showTab('computerTab')">VS Computer</button>
             <button class="tab-btn" id="btnTrainingTab" onclick="showTab('trainingTab')">Training</button>
             <button class="tab-btn" id="btnChatTab" onclick="showTab('chatTab')">Chat</button>
@@ -1846,6 +2385,18 @@ h3 {
                 <h3>Game Status</h3>
                 <div class="turn-indicator" id="turnIndicator">White's Turn</div>
                 
+                <!-- Live AI Coach Ticker inside Game Panel -->
+                <div class="live-coach-ticker" id="gamePanelCoachTicker" onclick="showTab('coachTab')" title="Click to view full Coach analysis">
+                    <div class="coach-ticker-header">
+                        <span class="coach-ticker-title">🤖 AI Coach Live Eval</span>
+                        <span class="coach-badge badge-neutral" id="gamePanelCoachBadge">Ready</span>
+                    </div>
+                    <div class="coach-ticker-eval-bar">
+                        <div class="coach-eval-fill" id="gamePanelEvalFill" style="width: 50%;"></div>
+                    </div>
+                    <div class="coach-ticker-text" id="gamePanelCoachNote">Make your first move to get live grandmaster analysis and tactical feedback!</div>
+                </div>
+                
                 <div class="captured-pieces" style="display: none;">
                     <div id="whiteCaptured"><div class="captured-placeholder">None</div></div>
                     <div id="blackCaptured"><div class="captured-placeholder">None</div></div>
@@ -1867,22 +2418,127 @@ h3 {
 
                 <div class="status" id="gameStatus"></div>
                 
-                <div class="game-id-display" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.04); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="game-id-display" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.04); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Room ID:</span>
                     <span style="font-weight: 700; color: var(--accent-color);" id="currentGameId">-</span>
                 </div>
+
+                <div class="buttons" style="margin-top: 8px;">
+                    <button class="action-btn" onclick="undoMove()" id="undoBtn">Undo</button>
+                    <button class="action-btn" onclick="takeBackMove()" id="takeBackBtn">Take Back</button>
+                    <button class="action-btn btn-danger" onclick="resignGame()" id="resignBtn">Resign</button>
+                    <button class="action-btn" onclick="leaveGame()" id="leaveBtn">Leave Game</button>
+                </div>
+                
+                <div class="moves-history" style="margin-top: 8px;">
+                    <h4>Moves History</h4>
+                    <ul id="movesList"></ul>
+                </div>
             </div>
-            
-            <div class="buttons" style="margin-top: 10px;">
-                <button class="action-btn" onclick="undoMove()" id="undoBtn">Undo</button>
-                <button class="action-btn" onclick="takeBackMove()" id="takeBackBtn">Take Back</button>
-                <button class="action-btn btn-danger" onclick="resignGame()" id="resignBtn">Resign</button>
-                <button class="action-btn" onclick="leaveGame()" id="leaveBtn">Leave Game</button>
-            </div>
-            
-            <div class="moves-history" style="margin-top: 10px;">
-                <h4>Moves History</h4>
-                <ul id="movesList"></ul>
+        </div>
+        
+        <!-- AI COACH TAB -->
+        <div class="tab-content" id="coachTab">
+            <div class="coach-panel" id="coachPanel">
+                <!-- Coach Header Card -->
+                <div class="coach-hero-card">
+                    <div class="coach-hero-avatar">🤖</div>
+                    <div class="coach-hero-info">
+                        <div class="coach-hero-name">Grandmaster AI Coach</div>
+                        <div class="coach-hero-sub">Real-Time Move Analysis • Blunder Detection • Tactical Feedback</div>
+                    </div>
+                    <button class="coach-refresh-btn" onclick="triggerManualAnalysis()" title="Re-analyze current board position">⚡ Analyze</button>
+                </div>
+
+                <!-- Position Evaluation Widget -->
+                <div class="coach-eval-card">
+                    <div class="coach-eval-header">
+                        <span class="coach-card-label">POSITION EVALUATION</span>
+                        <span class="coach-eval-score" id="coachEvalScore">0.00 (Even)</span>
+                    </div>
+                    <div class="coach-eval-meter-container">
+                        <div class="coach-eval-meter-track">
+                            <div class="coach-eval-meter-fill" id="coachEvalFill" style="width: 50%;"></div>
+                        </div>
+                        <div class="coach-eval-labels">
+                            <span id="coachWhiteAdvantage">White: 50%</span>
+                            <span id="coachBlackAdvantage">Black: 50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latest Move Feedback -->
+                <div class="coach-feedback-card">
+                    <div class="coach-feedback-header">
+                        <span class="coach-card-label">LAST MOVE ASSESSMENT</span>
+                        <span class="coach-badge badge-neutral" id="coachLatestBadge">Awaiting Move</span>
+                    </div>
+                    <div class="coach-move-summary" id="coachMoveSummary">Start the game to analyze moves.</div>
+                    <div class="coach-explanation" id="coachExplanation">Every move you play is analyzed in real time with tactical explanations, error detection, and recommended improvements.</div>
+                    
+                    <div class="coach-suggestion-box" id="coachSuggestionBox" style="display: none;">
+                        <div class="coach-suggestion-header">
+                            <span>💡 Better Move Available:</span>
+                            <button class="coach-show-board-btn" id="btnToggleBoardCoach" onclick="toggleCoachSuggestionOnBoard()">👁️ Show on Board</button>
+                        </div>
+                        <div class="coach-suggestion-text" id="coachSuggestionText"></div>
+                    </div>
+                </div>
+
+                <!-- Post-Game Deep Dive Section -->
+                <div class="coach-postgame-card" id="coachPostGameCard">
+                    <div class="coach-card-header-row">
+                        <span class="coach-card-label">📊 POST-GAME ANALYSIS & REPORT</span>
+                        <button class="coach-run-report-btn" onclick="runPostGameAnalysis(true)">⚡ Full Report</button>
+                    </div>
+                    <div class="coach-accuracy-grid">
+                        <div class="coach-accuracy-box">
+                            <div class="accuracy-circle" id="whiteAccuracyCircle">
+                                <span class="accuracy-val" id="whiteAccuracyVal">--%</span>
+                            </div>
+                            <span class="accuracy-label" id="whiteAccuracyPlayerLabel">White Accuracy</span>
+                        </div>
+                        <div class="coach-accuracy-box">
+                            <div class="accuracy-circle" id="blackAccuracyCircle">
+                                <span class="accuracy-val" id="blackAccuracyVal">--%</span>
+                            </div>
+                            <span class="accuracy-label" id="blackAccuracyPlayerLabel">Black Accuracy</span>
+                        </div>
+                    </div>
+
+                    <!-- Move Classification Breakdown -->
+                    <div class="coach-breakdown-title">Move Quality Breakdown</div>
+                    <div class="coach-breakdown-grid" id="coachBreakdownGrid">
+                        <div class="breakdown-pill pill-brilliant"><span>✨ Brilliant</span><strong id="cntBrilliant">0</strong></div>
+                        <div class="breakdown-pill pill-best"><span>⭐ Best</span><strong id="cntBest">0</strong></div>
+                        <div class="breakdown-pill pill-good"><span>👍 Good</span><strong id="cntGood">0</strong></div>
+                        <div class="breakdown-pill pill-inaccuracy"><span>⚠️ Inaccuracy</span><strong id="cntInaccuracy">0</strong></div>
+                        <div class="breakdown-pill pill-mistake"><span>❌ Mistake</span><strong id="cntMistake">0</strong></div>
+                        <div class="breakdown-pill pill-blunder"><span>💥 Blunder</span><strong id="cntBlunder">0</strong></div>
+                    </div>
+
+                    <!-- Key Turning Point -->
+                    <div class="coach-turning-point" id="coachTurningPoint" style="display: none;">
+                        <div class="turning-point-title">⚡ Key Turning Point of the Match:</div>
+                        <div class="turning-point-desc" id="coachTurningPointDesc"></div>
+                    </div>
+
+                    <!-- Personal Weaknesses & Tailored Training Suggestions -->
+                    <div class="coach-weaknesses-section" id="coachWeaknessesSection">
+                        <div class="weaknesses-title">🎯 Personal Weaknesses & Training Plan</div>
+                        <div class="weaknesses-list" id="coachWeaknessesList">
+                            <div class="weakness-item">Play moves in a match to generate your personalized weakness diagnostics and training plan.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Move History Timeline with Engine Evals -->
+                <div class="coach-timeline-card">
+                    <span class="coach-card-label">📜 MOVE ANALYSIS TIMELINE</span>
+                    <div class="coach-timeline-list" id="coachTimelineList">
+                        <div class="coach-timeline-empty">Moves will appear here with evaluations and tactical classifications.</div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -2268,6 +2924,594 @@ const pieceValues = {
     king: 20000
 };
 
+// ==========================================
+// AI CHESS COACH ENGINE & ANALYSIS SYSTEM
+// ==========================================
+let aiCoachHistory = [];
+let coachSuggestedHighlight = null;
+let isCoachHighlightActive = false;
+let lastMoveEvaluation = null;
+
+// Piece-Square Tables (PST) for Positional Evaluation (White's perspective; inverted for Black)
+const pstPawn = [
+    [0,  0,  0,  0,  0,  0,  0,  0],
+    [50, 50, 50, 50, 50, 50, 50, 50],
+    [10, 10, 20, 30, 30, 20, 10, 10],
+    [5,  5, 10, 25, 25, 10,  5,  5],
+    [0,  0,  0, 20, 20,  0,  0,  0],
+    [5, -5,-10,  0,  0,-10, -5,  5],
+    [5, 10, 10,-20,-20, 10, 10,  5],
+    [0,  0,  0,  0,  0,  0,  0,  0]
+];
+
+const pstKnight = [
+    [-50,-40,-30,-30,-30,-30,-40,-50],
+    [-40,-20,  0,  0,  0,  0,-20,-40],
+    [-30,  0, 10, 15, 15, 10,  0,-30],
+    [-30,  5, 15, 20, 20, 15,  5,-30],
+    [-30,  0, 15, 20, 20, 15,  0,-30],
+    [-30,  5, 10, 15, 15, 10,  5,-30],
+    [-40,-20,  0,  5,  5,  0,-20,-40],
+    [-50,-40,-30,-30,-30,-30,-40,-50]
+];
+
+const pstBishop = [
+    [-20,-10,-10,-10,-10,-10,-10,-20],
+    [-10,  0,  0,  0,  0,  0,  0,-10],
+    [-10,  0,  5, 10, 10,  5,  0,-10],
+    [-10,  5,  5, 10, 10,  5,  5,-10],
+    [-10,  0, 10, 10, 10, 10,  0,-10],
+    [-10, 10, 10, 10, 10, 10, 10,-10],
+    [-10,  5,  0,  0,  0,  0,  5,-10],
+    [-20,-10,-10,-10,-10,-10,-10,-20]
+];
+
+const pstRook = [
+    [0,  0,  0,  0,  0,  0,  0,  0],
+    [5, 10, 10, 10, 10, 10, 10,  5],
+    [-5,  0,  0,  0,  0,  0,  0, -5],
+    [-5,  0,  0,  0,  0,  0,  0, -5],
+    [-5,  0,  0,  0,  0,  0,  0, -5],
+    [-5,  0,  0,  0,  0,  0,  0, -5],
+    [-5,  0,  0,  0,  0,  0,  0, -5],
+    [0,  0,  0,  5,  5,  0,  0,  0]
+];
+
+const pstQueen = [
+    [-20,-10,-10, -5, -5,-10,-10,-20],
+    [-10,  0,  0,  0,  0,  0,  0,-10],
+    [-10,  0,  5,  5,  5,  5,  0,-10],
+    [-5,  0,  5,  5,  5,  5,  0, -5],
+    [0,  0,  5,  5,  5,  5,  0, -5],
+    [-10,  5,  5,  5,  5,  5,  0,-10],
+    [-10,  0,  5,  0,  0,  0,  0,-10],
+    [-20,-10,-10, -5, -5,-10,-10,-20]
+];
+
+const pstKing = [
+    [-30,-40,-40,-50,-50,-40,-40,-30],
+    [-30,-40,-40,-50,-50,-40,-40,-30],
+    [-30,-40,-40,-50,-50,-40,-40,-30],
+    [-30,-40,-40,-50,-50,-40,-40,-30],
+    [-20,-30,-30,-40,-40,-30,-30,-20],
+    [-10,-20,-20,-20,-20,-20,-20,-10],
+    [20, 20,  0,  0,  0,  0, 20, 20],
+    [20, 30, 10,  0,  0, 10, 30, 20]
+];
+
+function getPieceSquareValue(type, color, r, c) {
+    const row = color === 'white' ? r : 7 - r;
+    const col = c;
+    switch(type) {
+        case 'pawn': return pstPawn[row][col];
+        case 'knight': return pstKnight[row][col];
+        case 'bishop': return pstBishop[row][col];
+        case 'rook': return pstRook[row][col];
+        case 'queen': return pstQueen[row][col];
+        case 'king': return pstKing[row][col];
+        default: return 0;
+    }
+}
+
+function evaluateBoardState(targetBoard) {
+    if (!targetBoard || targetBoard.length !== 8) return 0;
+    let whiteTotal = 0;
+    let blackTotal = 0;
+    
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const piece = targetBoard[r][c];
+            if (piece) {
+                const val = (pieceValues[piece.type] || 0) + getPieceSquareValue(piece.type, piece.color, r, c);
+                if (piece.color === 'white') whiteTotal += val;
+                else blackTotal += val;
+            }
+        }
+    }
+    return whiteTotal - blackTotal;
+}
+
+function findBestEngineMove(targetBoard, color) {
+    const moves = [];
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const p = targetBoard[r][c];
+            if (p && p.color === color) {
+                const legalMoves = getMoves(r, c);
+                legalMoves.forEach(m => {
+                    moves.push({
+                        from: { row: r, col: c },
+                        to: { row: m.row, col: m.col },
+                        piece: p,
+                        targetPiece: targetBoard[m.row][m.col]
+                    });
+                });
+            }
+        }
+    }
+    
+    if (moves.length === 0) return null;
+    
+    let bestMove = null;
+    let bestScore = color === 'white' ? -999999 : 999999;
+    
+    for (const m of moves) {
+        const origPiece = targetBoard[m.from.row][m.from.col];
+        const captured = targetBoard[m.to.row][m.to.col];
+        
+        targetBoard[m.to.row][m.to.col] = origPiece;
+        targetBoard[m.from.row][m.from.col] = null;
+        
+        let score = 0;
+        const opponentColor = color === 'white' ? 'black' : 'white';
+        if (checkmate(opponentColor)) {
+            score = color === 'white' ? 100000 : -100000;
+        } else {
+            score = evaluateBoardState(targetBoard);
+        }
+        
+        targetBoard[m.from.row][m.from.col] = origPiece;
+        targetBoard[m.to.row][m.to.col] = captured;
+        
+        if (color === 'white') {
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = { ...m, score };
+            }
+        } else {
+            if (score < bestScore) {
+                bestScore = score;
+                bestMove = { ...m, score };
+            }
+        }
+    }
+    
+    return bestMove;
+}
+
+function classifyPlayerMove(r1, c1, r2, c2, piece, capturedPiece, evalBefore, evalAfter, bestEngineMove, moverColor, promotionPiece) {
+    const fromNotation = getNotation(r1, c1);
+    const toNotation = getNotation(r2, c2);
+    const promoStr = promotionPiece ? '=' + promotionPiece.charAt(0).toUpperCase() : '';
+    const moveNotation = `${piece.type === 'pawn' ? '' : (piece.type === 'knight' ? 'N' : piece.type.charAt(0).toUpperCase())}${fromNotation}→${toNotation}${promoStr}`;
+    
+    let bestNotation = 'None';
+    let bestFrom = null;
+    let bestTo = null;
+    if (bestEngineMove) {
+        const bFrom = getNotation(bestEngineMove.from.row, bestEngineMove.from.col);
+        const bTo = getNotation(bestEngineMove.to.row, bestEngineMove.to.col);
+        const bPiece = bestEngineMove.piece;
+        bestNotation = `${bPiece.type === 'pawn' ? '' : (bPiece.type === 'knight' ? 'N' : bPiece.type.charAt(0).toUpperCase())}${bFrom}→${bTo}`;
+        bestFrom = bestEngineMove.from;
+        bestTo = bestEngineMove.to;
+    }
+    
+    let cpLoss = 0;
+    if (bestEngineMove) {
+        if (moverColor === 'white') {
+            cpLoss = Math.max(0, bestEngineMove.score - evalAfter);
+        } else {
+            cpLoss = Math.max(0, evalAfter - bestEngineMove.score);
+        }
+    }
+    
+    const opponentColor = moverColor === 'white' ? 'black' : 'white';
+    const isMatingMove = checkmate(opponentColor);
+    
+    let classification = 'good';
+    let badgeClass = 'badge-good';
+    let explanation = '';
+    
+    const isBestMoveMatch = bestEngineMove && (bestEngineMove.from.row === r1 && bestEngineMove.from.col === c1 && bestEngineMove.to.row === r2 && bestEngineMove.to.col === c2);
+    
+    if (isMatingMove) {
+        classification = 'brilliant';
+        badgeClass = 'badge-brilliant';
+        explanation = `Decisive checkmate! Precision calculation forces the end of the game!`;
+    } else if (isBestMoveMatch) {
+        if (capturedPiece && (pieceValues[capturedPiece.type] >= 300 || capturedPiece.type === 'queen')) {
+            classification = 'brilliant';
+            badgeClass = 'badge-brilliant';
+            explanation = `Brilliant tactical execution! Wins significant material and seizes control.`;
+        } else {
+            classification = 'best';
+            badgeClass = 'badge-best';
+            explanation = `The top engine recommendation! Maximizes piece activity and maintains optimal control.`;
+        }
+    } else if (cpLoss <= 25) {
+        classification = 'best';
+        badgeClass = 'badge-best';
+        explanation = `Superb move! Almost identical in strength to the top computer continuation.`;
+    } else if (cpLoss <= 75) {
+        classification = 'good';
+        badgeClass = 'badge-good';
+        explanation = `Solid and active chess move. Maintains structural balance and safety.`;
+    } else if (cpLoss <= 160) {
+        classification = 'inaccuracy';
+        badgeClass = 'badge-inaccuracy';
+        explanation = `Slight inaccuracy (-${(cpLoss/100).toFixed(2)}). Better was ${bestNotation} which exerts more central pressure.`;
+    } else if (cpLoss <= 320) {
+        classification = 'mistake';
+        badgeClass = 'badge-mistake';
+        explanation = `Positional mistake (-${(cpLoss/100).toFixed(2)}). Gives opponent easy counterplay. Recommended alternative was ${bestNotation}.`;
+    } else {
+        classification = 'blunder';
+        badgeClass = 'badge-blunder';
+        explanation = `Critical blunder (-${(cpLoss/100).toFixed(2)})! Weakens your defenses or loses material. Strongest response was ${bestNotation}.`;
+    }
+    
+    return {
+        moveNumber: Math.floor(totalMoves / 2) + 1,
+        color: moverColor,
+        moveNotation: moveNotation,
+        from: { row: r1, col: c1 },
+        to: { row: r2, col: c2 },
+        piece: piece,
+        captured: capturedPiece,
+        evalBefore: evalBefore,
+        evalAfter: evalAfter,
+        bestMove: bestEngineMove,
+        bestNotation: bestNotation,
+        bestFrom: bestFrom,
+        bestTo: bestTo,
+        cpLoss: cpLoss,
+        classification: classification,
+        badgeClass: badgeClass,
+        explanation: explanation
+    };
+}
+
+function updateCoachLiveUI(analysis) {
+    if (!analysis) return;
+    
+    const rawEval = analysis.evalAfter;
+    const cpScore = (rawEval / 100).toFixed(2);
+    const scoreStr = rawEval > 0 ? `+${cpScore}` : (rawEval < 0 ? `${cpScore}` : `0.00`);
+    
+    const whiteWinPct = Math.min(95, Math.max(5, Math.round(50 + (rawEval / 40))));
+    const blackWinPct = 100 - whiteWinPct;
+    
+    const evalScoreEl = document.getElementById('coachEvalScore');
+    const evalFillEl = document.getElementById('coachEvalFill');
+    const whiteAdvEl = document.getElementById('coachWhiteAdvantage');
+    const blackAdvEl = document.getElementById('coachBlackAdvantage');
+    
+    if (evalScoreEl) {
+        evalScoreEl.textContent = `${scoreStr} (${rawEval > 40 ? 'White Advantage' : (rawEval < -40 ? 'Black Advantage' : 'Balanced')})`;
+        evalScoreEl.style.color = rawEval > 40 ? '#38bdf8' : (rawEval < -40 ? '#f472b6' : '#cbd5e1');
+    }
+    if (evalFillEl) evalFillEl.style.width = `${whiteWinPct}%`;
+    if (whiteAdvEl) whiteAdvEl.textContent = `White: ${whiteWinPct}%`;
+    if (blackAdvEl) blackAdvEl.textContent = `Black: ${blackWinPct}%`;
+    
+    const gpBadge = document.getElementById('gamePanelCoachBadge');
+    const gpFill = document.getElementById('gamePanelEvalFill');
+    const gpNote = document.getElementById('gamePanelCoachNote');
+    
+    if (gpBadge) {
+        gpBadge.className = `coach-badge ${analysis.badgeClass}`;
+        gpBadge.textContent = analysis.classification.toUpperCase();
+    }
+    if (gpFill) gpFill.style.width = `${whiteWinPct}%`;
+    if (gpNote) gpNote.textContent = `${analysis.moveNotation} (${scoreStr}) — ${analysis.explanation}`;
+    
+    const latestBadge = document.getElementById('coachLatestBadge');
+    const moveSummary = document.getElementById('coachMoveSummary');
+    const explanationEl = document.getElementById('coachExplanation');
+    const suggestionBox = document.getElementById('coachSuggestionBox');
+    const suggestionText = document.getElementById('coachSuggestionText');
+    
+    if (latestBadge) {
+        latestBadge.className = `coach-badge ${analysis.badgeClass}`;
+        latestBadge.textContent = analysis.classification.toUpperCase();
+    }
+    if (moveSummary) {
+        moveSummary.textContent = `${analysis.color === 'white' ? 'White' : 'Black'} played ${analysis.moveNotation} (${scoreStr})`;
+    }
+    if (explanationEl) {
+        explanationEl.textContent = analysis.explanation;
+    }
+    
+    if (suggestionBox && suggestionText) {
+        if (analysis.bestNotation && analysis.bestNotation !== 'None' && analysis.classification !== 'best' && analysis.classification !== 'brilliant') {
+            suggestionBox.style.display = 'flex';
+            suggestionText.textContent = `Engine recommends ${analysis.bestNotation} instead (+${(analysis.cpLoss/100).toFixed(2)} cp improvement).`;
+        } else {
+            suggestionBox.style.display = 'none';
+        }
+    }
+    
+    appendMoveToCoachTimeline(analysis);
+}
+
+function appendMoveToCoachTimeline(analysis) {
+    const list = document.getElementById('coachTimelineList');
+    if (!list) return;
+    
+    const emptyMsg = list.querySelector('.coach-timeline-empty');
+    if (emptyMsg) emptyMsg.remove();
+    
+    const row = document.createElement('div');
+    row.className = 'coach-timeline-row';
+    const scoreVal = (analysis.evalAfter / 100).toFixed(1);
+    const scoreBadge = analysis.evalAfter > 0 ? `+${scoreVal}` : scoreVal;
+    
+    row.innerHTML = `
+        <div class="coach-timeline-move">
+            <span class="coach-badge ${analysis.badgeClass}" style="padding:2px 6px; font-size:0.65rem;">${analysis.classification.charAt(0).toUpperCase()}</span>
+            <span>${analysis.moveNumber}. ${analysis.color === 'white' ? '⚪' : '⚫'} ${analysis.moveNotation}</span>
+        </div>
+        <div class="coach-timeline-score">${scoreBadge} cp</div>
+    `;
+    list.appendChild(row);
+    list.scrollTop = list.scrollHeight;
+}
+
+function toggleCoachSuggestionOnBoard() {
+    if (!lastMoveEvaluation || !lastMoveEvaluation.bestFrom || !lastMoveEvaluation.bestTo) {
+        showMsg("No alternative move suggestion available for this position.");
+        return;
+    }
+    
+    const btn = document.getElementById('btnToggleBoardCoach');
+    if (isCoachHighlightActive) {
+        coachSuggestedHighlight = null;
+        isCoachHighlightActive = false;
+        if (btn) btn.textContent = '👁️ Show on Board';
+        showMsg("Coach suggestion highlight cleared.");
+    } else {
+        coachSuggestedHighlight = {
+            from: lastMoveEvaluation.bestFrom,
+            to: lastMoveEvaluation.bestTo
+        };
+        isCoachHighlightActive = true;
+        if (btn) btn.textContent = '❌ Hide Suggestion';
+        showTab('gameTab');
+        showMsg(`Highlighted recommended move: ${lastMoveEvaluation.bestNotation}`);
+    }
+    drawBoard();
+}
+
+function triggerManualAnalysis() {
+    const currentScore = evaluateBoardState(board);
+    const bestM = findBestEngineMove(board, turn);
+    
+    const rawEval = currentScore;
+    const cpScore = (rawEval / 100).toFixed(2);
+    const scoreStr = rawEval > 0 ? `+${cpScore}` : (rawEval < 0 ? `${cpScore}` : `0.00`);
+    const whiteWinPct = Math.min(95, Math.max(5, Math.round(50 + (rawEval / 40))));
+    const blackWinPct = 100 - whiteWinPct;
+    
+    const evalScoreEl = document.getElementById('coachEvalScore');
+    const evalFillEl = document.getElementById('coachEvalFill');
+    const whiteAdvEl = document.getElementById('coachWhiteAdvantage');
+    const blackAdvEl = document.getElementById('coachBlackAdvantage');
+    
+    if (evalScoreEl) evalScoreEl.textContent = `${scoreStr} (${rawEval > 40 ? 'White Advantage' : (rawEval < -40 ? 'Black Advantage' : 'Balanced')})`;
+    if (evalFillEl) evalFillEl.style.width = `${whiteWinPct}%`;
+    if (whiteAdvEl) whiteAdvEl.textContent = `White: ${whiteWinPct}%`;
+    if (blackAdvEl) blackAdvEl.textContent = `Black: ${blackWinPct}%`;
+    
+    const explanationEl = document.getElementById('coachExplanation');
+    if (explanationEl && bestM) {
+        const bFrom = getNotation(bestM.from.row, bestM.from.col);
+        const bTo = getNotation(bestM.to.row, bestM.to.col);
+        const bP = bestM.piece;
+        const bNot = `${bP.type === 'pawn' ? '' : (bP.type === 'knight' ? 'N' : bP.type.charAt(0).toUpperCase())}${bFrom}→${bTo}`;
+        explanationEl.textContent = `Position re-analyzed! ${turn.toUpperCase()} to move. Optimal recommendation: ${bNot}. Controls key central outposts.`;
+    }
+    showMsg("AI Coach position analysis refreshed!");
+}
+
+function runPostGameAnalysis(force = false) {
+    if (aiCoachHistory.length === 0) {
+        if (force) showMsg("Play at least one move to run post-game report!");
+        return;
+    }
+    
+    let whiteTotalCpLoss = 0;
+    let blackTotalCpLoss = 0;
+    let whiteMovesCount = 0;
+    let blackMovesCount = 0;
+    
+    const counts = {
+        brilliant: 0,
+        best: 0,
+        good: 0,
+        inaccuracy: 0,
+        mistake: 0,
+        blunder: 0
+    };
+    
+    let biggestBlunder = null;
+    let maxLoss = 0;
+    
+    let openingInaccuracies = 0;
+    let blunderCount = 0;
+    let endgameMistakes = 0;
+    
+    aiCoachHistory.forEach(m => {
+        counts[m.classification] = (counts[m.classification] || 0) + 1;
+        if (m.color === 'white') {
+            whiteTotalCpLoss += m.cpLoss;
+            whiteMovesCount++;
+        } else {
+            blackTotalCpLoss += m.cpLoss;
+            blackMovesCount++;
+        }
+        
+        if (m.cpLoss > maxLoss) {
+            maxLoss = m.cpLoss;
+            biggestBlunder = m;
+        }
+        
+        if (m.moveNumber <= 8 && ['inaccuracy', 'mistake', 'blunder'].includes(m.classification)) {
+            openingInaccuracies++;
+        }
+        if (m.classification === 'blunder') {
+            blunderCount++;
+        }
+        if (m.moveNumber > 20 && ['mistake', 'blunder'].includes(m.classification)) {
+            endgameMistakes++;
+        }
+    });
+    
+    const whiteAcpl = whiteMovesCount > 0 ? (whiteTotalCpLoss / whiteMovesCount) : 0;
+    const blackAcpl = blackMovesCount > 0 ? (blackTotalCpLoss / blackMovesCount) : 0;
+    
+    const whiteAcc = Math.max(35, Math.min(99, Math.round(100 - (whiteAcpl * 0.22))));
+    const blackAcc = Math.max(35, Math.min(99, Math.round(100 - (blackAcpl * 0.22))));
+    
+    const whiteAccVal = document.getElementById('whiteAccuracyVal');
+    const blackAccVal = document.getElementById('blackAccuracyVal');
+    if (whiteAccVal) whiteAccVal.textContent = `${whiteAcc}%`;
+    if (blackAccVal) blackAccVal.textContent = `${blackAcc}%`;
+    
+    ['brilliant', 'best', 'good', 'inaccuracy', 'mistake', 'blunder'].forEach(type => {
+        const id = 'cnt' + type.charAt(0).toUpperCase() + type.slice(1);
+        const el = document.getElementById(id);
+        if (el) el.textContent = counts[type] || 0;
+    });
+    
+    const tpBox = document.getElementById('coachTurningPoint');
+    const tpDesc = document.getElementById('coachTurningPointDesc');
+    if (tpBox && tpDesc && biggestBlunder && maxLoss > 120) {
+        tpBox.style.display = 'flex';
+        tpDesc.textContent = `Move ${biggestBlunder.moveNumber} (${biggestBlunder.color.toUpperCase()} played ${biggestBlunder.moveNotation}): Swung evaluation by ${(maxLoss/100).toFixed(2)} centipawns. The engine preferred ${biggestBlunder.bestNotation}.`;
+    } else if (tpBox) {
+        tpBox.style.display = 'none';
+    }
+    
+    const weakList = document.getElementById('coachWeaknessesList');
+    if (weakList) {
+        weakList.innerHTML = '';
+        const weaknesses = [];
+        
+        if (blunderCount >= 2) {
+            weaknesses.push({
+                name: "Tactical Awareness & Hanging Pieces",
+                desc: `You encountered ${blunderCount} tactical blunders resulting in heavy material drops. Focus on calculating candidate checks, captures, and threats.`,
+                actionText: "🎯 Train Tactics & Blunder Prevention",
+                actionFn: "startTrainingWithCat('tactics')"
+            });
+        }
+        
+        if (openingInaccuracies >= 2) {
+            weaknesses.push({
+                name: "Opening Principles & Rapid Piece Development",
+                desc: `${openingInaccuracies} inaccuracies occurred within the first 8 moves. Avoid moving the same piece twice and castle early.`,
+                actionText: "♟️ Study Opening Systems in Master Academy",
+                actionFn: "openMasterAcademyWithTopic('openings')"
+            });
+        }
+        
+        if (endgameMistakes >= 1) {
+            weaknesses.push({
+                name: "Endgame Technique & Passed Pawns",
+                desc: "Critical inaccuracies were made in the late stage. Activate your King toward the center and push passed pawns supported by rooks.",
+                actionText: "👑 Practice Endgame Strategies",
+                actionFn: "openMasterAcademyWithTopic('endgame')"
+            });
+        }
+        
+        if (weaknesses.length === 0) {
+            weaknesses.push({
+                name: "Solid Positional Play (Master Level)",
+                desc: "Excellent accuracy across all game phases! To reach Master rating, practice deep tactical sacrifices and aggressive attack coordination.",
+                actionText: "⚔️ Study Grandmaster Attacks",
+                actionFn: "openMasterAcademyWithTopic('attack')"
+            });
+        }
+        
+        weaknesses.forEach(w => {
+            const item = document.createElement('div');
+            item.className = 'weakness-item';
+            item.innerHTML = `
+                <div class="weakness-item-name">${w.name}</div>
+                <div>${w.desc}</div>
+                <button class="weakness-action-btn" onclick="${w.actionFn}">${w.actionText}</button>
+            `;
+            weakList.appendChild(item);
+        });
+    }
+    
+    if (force) showMsg("Post-Game Analysis & Report updated!");
+}
+
+function startTrainingWithCat(category) {
+    const sel = document.getElementById('trainingCategory');
+    if (sel) sel.value = category;
+    showTab('trainingTab');
+    startTraining();
+    showMsg(`Started training in ${category.toUpperCase()} category!`);
+}
+
+function openMasterAcademyWithTopic(category) {
+    showTab('masterTab');
+    switchMasterCategory(category);
+    showMsg(`Switched to Master Academy: ${category.toUpperCase()}!`);
+}
+
+function resetCoachSession() {
+    aiCoachHistory = [];
+    coachSuggestedHighlight = null;
+    isCoachHighlightActive = false;
+    lastMoveEvaluation = null;
+    
+    const timelineList = document.getElementById('coachTimelineList');
+    if (timelineList) {
+        timelineList.innerHTML = '<div class="coach-timeline-empty">Moves will appear here with evaluations and tactical classifications.</div>';
+    }
+    
+    const gpBadge = document.getElementById('gamePanelCoachBadge');
+    const gpFill = document.getElementById('gamePanelEvalFill');
+    const gpNote = document.getElementById('gamePanelCoachNote');
+    if (gpBadge) { gpBadge.className = 'coach-badge badge-neutral'; gpBadge.textContent = 'Ready'; }
+    if (gpFill) gpFill.style.width = '50%';
+    if (gpNote) gpNote.textContent = 'Make your first move to get live grandmaster analysis and tactical feedback!';
+    
+    const latestBadge = document.getElementById('coachLatestBadge');
+    const moveSummary = document.getElementById('coachMoveSummary');
+    const explanationEl = document.getElementById('coachExplanation');
+    const suggestionBox = document.getElementById('coachSuggestionBox');
+    if (latestBadge) { latestBadge.className = 'coach-badge badge-neutral'; latestBadge.textContent = 'Awaiting Move'; }
+    if (moveSummary) moveSummary.textContent = 'Start the game to analyze moves.';
+    if (explanationEl) explanationEl.textContent = 'Every move you play is analyzed in real time with tactical explanations, error detection, and recommended improvements.';
+    if (suggestionBox) suggestionBox.style.display = 'none';
+}
+
+function updateCoachTabUI() {
+    if (lastMoveEvaluation) {
+        updateCoachLiveUI(lastMoveEvaluation);
+    } else {
+        triggerManualAnalysis();
+    }
+    if (aiCoachHistory.length > 0) {
+        runPostGameAnalysis(false);
+    }
+}
+
 const puzzles = [
     {
         fen: "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
@@ -2409,6 +3653,7 @@ function showTab(tabId) {
     
     const btnMap = {
         'gameTab': 'btnGameTab',
+        'coachTab': 'btnCoachTab',
         'computerTab': 'btnComputerTab',
         'trainingTab': 'btnTrainingTab',
         'chatTab': 'btnChatTab',
@@ -2419,6 +3664,9 @@ function showTab(tabId) {
 
     if (tabId === 'masterTab') {
         renderMasterTopics();
+    }
+    if (tabId === 'coachTab') {
+        updateCoachTabUI();
     }
     
     setTimeout(() => {
@@ -2512,6 +3760,8 @@ function initBoard(keepModes = false) {
     document.getElementById('boardCheckmateBanner').style.display = 'none';
     document.getElementById('gameOverlay').style.display = 'none';
     document.getElementById('movesList').innerHTML = '';
+    
+    resetCoachSession();
     
     if (poll) {
         clearInterval(poll);
@@ -2634,6 +3884,15 @@ function drawBoard() {
             
             if (trainingMode && currentHint && (currentHint.row === r && currentHint.col === c)) {
                 cell.classList.add('training-hint');
+            }
+            
+            if (coachSuggestedHighlight) {
+                if (coachSuggestedHighlight.from && coachSuggestedHighlight.from.row === r && coachSuggestedHighlight.from.col === c) {
+                    cell.classList.add('coach-suggest-from');
+                }
+                if (coachSuggestedHighlight.to && coachSuggestedHighlight.to.row === r && coachSuggestedHighlight.to.col === c) {
+                    cell.classList.add('coach-suggest-to');
+                }
             }
             
             const piece = board[r][c];
@@ -2888,8 +4147,23 @@ function makeMove(r1, c1, r2, c2, promotionPiece = null) {
         wasCaptureMove = false;
     }
     
+    // Snapshot position before move for AI Coach
+    const evalBefore = evaluateBoardState(board);
+    const bestEngineMove = findBestEngineMove(board, turn);
+    const moverTurn = turn;
+    
     board[r2][c2] = piece;
     board[r1][c1] = null;
+    
+    // Analyze move with AI Coach
+    const moveAnalysis = classifyPlayerMove(r1, c1, r2, c2, piece, capturedPiece, evalBefore, evaluateBoardState(board), bestEngineMove, moverTurn, promotionPiece);
+    aiCoachHistory.push(moveAnalysis);
+    lastMoveEvaluation = moveAnalysis;
+    updateCoachLiveUI(moveAnalysis);
+    
+    if (!isCoachHighlightActive) {
+        coachSuggestedHighlight = null;
+    }
     
     lastMoveFrom = {row: r1, col: c1};
     lastMoveTo = {row: r2, col: c2};
@@ -3443,6 +4717,7 @@ function endGame(msg) {
     gameActive = false;
     ended = true;
     addChatMessage("System", `Game Over: ${msg}`, 'system');
+    runPostGameAnalysis(false);
 }
 
 function showMsg(msg) {
