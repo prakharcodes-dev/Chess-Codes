@@ -2842,9 +2842,6 @@ let gameId = '';
 let opponent = '';
 let server = 'http://localhost:9090';
 let online = false;
-let poll = null;
-let lastMoves = 0;
-let lastChatCount = 0;
 let whiteTime = 600000;
 let blackTime = 600000;
 let started = false;
@@ -2853,7 +2850,6 @@ let ended = false;
 let vsComputer = false;
 let computerThinking = false;
 let computerDifficulty = 2;
-let chatMessages = [];
 
 let timeControl = 5;
 let gameVariant = 'standard';
@@ -2875,40 +2871,6 @@ let currentHint = null;
 let pendingPromotionMove = null;
 let activeMasterCategory = 'attack';
 let selectedMasterTopic = null;
-let currentAnalysisResult = null;
-
-const mockServer = {
-    games: {},
-    createGame(id) {
-        this.games[id] = {
-            white: null,
-            black: null,
-            moves: [],
-            turn: 'white',
-            whiteTime: 600000,
-            blackTime: 600000,
-            gameStarted: false,
-            gameEnded: false
-        };
-    },
-    joinGame(id, playerName) {
-        if (!this.games[id]) {
-            this.createGame(id);
-        }
-        const game = this.games[id];
-        
-        if (!game.white) {
-            game.white = playerName;
-            return 'white';
-        } else if (!game.black) {
-            game.black = playerName;
-            game.gameStarted = true;
-            return 'black';
-        } else {
-            return 'full';
-        }
-    }
-};
 
 const symbols = {
     white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
@@ -3754,19 +3716,11 @@ function initBoard(keepModes = false) {
     blackCaptured = [];
     wasCaptureMove = false;
     
-    lastMoves = 0;
-    lastChatCount = 0;
-    
     document.getElementById('boardCheckmateBanner').style.display = 'none';
     document.getElementById('gameOverlay').style.display = 'none';
     document.getElementById('movesList').innerHTML = '';
     
     resetCoachSession();
-    
-    if (poll) {
-        clearInterval(poll);
-        poll = null;
-    }
     
     drawBoard();
     updateInfo();
@@ -3824,6 +3778,10 @@ function setupChess960() {
 function drawBoard() {
     const el = document.getElementById('chessBoard');
     if (!el || !board || board.length !== 8) return;
+
+    const legalMoveSquares = highlightLegalMoves && possibleMoves.length
+        ? new Set(possibleMoves.map(move => `${move.row},${move.col}`))
+        : null;
     
     el.innerHTML = '';
     el.className = `chess-board theme-${boardTheme} piece-style-${pieceStyle}`;
@@ -3870,7 +3828,7 @@ function drawBoard() {
                 cell.classList.add('selected-cell');
             }
             
-            if (highlightLegalMoves && possibleMoves.some(m => m.row === r && m.col === c)) {
+            if (legalMoveSquares && legalMoveSquares.has(`${r},${c}`)) {
                 cell.classList.add('possible-move');
                 if (board[r][c]) {
                     cell.classList.add('capture-move');
