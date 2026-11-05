@@ -2587,6 +2587,7 @@ body {
                         <div class="mode-buttons-row">
                             <button class="mode-btn btn-success" id="joinRoomBtn" onclick="joinGame()">Join Room</button>
                             <button class="mode-btn btn-gold" id="createRoomBtn" onclick="createGame()">Create Room</button>
+                            <button class="mode-btn" id="watchRoomBtn" onclick="watchGame()">Watch Room</button>
                         </div>
                     </div>
 
@@ -2979,9 +2980,10 @@ body {
                 </div>
                 <div class="chat-input">
                     <input type="text" id="chatInput" placeholder="Type your message..." maxlength="100">
-                    <button onclick="sendChatMessage()">Send</button>
+                    <button id="chatSendBtn" onclick="sendChatMessage()">Send</button>
                 </div>
-                <div style="margin-top: 10px;">
+                <div id="spectatorChatNote" style="display: none; margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">Spectator view: chat is read-only.</div>
+                <div id="quickChatActions" style="margin-top: 10px;">
                     <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Quick Messages:</div>
                     <div class="quick-chat-btns">
                         <button class="quick-chat-btn" onclick="quickChat('Good game!')">Good game!</button>
@@ -3158,6 +3160,7 @@ let gameId = '';
 let opponent = '';
 let server = window.location.protocol === 'file:' ? 'http://localhost:9090' : window.location.origin;
 let online = false;
+let spectating = false;
 let onlinePlayerId = '';
 let onlineWhiteName = '';
 let onlineBlackName = '';
@@ -3302,20 +3305,61 @@ async function joinGame() {
     }
 }
 
+async function watchGame() {
+    if (onlineRoomActionPending) return;
+    onlineRoomActionPending = true;
+    setRoomButtonsDisabled(true);
+    const roomId = document.getElementById('gameId').value.trim().toUpperCase();
+    if (!roomId) {
+        showMsg('Enter a room ID to watch.');
+        document.getElementById('gameId').focus();
+        onlineRoomActionPending = false;
+        setRoomButtonsDisabled(false);
+        return;
+    }
+
+    try {
+        const roomList = JSON.parse(await onlineRequest('listGames'));
+        if (!roomList.games.some(room => room.id === roomId)) {
+            throw new Error('Room not found. Check the ID and try again.');
+        }
+        document.getElementById('gameId').value = roomId;
+        startOnlineSession(roomId, '', null, 'Spectator', true);
+    } catch (error) {
+        showMsg(`Could not watch room: ${error.message}`);
+    } finally {
+        onlineRoomActionPending = false;
+        setRoomButtonsDisabled(false);
+    }
+}
+
 function setRoomButtonsDisabled(disabled) {
-    ['joinRoomBtn', 'createRoomBtn'].forEach(id => {
+    ['joinRoomBtn', 'createRoomBtn', 'watchRoomBtn'].forEach(id => {
         const button = document.getElementById(id);
         if (button) button.disabled = disabled;
     });
 }
 
-function startOnlineSession(roomId, playerId, color, displayName) {
+function setSpectatorControls(spectatorMode) {
+    document.getElementById('undoBtn').style.display = spectatorMode ? 'none' : '';
+    document.getElementById('takeBackBtn').style.display = spectatorMode ? 'none' : '';
+    document.getElementById('resignBtn').style.display = spectatorMode ? 'none' : '';
+    document.getElementById('resignBtn').disabled = spectatorMode;
+    document.getElementById('leaveBtn').textContent = spectatorMode ? 'Leave Spectating' : 'Leave Game';
+    document.getElementById('chatInput').disabled = spectatorMode;
+    document.getElementById('chatSendBtn').disabled = spectatorMode;
+    document.getElementById('quickChatActions').style.display = spectatorMode ? 'none' : '';
+    document.getElementById('spectatorChatNote').style.display = spectatorMode ? 'block' : 'none';
+}
+
+function startOnlineSession(roomId, playerId, color, displayName, spectatorMode = false) {
     stopOnlinePolling();
     initBoard(true);
     vsComputer = false;
     trainingMode = false;
     computerThinking = false;
     online = true;
+    spectating = spectatorMode;
     gameId = roomId;
     onlinePlayerId = playerId;
     myColor = color;
@@ -3339,7 +3383,8 @@ function startOnlineSession(roomId, playerId, color, displayName) {
     document.getElementById('gameOverlay').style.display = 'none';
     document.getElementById('undoBtn').disabled = true;
     document.getElementById('takeBackBtn').disabled = true;
-    updateOnlineConnection('Waiting for opponent', 'waiting');
+    setSpectatorControls(spectatorMode);
+    updateOnlineConnection(spectatorMode ? 'Spectating room' : 'Waiting for opponent', 'waiting');
     showTab('gameTab');
 
     const sessionId = onlineSessionId;
@@ -3439,7 +3484,7 @@ function applyOnlineState(state) {
     const chats = Array.isArray(state.chats) ? state.chats : [];
     for (let index = onlineChatCount; index < chats.length; index++) {
         const chat = chats[index];
-        const type = chat.sender === onlinePlayerId ? 'you' : (chat.sender === 'System' ? 'system' : 'opponent');
+        const type = chat.sender === onlinePlayerId && !spectating ? 'you' : (chat.sender === 'System' ? 'system' : 'opponent');
         addChatMessage(chat.sender, chat.message, type);
     }
     onlineChatCount = chats.length;
@@ -3454,7 +3499,9 @@ function applyOnlineState(state) {
         endGame(winner);
         stopOnlinePolling();
     } else if (!ended) {
-        const status = started ? (turn === myColor ? 'Your turn' : 'Opponent’s turn') : 'Waiting for opponent';
+        const status = spectating
+            ? (started ? 'Watching live' : 'Waiting for players')
+            : (started ? (turn === myColor ? 'Your turn' : 'Opponent’s turn') : 'Waiting for opponent');
         updateOnlineConnection(status, started ? 'connected' : 'waiting');
         if (state.winner && state.winner !== '') {
             endGame(`${state.winner.toUpperCase()} wins on time`);
@@ -3479,6 +3526,7 @@ async function pollOnlineGame(sessionId = onlineSessionId) {
 }
 
 async function submitOnlineMove(fromRow, fromCol, toRow, toCol, promotionPiece) {
+    if (spectating) return;
     if (onlineMovePending || !started || turn !== myColor) {
         showMsg('Wait for your turn before moving.');
         return;
@@ -4198,6 +4246,7 @@ function setPieceStyle(styleVal) {
 
 function handleDragStart(e, r, c) {
     if (!gameActive || ended) return;
+    if (online && spectating) return;
     const piece = board[r][c];
     if (!piece || piece.color !== turn) return;
     if (vsComputer && turn !== myColor) return;
@@ -4276,6 +4325,8 @@ function showTab(tabId) {
 
 function initBoard(keepModes = false) {
     stopOnlinePolling();
+    spectating = false;
+    setSpectatorControls(false);
     timeControl = parseInt(document.getElementById('timeControl').value) || 5;
     gameVariant = document.getElementById('gameVariant').value || 'standard';
     soundEnabled = document.getElementById('soundToggle').checked;
@@ -4620,6 +4671,7 @@ function updateCapturedDisplay() {
 }
 
 function clickCell(row, col) {
+    if (online && spectating) return;
     if (!gameActive || ended) {
         showMsg("Game is over / not active!");
         triggerInvalidAttempt(row, col);
@@ -4715,6 +4767,7 @@ function showPromotionModal(color) {
 
 function makeMove(r1, c1, r2, c2, promotionPiece = null) {
     if (!gameActive || ended) return;
+    if (online && spectating && !applyingOnlineMove) return;
 
     if (online && !applyingOnlineMove) {
         const isLegalMove = getMoves(r1, c1).some(move => move.row === r2 && move.col === c2);
@@ -5120,6 +5173,7 @@ function simulateMoveCheckmate(move, color) {
 function updateInfo() {
     let text = turn === 'white' ? "White's Turn" : "Black's Turn";
     if (vsComputer) text = turn === myColor ? "YOUR TURN" : "Computer's Turn";
+    else if (online && spectating) text = started ? `SPECTATING · ${turn.toUpperCase()} TO MOVE` : 'SPECTATING · WAITING FOR PLAYERS';
     else if (online) text = !started ? 'WAITING FOR OPPONENT' : (turn === myColor ? 'YOUR TURN' : "OPPONENT'S TURN");
     else if (trainingMode) text = "TRAINING MODE";
     
@@ -5237,6 +5291,7 @@ function generateAIChatResponse(userMsg) {
 }
 
 async function sendChatMessage() {
+    if (online && spectating) return;
     const input = document.getElementById('chatInput');
     const message = input.value.trim();
     if (!message) return;
@@ -5333,6 +5388,7 @@ function undoMove() {
 function takeBackMove() { undoMove(); }
 
 function resignGame() {
+    if (online && spectating) return;
     if (confirm("Are you sure you want to resign?")) {
         if (online) {
             onlineRequest('resign', { gameId, playerId: onlinePlayerId })
@@ -5376,6 +5432,8 @@ function getDifficultyName(lvl) {
 
 function startTraining() {
     stopOnlinePolling();
+    spectating = false;
+    setSpectatorControls(false);
     trainingMode = true;
     vsComputer = false;
     online = false;
@@ -5728,6 +5786,10 @@ function runPositionAnalysis() {
 }
 
 function playBestCandidateMoveOnBoard() {
+    if (online && spectating) {
+        showMsg('Spectators cannot make moves.');
+        return;
+    }
     if (currentAnalyzerCandidates && currentAnalyzerCandidates.length > 0) {
         const top = currentAnalyzerCandidates[0];
         if (top && top.from && top.to && board[top.from.r] && board[top.from.r][top.from.c]) {
@@ -5739,6 +5801,10 @@ function playBestCandidateMoveOnBoard() {
 }
 
 function loadDetailPositionToBoard() {
+    if (online && spectating) {
+        showMsg('Spectators cannot replace the live board position.');
+        return;
+    }
     if (!selectedMasterTopic) {
         showMsg("Please select a topic first!");
         return;
