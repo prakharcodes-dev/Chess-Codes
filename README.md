@@ -106,7 +106,6 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   │       └── ChessServe.java  # Java HTTP server, REST endpoints, room state, & board logic
   ├── frontend/
   │   └── index.html           # Single-page HTML5/CSS3/JS UI layout, themes, Chess Master engine, & client logic
-  ├── run.bat                  # One-click Windows startup & JDK auto-detect script
   ├── Dockerfile               # Production multi-stage Docker build config
   ├── .dockerignore            # Docker build ignore rules
   ├── .gitignore               # Git version control ignore rules
@@ -134,21 +133,10 @@ You can run this project using any of the following convenient methods:
 
 ---
 
-### Option 1: ⚡ 1-Click Startup (Windows - Recommended)
-1. Double-click the **`run.bat`** file located in the project root directory.
-2. The script will automatically:
-   - Search and detect your Java JDK installation (`JAVA_HOME` or system paths).
-   - Compile `backend/src/ChessServe.java`.
-   - Start the HTTP backend server on **`http://localhost:9090`**.
-3. Open your browser and go to:
-   👉 **[http://localhost:9090](http://localhost:9090)**
-
----
-
-### Option 2: 💻 Command Line (Windows, macOS, Linux)
+### Option 1: Run the Java backend
 
 #### Prerequisites:
-* **Java Development Kit (JDK 8 or higher)** installed on your machine (`javac -version`).
+* **Java Development Kit (JDK 17 or higher)** installed on your machine (`javac -version`).
 
 #### Steps:
 1. Open your terminal (PowerShell, Command Prompt, or Bash) in the project root directory:
@@ -166,26 +154,18 @@ You can run this project using any of the following convenient methods:
    java -cp backend/src ChessServe
    ```
 
-4. You will see:
+Multiplayer room state is held in backend memory and is cleared when the backend stops.
+
+4. Open the browser and visit:
    ```text
-   Chess Server started successfully on port 9090
-   Server URL: http://localhost:9090
-   Thread pool: 50 threads ready
-   Memory management: Active games limit: 1000
+   http://localhost:9090
    ```
 
-5. Open your web browser and visit:
-   👉 **[http://localhost:9090](http://localhost:9090)**
-
-> **Tip - Custom Port:**
-> By default, the server runs on port `9090`. You can change the port using an environment variable:
-> - **PowerShell:** `$env:PORT=8080; java -cp backend/src ChessServe`
-> - **CMD:** `set PORT=8080 && java -cp backend/src ChessServe`
-> - **Linux/macOS:** `PORT=8080 java -cp backend/src ChessServe`
+The server prints its port and readiness when running. You can change the port using the `PORT` environment variable:
 
 ---
 
-### Option 3: 🌐 Instant Browser-Only Mode (Zero Setup / No Java Required)
+### Option 2: 🌐 Instant Browser-Only Mode (Zero Setup / No Java Required)
 If you don't have Java installed or just want to play offline immediately:
 1. Simply double-click **`frontend/index.html`** or right-click and select **"Open with Chrome / Edge / Firefox"**.
 2. **All core features work immediately out-of-the-box in standalone client mode:**
@@ -200,7 +180,7 @@ If you don't have Java installed or just want to play offline immediately:
 
 ---
 
-### Option 4: 🐳 Docker Container
+### Option 3: 🐳 Docker Container
 
 If you prefer containerized deployment:
 
