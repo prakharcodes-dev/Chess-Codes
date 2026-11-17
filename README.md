@@ -13,7 +13,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
   - 🌐 **Online Room Match**: Host or Join a 6-digit multiplayer room code.
   - ♟️ **Chess Master Academy**: 10 strategy categories, tactical patterns & live position evaluator.
   - 🎯 **Tactical Training**: Solve curated tactical puzzles & level up accuracy.
-- **Collapsible Customization Accordion**: Organized settings (**Time Control, Game Variant, Board Theme, Piece Set, Piece Visual Style, Sound Effects, Highlight Legal Moves**) inside a neat **⚙️ Match & Board Customization** accordion.
+- **Dedicated Board Customization Tab**: Match and appearance settings live in a separate **🎨 Board Customization** tab between **Game** and **AI Coach**, so they are easy to find without opening a collapsed panel. Includes **Time Control, Game Variant, Board Theme, Piece Set, Piece Visual Style, Sound Effects,** and **Highlight Legal Moves**.
 
 ### 1. 🤖 AI Chess Coach & Real-Time Move Analysis (NEW)
 - **Live Move-by-Move Evaluation**: Evaluates every move made during a match using Piece-Square Tables (PST) and centipawn material balance.
@@ -74,6 +74,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 
 ### 5. 🌐 Online Multiplayer Rooms
 - **Room-Based Matching**: Host a match to generate a unique 6-character room ID, or enter an existing room ID to join.
+- **One-Click Room ID Copy**: Copy the active room ID from the in-game status panel with the adjacent **Copy** button.
 - **Turn & Move Synchronization**: Real-time board state and turn updates powered by backend polling.
 - **Clocks & Timeouts**: Synchronized timers supporting bullet, blitz, classical, and untimed matches.
 - **In-Game Chat**: Live room chat between players with AI companion integration.
@@ -122,7 +123,7 @@ A full-featured, high-performance Chess application featuring a robust Java HTTP
 6. **Checkmate Visual Display & Audio**: Added floating checkmate banners, glowing red checkmate king highlights, checkmate sound effects, and victory modal overlay.
 7. **Real-Time Live Timer Tick Loop**: Added a 1-second live interval tick loop so timers tick continuously second-by-second.
 8. **Focus Mode & Collapsible Side Panel**: Added header toggle to collapse side controls for a grand full-screen board view.
-9. **Mode Selection Dashboard & Landing UX Redesign**: Added intuitive 1-click game mode cards (VS Computer, Local 2-Player, Online Room, Chess Master Academy, Tactical Training) and a collapsible match customization accordion for an ultra-clean, beginner-friendly onboarding experience.
+9. **Mode Selection Dashboard & Landing UX Redesign**: Added intuitive 1-click game mode cards (VS Computer, Local 2-Player, Online Room, Chess Master Academy, Tactical Training), a dedicated Board Customization tab between Game and AI Coach, and a one-click copy button for the active room ID.
 10. **Refined Board UI Spacing & Rounded Corners**: Enhanced `.board-container` padding and smooth rounded corner framing (`border-radius: 24px` / `16px`) for an elegant glassmorphism board design.
 
 ---

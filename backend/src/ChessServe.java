@@ -358,7 +358,7 @@ public class ChessServe {
                 System.out.println("Game '" + gameId + "' is full. Player '" + playerId + "' rejected");
             }
         }
-        
+
         sendResponse(exchange, 200, role, "text/plain");
     }
     
@@ -398,7 +398,7 @@ public class ChessServe {
             game.boardState = initializeBoard();
             game.cachedStateJson = null;
         }
-        
+
         String response = "{\"gameId\":\"" + gameId + "\",\"player\":\"" + playerId + "\",\"color\":\"white\"}";
         sendResponse(exchange, 200, response, "application/json");
         System.out.println("Created new game: " + gameId + " for player: " + playerId);
@@ -780,7 +780,7 @@ public class ChessServe {
             
             game.started = (game.whitePlayer != null && game.blackPlayer != null);
         }
-        
+
         String response = "{\"success\":true,\"reason\":\"Game reset successfully\"}";
         sendResponse(exchange, 200, response, "application/json");
         System.out.println("Game '" + gameId + "' has been reset");
@@ -940,7 +940,7 @@ public class ChessServe {
                 System.out.println("Player '" + playerId + "' resigned in game '" + gameId + "'");
             }
         }
-        
+
         sendResponse(exchange, 200, "OK", "text/plain");
     }
     
@@ -1020,6 +1020,6 @@ public class ChessServe {
         long hours = minutes / 60;
         return String.format("%02d:%02d:%02d", hours % 24, minutes % 60, seconds % 60);
     }
-    
+
     private static final long startTime = System.currentTimeMillis();
 }

@@ -2388,6 +2388,18 @@ body {
 }
 
 .settings-accordion-content { padding: 12px; }
+.copy-room-btn {
+    flex: 0 0 auto;
+    padding: 5px 9px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+.copy-room-btn:hover { background: rgba(255, 255, 255, 0.13); }
 .settings-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
@@ -2523,6 +2535,7 @@ body {
     <div class="controls">
         <div class="tabs">
             <button class="tab-btn active" id="btnGameTab" onclick="showTab('gameTab')">Game</button>
+            <button class="tab-btn" id="btnCustomizationTab" onclick="showTab('customizationTab')">🎨 Board Customization</button>
             <button class="tab-btn coach-tab-btn" id="btnCoachTab" onclick="showTab('coachTab')">🤖 AI Coach</button>
             <button class="tab-btn" id="btnComputerTab" onclick="showTab('computerTab')">VS Computer</button>
             <button class="tab-btn" id="btnTrainingTab" onclick="showTab('trainingTab')">Training</button>
@@ -2614,13 +2627,77 @@ body {
                     </div>
                 </div>
 
-                <!-- Collapsible Board Settings Accordion -->
-                <div class="settings-accordion-box">
-                    <div class="settings-accordion-header" onclick="toggleSettingsAccordion()">
-                        <span>⚙️ Match & Board Customization</span>
-                        <span id="settingsAccordionIcon">▼</span>
+            </div>
+            
+            <div class="info-panel" id="gamePanel" style="display: none;">
+                <h3>Game Status</h3>
+                <div class="turn-indicator" id="turnIndicator">White's Turn</div>
+                
+                <!-- Live AI Coach Ticker inside Game Panel -->
+                <div class="live-coach-ticker" id="gamePanelCoachTicker" onclick="showTab('coachTab')" title="Click to view full Coach analysis">
+                    <div class="coach-ticker-header">
+                        <span class="coach-ticker-title">🤖 AI Coach Live Eval</span>
+                        <span class="coach-badge badge-neutral" id="gamePanelCoachBadge">Ready</span>
                     </div>
-                    <div class="settings-accordion-content" id="settingsAccordionContent" style="display: none;">
+                    <div class="coach-ticker-eval-bar">
+                        <div class="coach-eval-fill" id="gamePanelEvalFill" style="width: 50%;"></div>
+                    </div>
+                    <div class="coach-ticker-text" id="gamePanelCoachNote">Make your first move to get live grandmaster analysis and tactical feedback!</div>
+                </div>
+                
+                <div class="captured-pieces" style="display: none;">
+                    <div id="whiteCaptured"><div class="captured-placeholder">None</div></div>
+                    <div id="blackCaptured"><div class="captured-placeholder">None</div></div>
+                </div>
+                <div class="timer-container" style="display: none;">
+                    <div class="timer-box" id="whiteTimer">
+                        <div class="timer-value" id="whiteTime">10:00</div>
+                    </div>
+                    <div class="timer-box" id="blackTimer">
+                        <div class="timer-value" id="blackTime">10:00</div>
+                    </div>
+                </div>
+                <div class="player-info" style="display: none;">
+                    <span id="myNameDisplay">-</span>
+                    <span id="myColorDisplay">-</span>
+                    <span id="opponentNameDisplay">-</span>
+                    <span id="opponentColorDisplay">-</span>
+                </div>
+
+                <div class="status" id="gameStatus"></div>
+                
+                <div class="game-id-display" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.04); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Room ID:</span>
+                    <span style="font-weight: 700; color: var(--accent-color); margin-left: auto;" id="currentGameId">-</span>
+                    <button class="copy-room-btn" type="button" onclick="copyRoomId()" title="Copy room ID" aria-label="Copy room ID">Copy</button>
+                </div>
+
+                <div class="buttons" style="margin-top: 8px;">
+                    <button class="action-btn" onclick="undoMove()" id="undoBtn">Undo</button>
+                    <button class="action-btn" onclick="takeBackMove()" id="takeBackBtn">Take Back</button>
+                    <button class="action-btn btn-danger" onclick="resignGame()" id="resignBtn">Resign</button>
+                    <button class="action-btn" onclick="leaveGame()" id="leaveBtn">Leave Game</button>
+                </div>
+                
+                <div class="moves-history" style="margin-top: 8px;">
+                    <h4>Moves History</h4>
+                    <ul id="movesList"></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="customizationTab">
+            <div class="setup-panel">
+                <div class="mode-welcome-card">
+                    <div class="welcome-hero-title">🎨 Board Customization</div>
+                    <div class="welcome-hero-desc">Choose your match settings, board theme, and piece style.</div>
+                </div>
+                <!-- Board customization settings -->
+                <div class="settings-accordion-box">
+                    <div class="settings-accordion-header">
+                        <span>🎨 Board Customization & Match Settings</span>
+                    </div>
+                    <div class="settings-accordion-content" style="display: block;">
                         <div class="settings-grid">
                             <div class="input-group">
                                 <label for="timeControl">⏱️ Time Control:</label>
@@ -2696,64 +2773,11 @@ body {
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="info-panel" id="gamePanel" style="display: none;">
-                <h3>Game Status</h3>
-                <div class="turn-indicator" id="turnIndicator">White's Turn</div>
-                
-                <!-- Live AI Coach Ticker inside Game Panel -->
-                <div class="live-coach-ticker" id="gamePanelCoachTicker" onclick="showTab('coachTab')" title="Click to view full Coach analysis">
-                    <div class="coach-ticker-header">
-                        <span class="coach-ticker-title">🤖 AI Coach Live Eval</span>
-                        <span class="coach-badge badge-neutral" id="gamePanelCoachBadge">Ready</span>
-                    </div>
-                    <div class="coach-ticker-eval-bar">
-                        <div class="coach-eval-fill" id="gamePanelEvalFill" style="width: 50%;"></div>
-                    </div>
-                    <div class="coach-ticker-text" id="gamePanelCoachNote">Make your first move to get live grandmaster analysis and tactical feedback!</div>
-                </div>
-                
-                <div class="captured-pieces" style="display: none;">
-                    <div id="whiteCaptured"><div class="captured-placeholder">None</div></div>
-                    <div id="blackCaptured"><div class="captured-placeholder">None</div></div>
-                </div>
-                <div class="timer-container" style="display: none;">
-                    <div class="timer-box" id="whiteTimer">
-                        <div class="timer-value" id="whiteTime">10:00</div>
-                    </div>
-                    <div class="timer-box" id="blackTimer">
-                        <div class="timer-value" id="blackTime">10:00</div>
-                    </div>
-                </div>
-                <div class="player-info" style="display: none;">
-                    <span id="myNameDisplay">-</span>
-                    <span id="myColorDisplay">-</span>
-                    <span id="opponentNameDisplay">-</span>
-                    <span id="opponentColorDisplay">-</span>
-                </div>
 
-                <div class="status" id="gameStatus"></div>
-                
-                <div class="game-id-display" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.04); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Room ID:</span>
-                    <span style="font-weight: 700; color: var(--accent-color);" id="currentGameId">-</span>
-                </div>
 
-                <div class="buttons" style="margin-top: 8px;">
-                    <button class="action-btn" onclick="undoMove()" id="undoBtn">Undo</button>
-                    <button class="action-btn" onclick="takeBackMove()" id="takeBackBtn">Take Back</button>
-                    <button class="action-btn btn-danger" onclick="resignGame()" id="resignBtn">Resign</button>
-                    <button class="action-btn" onclick="leaveGame()" id="leaveBtn">Leave Game</button>
-                </div>
-                
-                <div class="moves-history" style="margin-top: 8px;">
-                    <h4>Moves History</h4>
-                    <ul id="movesList"></ul>
-                </div>
             </div>
         </div>
-        
+
         <!-- AI COACH TAB -->
         <div class="tab-content" id="coachTab">
             <div class="coach-panel" id="coachPanel">
@@ -4297,6 +4321,7 @@ function showTab(tabId) {
     
     const btnMap = {
         'gameTab': 'btnGameTab',
+        'customizationTab': 'btnCustomizationTab',
         'coachTab': 'btnCoachTab',
         'computerTab': 'btnComputerTab',
         'trainingTab': 'btnTrainingTab',
@@ -5351,13 +5376,34 @@ function toggleSettingsAccordion() {
     const content = document.getElementById('settingsAccordionContent');
     const icon = document.getElementById('settingsAccordionIcon');
     if (!content) return;
-    if (content.style.display === 'none') {
+    if (getComputedStyle(content).display === 'none') {
         content.style.display = 'block';
         if (icon) icon.textContent = '▲';
     } else {
         content.style.display = 'none';
         if (icon) icon.textContent = '▼';
     }
+}
+
+async function copyRoomId() {
+    const roomId = document.getElementById('currentGameId')?.textContent.trim();
+    if (!roomId || roomId === '-') {
+        showMsg('No active room ID to copy.');
+        return;
+    }
+    try {
+        await navigator.clipboard.writeText(roomId);
+    } catch (error) {
+        const temporaryInput = document.createElement('textarea');
+        temporaryInput.value = roomId;
+        temporaryInput.style.position = 'fixed';
+        temporaryInput.style.opacity = '0';
+        document.body.appendChild(temporaryInput);
+        temporaryInput.select();
+        document.execCommand('copy');
+        temporaryInput.remove();
+    }
+    showMsg(`Room ID ${roomId} copied.`);
 }
 
 function newLocalGame() {
